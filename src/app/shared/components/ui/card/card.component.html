@@ -1,0 +1,147 @@
+<!-- how to use
+<app-card [carDetails]="car" fromWho="home"></app-card> ==> from home
+<app-card [carDetails]="car" fromWho="landing"></app-card> ==> from landing
+<app-card [carDetails]="car" fromWho="cars"></app-card> ==> from cars -->
+
+<!-- class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2" -->
+<div class="p-2">
+  <div
+    class="bg-grayLight border border-gray-200 rounded-lg shadow-lg h-full flex flex-col transform transition duration-300 hover:scale-105">
+    <!-- Image container with relative positioning -->
+    <div class="relative">
+      <img class="rounded-t-lg w-full h-48 object-cover p-1"
+        [src]="carDetails()?.car_photos?.[0] ?? '/images/car1.webp'"
+        [alt]="(carDetails()?.brand + ' ' + carDetails()?.model) || 'Car image'" />
+
+      <!-- Status badges -->
+      <div class="absolute top-0 left-0 flex justify-between items-center w-full">
+        @if(carDetails()?.availability_status == "Available"){
+        <p class="bg-green-100 text-green-900 font-semibold px-3 py-0.5 m-2 rounded-2xl">
+          {{carDetails()?.availability_status}}
+        </p>
+        }@else if (carDetails()?.availability_status == "Rented") {
+        <p class="bg-red-100 text-red-900 font-semibold px-3 py-0.5 m-2 rounded-2xl">
+          {{carDetails()?.availability_status}}
+        </p>
+        }@else {
+        <p class="bg-yellow-100 text-yellow-900 font-semibold px-3 py-0.5 m-2 rounded-2xl">
+          {{carDetails()?.availability_status}}
+        </p>
+        }
+
+        <!-- <p class="font-semibold px-3 py-0.5 m-2 rounded-2xl" [class]="{
+          'bg-green-100 text-green-900': carDetails()?.availability_status === 'Available',
+          'bg-red-100 text-red-900': carDetails()?.availability_status === 'Rented',
+          'bg-yellow-100 text-yellow-900': carDetails()?.availability_status === 'Under Maintenance'
+        }"> -->
+        <!-- {{carDetails()?.availability_status}}
+        </p> -->
+
+
+        <p class="bg-blue-100 text-blue-900 font-semibold px-3 py-0.5 m-2 rounded-2xl">
+          {{carDetails()?.type}}
+        </p>
+      </div>
+
+      @if(fromWho()!="landing"){
+      <!-- Heart Favorite Icon -->
+      <button (click)="toggleFavorite()"
+        class="absolute top-10 right-2 z-10 bg-gray-50 p-1 rounded-full shadow-md hover:bg-gray-100"
+        aria-label="Add to favorites">
+        @if (isFavorite) {
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6 text-red-600">
+          <path
+            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+        </svg>
+        }
+        @else {
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+          class="w-6 h-6 text-red-500 hover:text-red-600 transition-colors duration-200" stroke="currentColor"
+          stroke-width="1.8">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+        </svg>
+
+        }
+      </button>
+      }
+    </div>
+
+
+    <div class="p-5 flex flex-col flex-grow bg-white rounded-lg">
+      <div class="flex justify-between gap-5">
+        <h5 class="mb-2 text-xl lg:text-2xl font-bold tracking-tight text-dark-blue break-words max-w-[85%]">
+          {{carDetails()?.brand}} {{carDetails()?.model}} {{carDetails()?.year}}
+        </h5>
+        <p class="mb-4 text-sm sm:text-base font-medium text-gray-500 flex-grow">
+          {{carDetails()?.color}}
+        </p>
+      </div>
+
+      <!-- Added Price Section -->
+      <div class="mb-2 flex items-center">
+        <span class="text-xl font-bold text-dark-blue">
+          EG {{carDetails()?.total_price_per_hour}}
+        </span>
+        <span class="text-sm text-gray-500 ml-1">/hour</span>
+      </div>
+
+      <app-star-rating [rating]="carDetails()?.rating?? 0"></app-star-rating>
+
+      <hr class="border-t-2 border-grayLight my-4" />
+
+      <div class="flex gap-3 text-sm text-gray-600 dark:text-gray-400 justify-between">
+        @if (carDetails()?.seats) {
+        <span class="flex items-center gap-1 bg-grayLight px-3 py-2 rounded-xl text-dark-blue font-bold"
+          [title]="carDetails()?.seats + ' seats'">
+          <!-- Seat icon -->
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M5 12V6a3 3 0 013-3h8a3 3 0 013 3v6M4 16h16a1 1 0 011 1v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2a1 1 0 011-1z" />
+          </svg>
+          {{ carDetails()?.seats }}
+        </span>
+        }
+
+        @if (carDetails()?.transmission) {
+        <span class="flex items-center gap-1 bg-grayLight px-3 py-2 rounded-xl text-dark-blue font-bold"
+          [title]="carDetails()?.transmission">
+          <!-- Transmission icon -->
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 6V3m0 3v12m0-6H9m3 0h3m-3 0v6m0 0v3m0-3h3m-3 0H9" />
+          </svg>
+          {{ carDetails()?.transmission === 'Automatic' ? 'AT' : 'MT' }}
+        </span>
+        }
+
+        @if (carDetails()?.fuel_type) {
+        <span class="flex items-center gap-1 bg-grayLight px-3 py-2 rounded-xl text-dark-blue font-bold"
+          [title]="carDetails()?.fuel_type">
+          <!-- Fuel icon -->
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M16 3h1a1 1 0 011 1v4a1 1 0 001 1h.5a.5.5 0 01.5.5v9.25a2.25 2.25 0 01-4.5 0V16M5 7h8a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V9a2 2 0 012-2z" />
+          </svg>
+          {{ carDetails()?.fuel_type }}
+        </span>
+        }
+      </div>
+
+      @if(fromWho()!='car'){
+      <div>
+        <hr class="border-t-2 border-grayLight my-4" />
+        <a class="w-full inline-flex justify-center items-center px-3 py-2 text-sm font-medium text-white bg-light-blue rounded-lg hover:bg-dark-blue focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mt-auto"
+          [routerLink]="['/landing']" routerLinkActive="router-link-active">
+          Book Now
+          <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 14 10">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M1 5h12m0 0L9 1m4 4L9 9" />
+          </svg>
+        </a>
+      </div>
+      }
+    </div>
+  </div>
+</div>
