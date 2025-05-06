@@ -1,0 +1,10 @@
+<section
+    class="sticky left-0 top-0 z-20 flex h-screen w-fit flex-col justify-between overflow-auto border-r-[1.5px] border-[#e8e8e8] pb-5 pt-28 max-md:hidden">
+    <div class="flex flex-col w-full flex-1 gap-10 px-6">
+        @for (link of links; track link.img) {
+        <a [routerLink]="link.route" routerLinkActive="active">
+            <i class="pi pi-{{link.img}}" style="color: #d2d2d2; font-size: 1.3rem"></i>
+        </a>
+        }
+    </div>
+</section>
