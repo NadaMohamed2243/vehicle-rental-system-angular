@@ -1,0 +1,35 @@
+.brand-scroll {
+  overflow: hidden;
+  background: #fff;
+}
+
+.brand-track {
+  display: flex;
+  gap: 3rem;
+  animation: scrollLeft 20s linear infinite;
+}
+
+.brand-icon {
+  flex: 0 0 auto;
+  opacity: 0.4;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.brand-icon:hover {
+  opacity: 1;
+}
+
+.brand-icon img {
+  height: 50px; 
+  width: auto;
+}
+
+@keyframes scrollLeft {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
