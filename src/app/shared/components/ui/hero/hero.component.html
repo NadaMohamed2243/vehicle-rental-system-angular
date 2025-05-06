@@ -1,0 +1,128 @@
+<div class="min-h-screen flex flex-col items-center bg-[url('/images/heroBackground.jpg')] bg-cover bg-center relative overflow-hidden">
+  <div class="absolute inset-0 bg-white/70 backdrop-blur-xs z-0"></div>
+
+  <div class="container mx-auto px-4 flex flex-col items-center justify-between flex-grow z-10 py-5">
+    <div class="w-full max-w-4xl text-center mb-7  mt-5">
+      <h1 class="text-4xl md:text-6xl font-bold mb-4 leading-tight text-gray-800">
+        Find, Book, and<br>
+        <span class="text-blue-600">Rent a car</span> in Easy Steps
+      </h1>
+      <p class="text-lg md:text-xl text-gray-600">Get a car whenever you need it with <span class="font-bold text-blue-600">RENTLY</span></p>
+    </div>
+
+    <div class="relative w-full max-w-4xl h-70 md:h-[300px] mb-5 md:mb-5">
+      <div class="absolute inset-y-0 left-0 flex items-center z-20 -ml-4">
+        <button (click)="prevCar()" class="p-3 rounded-full bg-white shadow-lg hover:bg-gray-100 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="absolute inset-y-0 right-0 flex items-center z-20 -mr-4">
+        <button (click)="nextCar()" class="p-3 rounded-full bg-white shadow-lg hover:bg-gray-100 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="absolute w-[50%] h-[30%] z-0" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <!-- Base glow layer - wide oval shape -->
+        <div class="absolute inset-0 rounded-[50%]
+                    bg-gradient-to-br from-blue-400/20 to-blue-600/30
+                    shadow-[0_0_100px_40px_rgba(59,130,246,0.4)]
+                    blur-[20px]
+                    scale-x-150 scale-y-100"></div>
+
+        <!-- Secondary glow layer - slightly smaller -->
+        <div class="absolute inset-0 rounded-[50%]
+                    bg-gradient-to-br from-blue-300/15 to-blue-500/25
+                    shadow-[0_0_120px_50px_rgba(29,78,216,0.3)]
+                    blur-[25px]
+                    scale-x-140 scale-y-90"></div>
+
+        <!-- Inner glow core - most oval shaped -->
+        <div class="absolute inset-0 rounded-[50%]
+                    bg-gradient-to-br from-blue-200/10 to-blue-400/20
+                    shadow-[0_0_80px_30px_rgba(96,165,250,0.5)]
+                    blur-[15px]
+                    scale-x-130 scale-y-80"></div>
+
+        <!-- Edge highlight - subtle oval border -->
+        <div class="absolute inset-0 rounded-[50%]
+                    border-2 border-blue-300/50
+                    ring-4 ring-blue-100/70
+                    shadow-[0_0_30px_10px_rgba(191,219,254,0.8)]
+                    scale-x-145 scale-y-95"></div>
+      </div>
+
+
+      <div class="absolute w-full h-full z-10"
+           style="transform: translate(-50%, -50%); top: 50%; left: 50%;"
+           #carContainer></div>
+    </div>
+
+    <div class="w-full max-w-4xl bg-white rounded-xl shadow-xl p-6 mb-5">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+        <div class="relative">
+          <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+          <div class="relative">
+            <input
+              type="text"
+              id="location"
+              placeholder="Enter city or airport"
+              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label for="pickup-date" class="block text-sm font-medium text-gray-700 mb-1">Pickup Date</label>
+          <div class="relative">
+            <input
+              type="date"
+              id="pickup-date"
+              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label for="return-date" class="block text-sm font-medium text-gray-700 mb-1">Return Date</label>
+          <div class="relative">
+            <input
+              type="date"
+              id="return-date"
+              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-end">
+          <button
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200 shadow-md transform hover:scale-105"
+          >
+            FIND CAR
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
