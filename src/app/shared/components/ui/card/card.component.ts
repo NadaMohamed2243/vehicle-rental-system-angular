@@ -12,10 +12,14 @@ import { StarRatingComponent } from "../star-rating/star-rating.component";
 })
 export class CardComponent {
   carDetails = input<Car>()
-  fromWho = input<any>()
+  fromWho = input<'landing' | 'home' | 'car'>()
   isFavorite = false;
 
   toggleFavorite() {
     this.isFavorite = !this.isFavorite;
+  }
+  getTargetRoute(): string {
+    const source = this.fromWho();
+    return source === 'home' ? '/payment' : '/cars';
   }
 }
