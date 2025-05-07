@@ -360,6 +360,10 @@ export class CarsService {
   ];
 
 
+  setCars(cars: Car[]) {
+    this._cars = cars;
+  }
+
     getCars(): Car[] {
       return this._cars;
     }
