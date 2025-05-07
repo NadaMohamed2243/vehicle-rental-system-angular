@@ -14,7 +14,7 @@ export class CarsService {
       year: 2021,
       license_plate: 'XYZ 1234',
       vin: '1HGBH41JXMN109186',
-      type: 'Sedan',
+      type: 'pickup',
       transmission: 'Automatic',
       fuel_type: 'Petrol',
       seats: 5,
@@ -64,7 +64,7 @@ export class CarsService {
       year: 2022,
       license_plate: 'ABC 5678',
       vin: '2HGES16555H109187',
-      type: 'Sedan',
+      type: 'sports',
       transmission: 'Manual',
       fuel_type: 'Diesel',
       seats: 5,
@@ -72,7 +72,7 @@ export class CarsService {
       mileage: 35000,
       rental_rate_per_day: 50,
       rental_rate_per_hour: 12,
-      rating: 4.7,
+      rating: 2.7,
       availability_status: 'Rented',
       current_location: 'Downtown Branch',
       location: {
@@ -107,7 +107,7 @@ export class CarsService {
       year: 2020,
       license_plate: 'DEF 9101',
       vin: '3FADP4EJ0EM200123',
-      type: 'SUV',
+      type: 'van',
       transmission: 'Automatic',
       fuel_type: 'Hybrid',
       seats: 5,
@@ -150,7 +150,7 @@ export class CarsService {
       year: 2023,
       license_plate: 'GHI 2345',
       vin: 'WBAEN33494PC12345',
-      type: 'SUV',
+      type: 'Limousine',
       transmission: 'Automatic',
       fuel_type: 'Petrol',
       seats: 7,
@@ -398,6 +398,33 @@ export class CarsService {
     );
     return this._nearbyCars;
   }
+
+
+
+
+
+
+  getPopularTypes(): {type: string, count: number}[] {
+    const typeCounts: {[key: string]: number} = {};
+
+    this._cars.forEach(car => {
+      if (typeCounts[car.type]) {
+        typeCounts[car.type]++;
+      } else {
+        typeCounts[car.type] = 1;
+      }
+    });
+
+    return Object.entries(typeCounts)
+      .map(([type, count]) => ({type, count}))
+      .sort((a, b) => b.count - a.count);
+  }
+
+  getCarsByType(type: string): Car[] {
+    return this._cars.filter(car => car.type === type);
+  }
+
+
 
   constructor() {}
 }

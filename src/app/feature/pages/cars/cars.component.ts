@@ -15,15 +15,41 @@ export class CarsComponent implements OnInit {
   _carsService = inject(CarsService);
   _router = inject(Router);
   _route = inject(ActivatedRoute);
+  filtration: string | null = null;
+  type: string | null = null;
 
   ngOnInit(): void {
-    this.cars = this._carsService.getCars();
+    // this.cars = this._carsService.getCars();
 
-    console.log(this.cars);
+    // console.log(this.cars);
     // Correct way to subscribe to query params
     this._route.queryParams.subscribe((params) => {
-      const attribute = params['filtration'] || 'all';
-      console.log(attribute);
+      this.filtration = params['filtration'] || null;
+      this.type = params['type'] || null; // Default to null if no 'type'
+      console.log(this.filtration);
+      console.log(this.type);
+      this.loadCars();
     });
+  }
+
+  loadCars(): void {
+    if (this.type) {
+      // If both filtration and type are provided, filter cars accordingly
+      this.cars = this._carsService.getCarsByType(this.type);
+    } else if (this.filtration === 'most-popular') {
+      // If only filtration is provided, filter by filtration criteria
+      this.cars = this._carsService.getMostPopularCars();
+    } else if (this.filtration === 'NearBy') {
+      // If only filtration is provided, filter by filtration criteria
+      this.cars = this._carsService.getNearByCars();
+    } else if (this.filtration === 'all') {
+      // If only filtration is provided, filter by filtration criteria
+      this.cars = this._carsService.getCars();
+    } else {
+      // Otherwise, load all cars
+      this.cars = this._carsService.getCars();
+    }
+
+    console.log(this.cars);
   }
 }

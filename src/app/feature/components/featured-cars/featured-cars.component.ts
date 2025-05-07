@@ -1,8 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { CardCarouselComponent } from "../../../shared/components/ui/card-carousel/card-carousel.component";
 import { Car } from '../../../core/interfaces/car';
 import { CarsService } from '../../../core/services/cars.service';
-import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-featured-cars',
