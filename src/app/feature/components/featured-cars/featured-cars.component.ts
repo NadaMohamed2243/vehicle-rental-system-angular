@@ -6,9 +6,9 @@ import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-featured-cars',
-  imports: [CardCarouselComponent,RouterLink],
+  imports: [CardCarouselComponent],
   templateUrl: './featured-cars.component.html',
-  styleUrl: './featured-cars.component.css'
+  styleUrl: './featured-cars.component.css',
 })
 export class FeaturedCarsComponent implements OnInit {
   cars!:Car[]
@@ -19,7 +19,7 @@ export class FeaturedCarsComponent implements OnInit {
   }
   viewAllCars() {
     this._router.navigate(['/cars'], {
-      queryParams: { attribute: 'all' }
+      queryParams: { filtration: 'all' }
     });
   }
 }

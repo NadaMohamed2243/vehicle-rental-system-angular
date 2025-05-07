@@ -22,7 +22,7 @@ export class CarsComponent implements OnInit {
     console.log(this.cars);
     // Correct way to subscribe to query params
     this._route.queryParams.subscribe((params) => {
-      const attribute = params['attribute'] || 'all';
+      const attribute = params['filtration'] || 'all';
       console.log(attribute);
     });
   }

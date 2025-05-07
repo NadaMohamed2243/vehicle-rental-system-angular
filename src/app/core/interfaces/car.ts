@@ -16,6 +16,7 @@ export interface Car {
   rating: number,
   availability_status: string   //'Available' | 'Rented' | 'Under Maintenance';
   current_location: string
+  location: Location;
   deposit_required: number
   insurance_status: string
   last_maintenance_date: string
@@ -38,4 +39,10 @@ export interface RentalHistory {
   start_date: string; // ISO format date of rental start
   end_date: string; // ISO format date of rental end
   total_amount: number; // Total rental amount charged
+}
+
+export interface Location {
+  city: string;
+  country?: string; // optional if needed
+  address?: string; // optional if you want to be more specific
 }
