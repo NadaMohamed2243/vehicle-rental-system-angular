@@ -4,7 +4,8 @@
 <app-card [carDetails]="car" fromWho="cars"></app-card> ==> from cars -->
 
 <!-- class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2" -->
-<div class="p-2 max-w-90">
+<!-- max-w-90 -->
+<div class="p-2 py-4">
   <div
     class="bg-grayLight border border-gray-200 rounded-lg shadow-lg h-full flex flex-col transform transition duration-300 hover:scale-105">
     <!-- Image container with relative positioning -->
@@ -128,20 +129,18 @@
         }
       </div>
 
-      @if(fromWho()!='car'){
-      <div>
-        <hr class="border-t-2 border-grayLight my-4" />
-        <a class="w-full inline-flex justify-center items-center px-3 py-2 text-sm font-medium text-white bg-light-blue rounded-lg hover:bg-dark-blue focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mt-auto"
-          [routerLink]="['/landing']" routerLinkActive="router-link-active">
-          Book Now
-          <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" xmlns="http://www.w3.org/2000/svg" fill="none"
-            viewBox="0 0 14 10">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M1 5h12m0 0L9 1m4 4L9 9" />
-          </svg>
-        </a>
-      </div>
-      }
+      @if(fromWho() === 'landing' || fromWho() === 'home') {
+        <div>
+          <hr class="border-t-2 border-grayLight my-4" />
+          <a class="w-full inline-flex justify-center items-center px-3 py-2 text-sm font-medium text-white bg-light-blue rounded-lg hover:bg-dark-blue focus:ring-4 focus:outline-none focus:ring-blue-300 mt-auto"
+             [routerLink]="getTargetRoute()">
+            Book Now
+            <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+            </svg>
+          </a>
+        </div>
+        }
     </div>
   </div>
 </div>
