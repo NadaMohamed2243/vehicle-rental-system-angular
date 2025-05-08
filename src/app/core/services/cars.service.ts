@@ -9,7 +9,7 @@ export class CarsService {
   private _cars: Car[] = [
     {
       car_id: '12345',
-      brand: 'Hyundai',
+      brand: 'ferrari',
       model: 'Corolla',
       year: 2021,
       license_plate: 'XYZ 1234',
