@@ -9,7 +9,7 @@ export class CarsService {
   private _cars: Car[] = [
     {
       car_id: '12345',
-      brand: 'Toyota',
+      brand: 'Hyundai',
       model: 'Corolla',
       year: 2021,
       license_plate: 'XYZ 1234',
@@ -59,7 +59,7 @@ export class CarsService {
     },
     {
       car_id: '67890',
-      brand: 'Honda',
+      brand: 'nissan',
       model: 'Civic',
       year: 2022,
       license_plate: 'ABC 5678',
@@ -399,15 +399,12 @@ export class CarsService {
     return this._nearbyCars;
   }
 
+  // --------------------car types---------------------
 
+  getPopularTypes(): { type: string; count: number }[] {
+    const typeCounts: { [key: string]: number } = {};
 
-
-
-
-  getPopularTypes(): {type: string, count: number}[] {
-    const typeCounts: {[key: string]: number} = {};
-
-    this._cars.forEach(car => {
+    this._cars.forEach((car) => {
       if (typeCounts[car.type]) {
         typeCounts[car.type]++;
       } else {
@@ -416,15 +413,36 @@ export class CarsService {
     });
 
     return Object.entries(typeCounts)
-      .map(([type, count]) => ({type, count}))
+      .map(([type, count]) => ({ type, count }))
       .sort((a, b) => b.count - a.count);
   }
 
+  // if the type == {type} call this
   getCarsByType(type: string): Car[] {
-    return this._cars.filter(car => car.type === type);
+    return this._cars.filter((car) => car.type === type);
   }
 
+  // -----------------------car brands-------------------
+  // Add these methods to your CarsService
+  getPopularBrands(): { brand: string; count: number }[] {
+    const brandCounts: { [key: string]: number } = {};
 
+    this._cars.forEach((car) => {
+      if (brandCounts[car.brand]) {
+        brandCounts[car.brand]++;
+      } else {
+        brandCounts[car.brand] = 1;
+      }
+    });
+
+    return Object.entries(brandCounts)
+      .map(([brand, count]) => ({ brand, count }))
+      .sort((a, b) => b.count - a.count);
+  }
+
+  getCarsByBrand(brand: string): Car[] {
+    return this._cars.filter((car) => car.brand === brand);
+  }
 
   constructor() {}
 }

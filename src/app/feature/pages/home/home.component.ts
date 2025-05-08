@@ -8,7 +8,7 @@ import { CarBrandsComponent } from "../../components/car-brands/car-brands.compo
 
 @Component({
   selector: 'app-home',
-  imports: [MostPopularComponent, NearbyCarsComponent, CarTypesComponent, CarBrandsComponent],
+  imports: [MostPopularComponent, NearbyCarsComponent , CarBrandsComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
