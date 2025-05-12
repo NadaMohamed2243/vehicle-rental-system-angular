@@ -1,1 +1,66 @@
-<p>accept-user works!</p>
+<h1 class="text-center text-3xl font-bold">Manage Clients</h1>
+
+
+  <div class="px-5 ml-12 m-2 border border-gray-200 rounded-lg bg-white shadow-sm p-4 ">
+
+    <p-tabView >
+      <p-tabPanel header="Pending Clients">
+        <p-table [value]="pendingClients" stripedRows [tableStyle]="{'min-width': '50rem'}">
+            <ng-template pTemplate="header">
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>City</th>
+                <th>Actions</th>
+            </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-client>
+            <tr>
+                <td>{{ client.id }}</td>
+                <td>{{ client.name }}</td>
+                <td>{{ client.email }}</td>
+                <td>{{ client.location.city }}</td>
+                <td>
+                  <p-button class="p-button-sm" icon="pi pi-check"  variant="outlined" severity="info" [rounded]="true" (click)="approveClient(client.id)"/>
+                  <p-button class="p-button-sm" icon="pi pi-times" variant="outlined" severity="danger" [rounded]="true" (click)="rejectClient(client.id)" />
+                </td>
+            </tr>
+            </ng-template>
+        </p-table>
+        </p-tabPanel>
+
+
+    
+    <!-- approved Clients -->
+      <p-tabPanel header="Approved Clients">
+        <p-table [value]="approvedClients" stripedRows [tableStyle]="{'min-width': '50rem'}">
+            <ng-template pTemplate="header">
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>City</th>
+            </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-client>
+            <tr>
+                <td>{{ client.id }}</td>
+                <td>{{ client.name }}</td>
+                <td>{{ client.email }}</td>
+                <td>{{ client.location.city }}</td>
+            </tr>
+            </ng-template>
+        </p-table>
+        </p-tabPanel>
+
+      
+    </p-tabView>
+  </div>
+
+  
+    
+
+  
+
+
