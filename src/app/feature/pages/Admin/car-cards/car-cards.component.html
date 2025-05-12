@@ -13,7 +13,7 @@
         <div class="flex mt-4 gap-6">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4 flex-1">
             <p-card
-              *ngFor="let car of allcars"
+              *ngFor="let car of cars"
               (click)="selectCar(car)"
               header=" {{ car.license_plate }}"
               class="cursor-pointer hover:shadow-lg transition duration-300"

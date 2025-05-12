@@ -7,9 +7,10 @@ import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { FileUploadModule } from 'primeng/fileupload';
-import { HttpClient } from '@angular/common/http';
 import { CalendarModule } from 'primeng/calendar';
 import { Router } from '@angular/router';
+import { AdmincarsService } from '../../../../core/services/admincars.service';
+import { Car } from '../../../../core/interfaces/car';
 
 
 @Component({
@@ -29,7 +30,7 @@ export class AddCarComponent {
 
 
 
-  constructor(private fb: FormBuilder,private http: HttpClient, private router: Router) {
+  constructor(private fb: FormBuilder, private _AdmincarService:AdmincarsService ,private router: Router) {
     this.carForm = this.fb.group({
       car_id: [''],
       brand: ['', Validators.required],
@@ -109,40 +110,46 @@ export class AddCarComponent {
   
 
  submitForm() {
-  this.submitted = true;
-  if (this.carForm.invalid) return;
+    this.submitted = true;
+    const formData = new FormData();
+    Object.entries(this.carForm.value).forEach(([key, value]) => {
+      if (value !== null && value !== undefined) {
+          if (value instanceof Blob) {
+          formData.append(key, value);
+        } else if (typeof value === 'object' && value !== null) {
+          formData.append(key, JSON.stringify(value));
+        } else if (value !== null && value !== undefined) {
+          formData.append(key, String(value));
+        }
+      }
+    });
 
-  const formData = new FormData();
-  Object.entries(this.carForm.value).forEach(([key, value]) => {
-    if (value !== null && value !== undefined) {
-      formData.append(key, value instanceof Blob ? value : JSON.stringify(value));
+    if (this.carData) {
+      // editing an existing car
+      this._AdmincarService.updateCar(this.carData.id, formData).subscribe({
+        next: (res:any) => {
+          console.log('Car updated successfully', res);
+          this.router.navigate(['dashboard/car-cards']);
+          
+        },
+        error: (err: any) => {
+          console.error('Error updating car', err);
+        }
+      });
+    } else {
+      // adding a new car
+      this._AdmincarService.addCar(formData).subscribe({
+        next: (res :any) => {
+          console.log('Car added successfully', res);
+          this.router.navigate(['dashboard/car-cards']);
+        },
+        error: (err:any) => {
+          console.error('Error adding car', err);
+        }
+      });
     }
-  });
-
-  if (this.carData) {
-    // edit car
-    this.http.put(`YOUR_UPDATE_API_URL/${this.carData.id}`, formData).subscribe({
-      next: (res) => {
-        console.log('Car updated successfully', res);
-        this.router.navigate(['dashboard/car-cards', this.carData.id]);
-      },
-      error: (err) => {
-        console.error('Error updating car', err);
-      }
-    });
-  } else {
-    // add car
-    this.http.post('YOUR_CREATE_API_URL', formData).subscribe({
-      next: (res) => {
-        console.log('Car added successfully', res);
-         this.router.navigate(['dashboard/car-cards']);
-      },
-      error: (err) => {
-        console.error('Error adding car', err);
-      }
-    });
   }
-}
+
 
 
   ngOnInit(): void {
