@@ -11,6 +11,7 @@ import{DashboardComponent} from './feature/pages/Admin/dashboard/dashboard.compo
 import { AddCarComponent } from './feature/pages/Admin/add-car/add-car.component';
 import { AcceptUserComponent } from './feature/pages/Admin/accept-user/accept-user.component';
 import { CarCardsComponent } from './feature/pages/Admin/car-cards/car-cards.component';
+import { OverviewComponent } from './feature/pages/Admin/overview/overview.component';
 
 
 export const routes: Routes = [
@@ -28,6 +29,7 @@ export const routes: Routes = [
       { path: 'car-cards', component: CarCardsComponent },
       { path: 'add-car', component: AddCarComponent },
       { path: 'accept-user', component: AcceptUserComponent },
+      { path: 'overview', component: OverviewComponent},
     ]
     },
 
