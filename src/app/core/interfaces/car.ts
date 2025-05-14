@@ -5,7 +5,7 @@ export interface Car {
   year: number
   license_plate: string
   vin: string
-  type: string
+  type: string                   //sports , sedan ,van ,limousine , pickup , suv
   transmission: string
   fuel_type: string
   seats: number
@@ -16,6 +16,7 @@ export interface Car {
   rating: number,
   availability_status: string   //'Available' | 'Rented' | 'Under Maintenance';
   current_location: string
+  location: Location;
   deposit_required: number
   insurance_status: string
   last_maintenance_date: string
@@ -35,7 +36,13 @@ export interface Car {
 export interface RentalHistory {
   rental_id: string;
   customer_id: string;
-  start_date: string; // ISO format date of rental start
-  end_date: string; // ISO format date of rental end
-  total_amount: number; // Total rental amount charged
+  start_date: string;
+  end_date: string;
+  total_amount: number;
+}
+
+export interface Location {
+  city: string;
+  country?: string; // optional if needed
+  address?: string; // optional if we want to be more specific
 }

@@ -1,0 +1,97 @@
+<!-- <div class="container mx-auto px-4 py-8">
+  <h2 class="text-2xl font-bold mb-6">Most Popular Car Types</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    @for (item of popularTypes; track $index) {
+
+
+    <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+      <h3 class="text-xl font-semibold mb-2">{{item.type}}</h3>
+      <p class="text-gray-600 mb-4">{{item.count}} available</p>
+      <button (click)="viewCarsFromType(item.type)"
+        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors">
+        View {{item.type}}s
+      </button>
+    </div>
+
+
+    }
+  </div>
+</div> -->
+
+
+
+<!--
+<div class="py-8 bg-white">
+  <div class="text-center max-w-2xl mx-auto mb-10">
+    <h1 class="text-3xl md:text-4xl font-bold text-dark-blue mb-4">
+      Most Popular Car Types
+    </h1>
+    <p class="text-dark-blue text-base md:text-lg">
+      A set of impressive cars you won't find anywhere else.
+    </p>
+  </div>
+
+  @if(popularTypes.length != 0){
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    @for (item of popularTypes; track $index) {
+
+
+    <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+      <h3 class="text-xl font-semibold mb-2">{{item.type}}</h3>
+      <p class="text-gray-600 mb-4">{{item.count}} available</p>
+      <button (click)="viewCarsFromType(item.type)"
+        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors">
+        View {{item.type}}s
+      </button>
+    </div>
+
+    }
+  </div>
+  }
+  @else{
+  <h1 class="text-dark-blue text-center my-5">No Types Now</h1>
+  }
+
+</div> -->
+
+<div class="py-8 bg-white">
+  <div class="text-center max-w-2xl mx-auto mb-10">
+    <h1 class="text-3xl md:text-4xl font-bold text-dark-blue mb-4">
+      Most Popular Car Types
+    </h1>
+    <p class="text-dark-blue text-base md:text-lg">
+      A set of impressive Car Types you won't find anywhere else.
+    </p>
+  </div>
+
+  @if(popularTypes.length != 0) {
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-10 p-20">
+      @for (item of popularTypes; track $index) {
+        <div class="bg-grayLight rounded-3xl shadow-lg pt-20 hover:shadow-2xl transition-shadow relative border border-gray-300 mb-3">
+
+          <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-dark-blue text-white rounded-full p-6 w-24 h-24 flex justify-center items-center shadow-lg">
+            <i [class]="getCarTypeIcon(item.type)" ></i>
+          </div>
+
+          <!-- Card Content -->
+          <div class="bg-white rounded-3xl flex flex-col justify-center items-center py-6 px-4">
+            <h3 class="text-xl font-semibold mb-2 text-dark-blue">{{item.type}}</h3>
+            <p class="text-gray-600 mb-4">{{item.count}} {{ item.count === 1 ? 'car' : 'cars' }}</p>
+
+            <button (click)="viewCarsFromType(item.type)"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-full flex items-center transition-colors">
+              <svg class="rtl:rotate-180 w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M1 5h12m0 0L9 1m4 4L9 9" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+  @else {
+    <h1 class="text-dark-blue text-center my-5">No Types Now</h1>
+  }
+</div>
+

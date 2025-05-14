@@ -6,7 +6,7 @@ import { StarRatingComponent } from "../star-rating/star-rating.component";
 
 @Component({
   selector: 'app-card',
-  imports: [RouterLink, RouterLinkActive, StarRatingComponent],
+  imports: [RouterLink, StarRatingComponent],
   templateUrl: './card.component.html',
   styleUrl: './card.component.css'
 })

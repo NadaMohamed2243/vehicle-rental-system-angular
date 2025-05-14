@@ -9,7 +9,15 @@ import { CarsComponent } from './feature/pages/cars/cars.component';
 import { ResetPasswordComponent } from './core/pages/reset-password/reset-password.component';
 import { PendingResetPasswordComponent } from './core/pages/pending-reset-password/pending-reset-password.component';
 
+import{DashboardComponent} from './feature/pages/Admin/dashboard/dashboard.component';
+import { AddCarComponent } from './feature/pages/Admin/add-car/add-car.component';
+import { AcceptUserComponent } from './feature/pages/Admin/accept-user/accept-user.component';
+import { CarCardsComponent } from './feature/pages/Admin/car-cards/car-cards.component';
+import { OverviewComponent } from './feature/pages/Admin/overview/overview.component';
+
+
 export const routes: Routes = [
+  {path:"", redirectTo:"landing", pathMatch:"full"},
   {path:"landing", component:LandingComponent},
   {path:"home", component:HomeComponent},
   {path:"cars", component:CarsComponent},
@@ -18,5 +26,17 @@ export const routes: Routes = [
   {path:"forgetPassword", component:ForgetPasswordComponent},
   {path:"pendingResetPassword", component:PendingResetPasswordComponent},
   {path:"resetPassword", component:ResetPasswordComponent},
+
+
+  {path: 'dashboard',component: DashboardComponent,
+    children: [
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      { path: 'car-cards', component: CarCardsComponent },
+      { path: 'add-car', component: AddCarComponent },
+      { path: 'accept-user', component: AcceptUserComponent },
+      { path: 'overview', component: OverviewComponent},
+    ]
+    },
+
   {path:"**", component:NotFoundComponent}
 ];

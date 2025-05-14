@@ -1,0 +1,41 @@
+<div class="py-8 bg-white">
+  <div class="text-center max-w-2xl mx-auto mb-10">
+    <h1 class="text-3xl md:text-4xl font-bold text-dark-blue mb-4">
+      Most Popular Car Brands
+    </h1>
+    <p class="text-dark-blue text-base md:text-lg">
+      Explore our collection of top car brands from around the world.
+    </p>
+  </div>
+
+  @if(popularBrands.length != 0) {
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-10 p-20">
+      @for (item of popularBrands; track $index) {
+        <div class="bg-grayLight rounded-3xl shadow-lg pt-20 hover:shadow-2xl transition-shadow relative border border-gray-300 mb-3">
+
+          <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-dark-blue text-white rounded-full p-6 w-24 h-24 flex justify-center items-center shadow-lg">
+            <img [src]="getBrandLogo(item.brand)" [alt]="item.brand + ' logo'" class="w-12 h-12 object-contain">
+          </div>
+
+          <!-- Card Content -->
+          <div class="bg-white rounded-3xl flex flex-col justify-center items-center py-6 px-4">
+            <h3 class="text-xl font-semibold mb-2 text-dark-blue">{{item.brand}}</h3>
+            <p class="text-gray-600 mb-4">{{item.count}} {{ item.count === 1 ? 'model' : 'models' }}</p>
+
+
+            <button (click)="viewCarsFromBrand(item.brand)"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-full flex items-center transition-colors">
+              <svg class="rtl:rotate-180 w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M1 5h12m0 0L9 1m4 4L9 9" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+  @else {
+    <h1 class="text-dark-blue text-center my-5">No Brands Available</h1>
+  }
+</div>
