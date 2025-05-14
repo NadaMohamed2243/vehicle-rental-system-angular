@@ -38,6 +38,12 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 export class CarsComponent implements OnInit {
   visible: boolean = false;
   checked: boolean = false;
+  selectedCar: Car | null = null;
+
+  showCarDetails(car: Car | null) {
+    this.selectedCar = car;
+    this.visible = true;
+  }
 
   cars!: Car[];
   _carsService = inject(CarsService);

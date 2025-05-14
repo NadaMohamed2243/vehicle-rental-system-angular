@@ -3,7 +3,7 @@
         <app-filter></app-filter>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 p-4 m-5">
             @for (car of cars; track car.car_id) {
-            <app-card [carDetails]="car" fromWho="car" (click)="visible = true"></app-card>
+            <app-card [carDetails]="car" fromWho="car" (click)="showCarDetails(car)"></app-card>
             }
             @if (cars.length === 0) {
             <p class="col-span-full text-center text-gray-500">No cars available</p>
@@ -25,7 +25,7 @@
                     <app-car-slider></app-car-slider>
                 </div>
                 <div class="flex justify-between pt-5">
-                    <p class="font-semibold text-[#8c8c8c] text-sm">FORD FOCUS</p>
+                    <p class="font-semibold text-[#8c8c8c] text-sm">{{selectedCar?.brand}}</p>
                     <button (click)="toggleFavorite()" class="bg-gray-50 p-1 rounded-full shadow-md hover:bg-gray-100"
                         aria-label="Add to favorites">
                         @if (isFavorite) {
@@ -47,8 +47,9 @@
                     </button>
                 </div>
                 <div class="flex justify-between pb-3">
-                    <p class="font-bold text-lg">2025 Kia Sportage Plug-in Hybrid</p>
-                    <p class="font-semibold">$20.00 <span class="text-sm text-[#8c8c8c]">/hour</span></p>
+                    <p class="font-bold text-lg">{{selectedCar?.brand}} {{selectedCar?.model}} {{selectedCar?.year}}</p>
+                    <p class="font-semibold">EG {{selectedCar?.rental_rate_per_hour}} <span
+                            class="text-sm text-[#8c8c8c]">/hour</span></p>
                 </div>
                 <div class="card">
                     <p-tabs value="0">
@@ -138,8 +139,6 @@
                     </p-tabs>
                 </div>
             </ng-template>
-
         </p-drawer>
-        <button pButton (click)="visible = true" icon="pi pi-plus"></button>
     </div>
 </app-layout>
