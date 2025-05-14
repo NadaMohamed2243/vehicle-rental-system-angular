@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-forget-password',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule,RouterLink],
   templateUrl: './forget-password.component.html',
   styleUrl: './forget-password.component.css'
 })
@@ -19,7 +19,7 @@ export class ForgetPasswordComponent {
     console.log(this.forgetForm.value);
     if (this.forgetForm.valid) {
       console.log('Sending data to API', this.forgetForm.value);
-      this._router.navigate(['/resetPassword']);
+      this._router.navigate(['/pendingResetPassword']);
       // Api
     } else {
       this.forgetForm.markAllAsTouched();
