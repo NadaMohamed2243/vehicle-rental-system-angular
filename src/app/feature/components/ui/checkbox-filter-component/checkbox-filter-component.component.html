@@ -1,0 +1,8 @@
+<div class="grid grid-cols-2 gap-y-2">
+    @for (item of items; track $index) {
+    <div class="flex items-center">
+        <p-checkbox name="group" [value]="item" [(ngModel)]="selectedItems" (onChange)="onSelectedItemsChange()" />
+        <label [for]="item" class="ml-2"> {{ item }} </label>
+    </div>
+    }
+</div>
