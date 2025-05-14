@@ -1,0 +1,7 @@
+.p-tab:first-child {
+  padding-left: 0% !important;
+}
+.p-tabpanels {
+  padding-left: 0% !important;
+  padding-right: 0% !important;
+}
