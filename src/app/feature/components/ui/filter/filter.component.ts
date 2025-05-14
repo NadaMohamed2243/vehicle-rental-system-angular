@@ -53,7 +53,7 @@ export class FilterComponent {
     'BMW',
     'Mercedes',
   ];
-  carBodyTypes: String[] = [
+  carBodyTypes: string[] = [
     'Sedan',
     'Hatchback',
     'Coupe',
@@ -61,8 +61,8 @@ export class FilterComponent {
     'Wagon',
     'Sports Car',
   ];
-  transmissionTypes: String[] = ['Any', 'Automatic', 'Manual'];
-  fuelTypes: String[] = ['Gasoline', 'Diesel', 'Electric', 'Hybrid'];
+  transmissionTypes: string[] = ['Any', 'Automatic', 'Manual'];
+  fuelTypes: string[] = ['Gasoline', 'Diesel', 'Electric', 'Hybrid'];
 
   onPriceRangeChange(range: { min: number | null; max: number | null }) {
     console.log('Price range changed:', range);

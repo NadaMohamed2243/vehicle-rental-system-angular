@@ -36,14 +36,6 @@
                     <p class="text-sm font-bold">CAR BRAND</p>
                 </p-accordion-header>
                 <p-accordion-content>
-                    <!-- <div class="grid grid-cols-2 gap-y-2">
-                        @for (brand of brands; track $index) {
-                        <div class="flex items-center">
-                            <p-checkbox name="group" [value]="brand" [(ngModel)]="selectedBrands" />
-                            <label [for]="brand" class="ml-2"> {{ brand }} </label>
-                        </div>
-                        }
-                    </div> -->
                     <app-checkbox-filter-component [items]="brands" [selectedItems]="selectedBrands"
                         (selectedItemsChange)="onSelectedItemsChange($event)"></app-checkbox-filter-component>
                 </p-accordion-content>
@@ -53,14 +45,8 @@
                     <p class="text-sm font-bold">BODYSTYLE</p>
                 </p-accordion-header>
                 <p-accordion-content>
-                    <div class="grid grid-cols-2 gap-y-2">
-                        @for (type of carBodyTypes; track $index) {
-                        <div class="flex items-center">
-                            <p-checkbox name="group" [value]="type" [(ngModel)]="selectedBodyTypes" />
-                            <label [for]="type" class="ml-2"> {{ type }} </label>
-                        </div>
-                        }
-                    </div>
+                    <app-checkbox-filter-component [items]="carBodyTypes" [selectedItems]="selectedBodyTypes"
+                        (selectedItemsChange)="onSelectedItemsChange($event)"></app-checkbox-filter-component>
                 </p-accordion-content>
             </p-accordion-panel>
             <p-accordion-panel value="3">
@@ -84,14 +70,8 @@
                     <p class="text-sm font-bold">FUEL TYPE</p>
                 </p-accordion-header>
                 <p-accordion-content>
-                    <div class="grid grid-cols-2 gap-y-2">
-                        @for (fuel of fuelTypes; track $index) {
-                        <div class="flex items-center">
-                            <p-check-box name="group" [value]="fuel" [(ngModel)]="selectedFuelTypes" />
-                            <label [for]="fuel" class="ml-2"> {{ fuel }} </label>
-                        </div>
-                        }
-                    </div>
+                    <app-checkbox-filter-component [items]="fuelTypes" [selectedItems]="selectedFuelTypes"
+                        (selectedItemsChange)="onSelectedItemsChange($event)"></app-checkbox-filter-component>
                 </p-accordion-content>
             </p-accordion-panel>
         </p-accordion>
