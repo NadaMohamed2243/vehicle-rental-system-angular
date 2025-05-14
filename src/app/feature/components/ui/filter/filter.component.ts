@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -13,6 +13,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { PriceRangeFilterComponent } from '../price-range-filter/price-range-filter.component';
 import { CheckboxFilterComponentComponent } from '../checkbox-filter-component/checkbox-filter-component.component';
 import { RadioFilterComponentComponent } from '../radio-filter-component/radio-filter-component.component';
+import { FilterStateService } from '../../../../core/services/filter-state.service';
 
 @Component({
   selector: 'app-filter',
@@ -37,6 +38,8 @@ import { RadioFilterComponentComponent } from '../radio-filter-component/radio-f
   styleUrl: './filter.component.css',
 })
 export class FilterComponent {
+  searchText = '';
+  availableNow = false;
   visible: boolean = false;
   selectedBrands: any[] = [];
   selectedBodyTypes: any[] = [];
@@ -64,16 +67,41 @@ export class FilterComponent {
     'Sports Car',
   ];
   transmissionTypes: string[] = ['Any', 'Automatic', 'Manual'];
-  fuelTypes: string[] = ['Gasoline', 'Diesel', 'Electric', 'Hybrid'];
+  fuelTypes: string[] = ['Petrol', 'Diesel', 'Electric', 'Hybrid'];
+
+  filterState = inject(FilterStateService);
+
+  onSearchChange() {
+    this.filterState.updateFilters({ searchText: this.searchText });
+  }
+
+  onAvailabilityChange() {
+    this.filterState.updateFilters({ availableNow: this.availableNow });
+  }
 
   onPriceRangeChange(range: { min: number | null; max: number | null }) {
-    console.log('Price range changed:', range);
+    this.filterState.updateFilters({ priceRange: range });
   }
 
-  onSelectedItemsChange(items: string[]) {
-    console.log('Selected items:', items);
+  onBrandsChange(brands: string[]) {
+    this.filterState.updateFilters({ brands });
   }
-  onSelectedItemChange(item: string | null) {
-    console.log('Selected items:', item);
+
+  onBodyTypesChange(bodyTypes: string[]) {
+    this.filterState.updateFilters({ bodyTypes });
+  }
+
+  onTransmissionChange(transmission: string | null) {
+    this.filterState.updateFilters({ transmission });
+  }
+
+  onFuelTypesChange(fuelTypes: string[]) {
+    this.filterState.updateFilters({ fuelTypes });
+  }
+
+  resetAll() {
+    this.searchText = '';
+    this.availableNow = false;
+    this.filterState.resetFilters();
   }
 }

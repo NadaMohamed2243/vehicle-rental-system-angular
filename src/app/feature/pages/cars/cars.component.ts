@@ -14,6 +14,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { FilterStateService } from '../../../core/services/filter-state.service';
 
 @Component({
   selector: 'app-cars',
@@ -46,7 +47,9 @@ export class CarsComponent implements OnInit {
   }
 
   cars!: Car[];
+  filterdCars!: Car[];
   _carsService = inject(CarsService);
+  _filterService = inject(FilterStateService);
   isFavorite = false;
   insurance: string[] = [
     'No insurance',
@@ -61,5 +64,9 @@ export class CarsComponent implements OnInit {
 
   ngOnInit(): void {
     this.cars = this._carsService.getCars();
+    this.filterdCars = [...this.cars];
+    this._filterService.currentFilters$.subscribe((filters) => {
+      this.filterdCars = this._carsService.filterCars(this.cars, filters);
+    });
   }
 }

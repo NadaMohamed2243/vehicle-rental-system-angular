@@ -2,7 +2,7 @@
     <div class="pt-5 px-5">
         <div class="font-bold flex items-center justify-between w-full min-w-[250px]">
             <h3 class="text-lg whitespace-nowrap">Filter by:</h3>
-            <button class="text-[#d2d2d2] text-sm whitespace-nowrap flex items-center gap-1">
+            <button class="text-[#d2d2d2] text-sm whitespace-nowrap flex items-center gap-1" (click)="resetAll()">
                 Reset all
                 <i class="pi pi-times text-sm"></i>
             </button>
@@ -11,12 +11,13 @@
         <div class="mt-6">
             <p-iconfield>
                 <p-inputicon styleClass="pi pi-search" />
-                <input type="text" pInputText placeholder="Search" class="w-full" />
+                <input type="text" pInputText placeholder="Search" class="w-full" [(ngModel)]="searchText"
+                    (ngModelChange)="onSearchChange()" />
             </p-iconfield>
         </div>
         <div class="mt-6 mb-3 flex justify-between items-center">
             <span class="text-sm font-bold">AVAILABLE NOW ONLY</span>
-            <p-toggleswitch [(ngModel)]="checked" />
+            <p-toggleswitch [(ngModel)]="availableNow" (ngModelChange)="onAvailabilityChange()" />
         </div>
     </div>
     <p-divider />
@@ -37,7 +38,7 @@
                 </p-accordion-header>
                 <p-accordion-content>
                     <app-checkbox-filter-component [items]="brands" [selectedItems]="selectedBrands"
-                        (selectedItemsChange)="onSelectedItemsChange($event)"></app-checkbox-filter-component>
+                        (selectedItemsChange)="onBrandsChange($event)"></app-checkbox-filter-component>
                 </p-accordion-content>
             </p-accordion-panel>
             <p-accordion-panel value="2">
@@ -46,7 +47,7 @@
                 </p-accordion-header>
                 <p-accordion-content>
                     <app-checkbox-filter-component [items]="carBodyTypes" [selectedItems]="selectedBodyTypes"
-                        (selectedItemsChange)="onSelectedItemsChange($event)"></app-checkbox-filter-component>
+                        (selectedItemsChange)="onBodyTypesChange($event)"></app-checkbox-filter-component>
                 </p-accordion-content>
             </p-accordion-panel>
             <p-accordion-panel value="3">
@@ -55,7 +56,7 @@
                 </p-accordion-header>
                 <p-accordion-content>
                     <app-radio-filter-component [items]="transmissionTypes" [selectedItem]="selectedTransmissionType"
-                        (selectionChange)="onSelectedItemChange($event)"></app-radio-filter-component>
+                        (selectionChange)="onTransmissionChange($event)"></app-radio-filter-component>
                 </p-accordion-content>
             </p-accordion-panel>
             <p-accordion-panel value="4">
@@ -64,7 +65,7 @@
                 </p-accordion-header>
                 <p-accordion-content>
                     <app-checkbox-filter-component [items]="fuelTypes" [selectedItems]="selectedFuelTypes"
-                        (selectedItemsChange)="onSelectedItemsChange($event)"></app-checkbox-filter-component>
+                        (selectedItemsChange)="onFuelTypesChange($event)"></app-checkbox-filter-component>
                 </p-accordion-content>
             </p-accordion-panel>
         </p-accordion>
