@@ -2,194 +2,223 @@ import { Injectable } from '@angular/core';
 import { Car } from '../../core/interfaces/car';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CarsService {
-
-
   private _cars: Car[] = [
     {
-      car_id: "12345",
-      brand: "Toyota",
-      model: "Corolla",
+      car_id: '12345',
+      brand: 'Toyota',
+      model: 'Corolla',
       year: 2021,
-      license_plate: "XYZ 1234",
-      vin: "1HGBH41JXMN109186",
-      type: "Sedan",
-      transmission: "Automatic",
-      fuel_type: "Petrol",
+      license_plate: 'XYZ 1234',
+      vin: '1HGBH41JXMN109186',
+      type: 'Sedan',
+      transmission: 'Automatic',
+      fuel_type: 'Petrol',
       seats: 5,
-      color: "gray",
+      color: 'gray',
       mileage: 50000,
       rental_rate_per_day: 40,
       rental_rate_per_hour: 10,
       rating: 4.5,
-      availability_status: "Available",
-      current_location: "Main Branch",
+      availability_status: 'Available',
+      current_location: 'Main Branch',
       deposit_required: 100,
-      insurance_status: "Full Coverage",
-      last_maintenance_date: "2024-01-15",
-      next_maintenance_due: "2025-01-15",
-      condition_notes: "Minor scratches on the rear bumper",
-      fuel_level: "Full",
+      insurance_status: 'Full Coverage',
+      last_maintenance_date: '2024-01-15',
+      next_maintenance_due: '2025-01-15',
+      condition_notes: 'Minor scratches on the rear bumper',
+      fuel_level: 'Full',
       odometer_reading: 50000,
-      date_added_to_fleet: "2021-06-01",
-      last_rented_date: "2025-04-20",
-      expected_return_date: "2025-04-25",
+      date_added_to_fleet: '2021-06-01',
+      last_rented_date: '2025-04-20',
+      expected_return_date: '2025-04-25',
       total_price_per_hour: 200,
       rental_history: [
         {
-          rental_id: "R1001",
-          customer_id: "C2001",
-          start_date: "2025-04-10",
-          end_date: "2025-04-15",
-          total_amount: 200
+          rental_id: 'R1001',
+          customer_id: 'C2001',
+          start_date: '2025-04-10',
+          end_date: '2025-04-15',
+          total_amount: 200,
         },
         {
-          rental_id: "R1002",
-          customer_id: "C2002",
-          start_date: "2025-03-15",
-          end_date: "2025-03-20",
-          total_amount: 180
-        }
+          rental_id: 'R1002',
+          customer_id: 'C2002',
+          start_date: '2025-03-15',
+          end_date: '2025-03-20',
+          total_amount: 180,
+        },
       ],
-      car_photos: [
-        "/images/car1.webp"
-      ]
+      car_photos: ['/images/car1.webp'],
     },
     {
-      car_id: "67890",
-      brand: "Honda",
-      model: "Civic",
+      car_id: '67890',
+      brand: 'Honda',
+      model: 'Civic',
       year: 2022,
-      license_plate: "ABC 5678",
-      vin: "2HGES16555H109187",
-      type: "Sedan",
-      transmission: "Manual",
-      fuel_type: "Diesel",
+      license_plate: 'ABC 5678',
+      vin: '2HGES16555H109187',
+      type: 'Sedan',
+      transmission: 'Manual',
+      fuel_type: 'Diesel',
       seats: 5,
-      color: "blue",
+      color: 'blue',
       mileage: 35000,
       rental_rate_per_day: 50,
       rental_rate_per_hour: 12,
       rating: 4.7,
-      availability_status: "Rented",
-      current_location: "Downtown Branch",
+      availability_status: 'Rented',
+      current_location: 'Downtown Branch',
       deposit_required: 120,
-      insurance_status: "Partial Coverage",
-      last_maintenance_date: "2024-03-10",
-      next_maintenance_due: "2025-03-10",
-      condition_notes: "Good condition",
-      fuel_level: "Half",
+      insurance_status: 'Partial Coverage',
+      last_maintenance_date: '2024-03-10',
+      next_maintenance_due: '2025-03-10',
+      condition_notes: 'Good condition',
+      fuel_level: 'Half',
       odometer_reading: 35000,
-      date_added_to_fleet: "2022-03-15",
-      last_rented_date: "2025-04-22",
-      expected_return_date: "2025-04-27",
+      date_added_to_fleet: '2022-03-15',
+      last_rented_date: '2025-04-22',
+      expected_return_date: '2025-04-27',
       total_price_per_hour: 220,
       rental_history: [
         {
-          rental_id: "R1003",
-          customer_id: "C2003",
-          start_date: "2025-04-01",
-          end_date: "2025-04-05",
-          total_amount: 240
-        }
+          rental_id: 'R1003',
+          customer_id: 'C2003',
+          start_date: '2025-04-01',
+          end_date: '2025-04-05',
+          total_amount: 240,
+        },
       ],
-      car_photos: [
-        "/images/car2.png"
-      ]
+      car_photos: ['/images/car2.png'],
     },
     {
-      car_id: "11223",
-      brand: "Ford",
-      model: "Escape",
+      car_id: '11223',
+      brand: 'Ford',
+      model: 'Escape',
       year: 2020,
-      license_plate: "DEF 9101",
-      vin: "3FADP4EJ0EM200123",
-      type: "SUV",
-      transmission: "Automatic",
-      fuel_type: "Hybrid",
+      license_plate: 'DEF 9101',
+      vin: '3FADP4EJ0EM200123',
+      type: 'SUV',
+      transmission: 'Automatic',
+      fuel_type: 'Hybrid',
       seats: 5,
-      color: "white",
+      color: 'white',
       mileage: 60000,
       rental_rate_per_day: 60,
       rental_rate_per_hour: 15,
       rating: 4.2,
-      availability_status: "Under Maintenance",
-      current_location: "Airport Branch",
+      availability_status: 'Under Maintenance',
+      current_location: 'Airport Branch',
       deposit_required: 150,
-      insurance_status: "Full Coverage",
-      last_maintenance_date: "2024-02-20",
-      next_maintenance_due: "2025-02-20",
-      condition_notes: "Brake pads replaced recently",
-      fuel_level: "Quarter",
+      insurance_status: 'Full Coverage',
+      last_maintenance_date: '2024-02-20',
+      next_maintenance_due: '2025-02-20',
+      condition_notes: 'Brake pads replaced recently',
+      fuel_level: 'Quarter',
       odometer_reading: 60000,
-      date_added_to_fleet: "2020-08-10",
-      last_rented_date: "2025-03-15",
-      expected_return_date: "2025-03-20",
+      date_added_to_fleet: '2020-08-10',
+      last_rented_date: '2025-03-15',
+      expected_return_date: '2025-03-20',
       total_price_per_hour: 250,
       rental_history: [
         {
-          rental_id: "R1004",
-          customer_id: "C2004",
-          start_date: "2025-03-01",
-          end_date: "2025-03-07",
-          total_amount: 310
-        }
+          rental_id: 'R1004',
+          customer_id: 'C2004',
+          start_date: '2025-03-01',
+          end_date: '2025-03-07',
+          total_amount: 310,
+        },
       ],
-      car_photos: [
-        "/images/car3.png"
-      ]
+      car_photos: ['/images/car3.png'],
     },
     {
-      car_id: "33445",
-      brand: "BMW",
-      model: "X5",
+      car_id: '33445',
+      brand: 'BMW',
+      model: 'X5',
       year: 2023,
-      license_plate: "GHI 2345",
-      vin: "WBAEN33494PC12345",
-      type: "SUV",
-      transmission: "Automatic",
-      fuel_type: "Petrol",
+      license_plate: 'GHI 2345',
+      vin: 'WBAEN33494PC12345',
+      type: 'SUV',
+      transmission: 'Automatic',
+      fuel_type: 'Petrol',
       seats: 7,
-      color: "black",
+      color: 'black',
       mileage: 15000,
       rental_rate_per_day: 100,
       rental_rate_per_hour: 25,
       rating: 4.9,
-      availability_status: "Available",
-      current_location: "Luxury Branch",
+      availability_status: 'Available',
+      current_location: 'Luxury Branch',
       deposit_required: 300,
-      insurance_status: "Full Coverage",
-      last_maintenance_date: "2025-01-01",
-      next_maintenance_due: "2026-01-01",
-      condition_notes: "Like new",
-      fuel_level: "Full",
+      insurance_status: 'Full Coverage',
+      last_maintenance_date: '2025-01-01',
+      next_maintenance_due: '2026-01-01',
+      condition_notes: 'Like new',
+      fuel_level: 'Full',
       odometer_reading: 15000,
-      date_added_to_fleet: "2023-07-20",
-      last_rented_date: "2025-04-10",
-      expected_return_date: "2025-04-15",
+      date_added_to_fleet: '2023-07-20',
+      last_rented_date: '2025-04-10',
+      expected_return_date: '2025-04-15',
       total_price_per_hour: 350,
       rental_history: [
         {
-          rental_id: "R1005",
-          customer_id: "C2005",
-          start_date: "2025-03-10",
-          end_date: "2025-03-14",
-          total_amount: 500
-        }
+          rental_id: 'R1005',
+          customer_id: 'C2005',
+          start_date: '2025-03-10',
+          end_date: '2025-03-14',
+          total_amount: 500,
+        },
       ],
-      car_photos: [
-        "/images/car4.png"
-      ]
+      car_photos: ['/images/car4.png'],
     },
   ];
 
+  getCars(): Car[] {
+    return this._cars;
+  }
 
-    getCars(): Car[] {
-      return this._cars;
-    }
+  filterCars(cars: Car[], filters: any): Car[] {
+    return cars.filter((car) => {
+      if (filters.searchText) {
+        const searchText = filters.searchText.toLowerCase();
+        return (
+          car.brand.toLowerCase().includes(searchText) ||
+          car.model.toLowerCase().includes(searchText) ||
+          car.year.toString().includes(searchText)
+        );
+      }
+      if (filters.priceRange) {
+        const { min, max } = filters.priceRange;
+        if (min !== null && car.total_price_per_hour < min) {
+          return false;
+        }
+        if (max !== null && car.total_price_per_hour > max) {
+          return false;
+        }
+      }
+      if (filters.brands && filters.brands.length > 0) {
+        return filters.brands.includes(car.brand);
+      }
+      if (filters.bodyTypes && filters.bodyTypes.length > 0) {
+        return filters.bodyTypes.includes(car.type);
+      }
+      if (filters.transmission) {
+        return (
+          car.transmission === filters.transmission ||
+          filters.transmission === 'Any'
+        );
+      }
+      if (filters.fuelTypes && filters.fuelTypes.length > 0) {
+        return filters.fuelTypes.includes(car.fuel_type);
+      }
+      if (filters.availableNow) {
+        return car.availability_status === 'Available';
+      }
+      return true;
+    });
+  }
 
-    constructor() {}
-
+  constructor() {}
 }
