@@ -12,6 +12,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { PriceRangeFilterComponent } from '../price-range-filter/price-range-filter.component';
 import { CheckboxFilterComponentComponent } from '../checkbox-filter-component/checkbox-filter-component.component';
+import { RadioFilterComponentComponent } from '../radio-filter-component/radio-filter-component.component';
 
 @Component({
   selector: 'app-filter',
@@ -30,6 +31,7 @@ import { CheckboxFilterComponentComponent } from '../checkbox-filter-component/c
     InputNumberModule,
     PriceRangeFilterComponent,
     CheckboxFilterComponentComponent,
+    RadioFilterComponentComponent,
   ],
   templateUrl: './filter.component.html',
   styleUrl: './filter.component.css',
@@ -38,7 +40,7 @@ export class FilterComponent {
   visible: boolean = false;
   selectedBrands: any[] = [];
   selectedBodyTypes: any[] = [];
-  selectedTransmissionTypes: any[] = [];
+  selectedTransmissionType: string | null = null;
   selectedFuelTypes: any[] = [];
   checked: boolean = false;
   brands: string[] = [
@@ -70,5 +72,8 @@ export class FilterComponent {
 
   onSelectedItemsChange(items: string[]) {
     console.log('Selected items:', items);
+  }
+  onSelectedItemChange(item: string | null) {
+    console.log('Selected items:', item);
   }
 }

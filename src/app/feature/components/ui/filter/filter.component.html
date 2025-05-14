@@ -54,15 +54,8 @@
                     <p class="text-sm font-bold">TRANSMISSION</p>
                 </p-accordion-header>
                 <p-accordion-content>
-                    <div class="grid grid-cols-1 gap-y-2">
-                        @for (transmission of transmissionTypes; track $index) {
-                        <div class="flex items-center">
-                            <p-radiobutton name="group" [value]="transmission"
-                                [(ngModel)]="selectedTransmissionTypes" />
-                            <label [for]="transmission" class="ml-2"> {{ transmission }} </label>
-                        </div>
-                        }
-                    </div>
+                    <app-radio-filter-component [items]="transmissionTypes" [selectedItem]="selectedTransmissionType"
+                        (selectionChange)="onSelectedItemChange($event)"></app-radio-filter-component>
                 </p-accordion-content>
             </p-accordion-panel>
             <p-accordion-panel value="4">
