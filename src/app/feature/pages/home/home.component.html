@@ -12,13 +12,15 @@
   @for (car of cars; track car.car_id ) {
     <app-card [carDetails]="car" fromWho="car"></app-card>
   } -->
-<!-- </div> --> -->
-<p>home works!</p>
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 p-4 m-5">
-  @for (car of cars; track car.car_id) {
+<!-- </div> -->
+<!-- <p>home works!</p> -->
+<app-layout>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 p-4 m-5">
+    @for (car of cars; track car.car_id) {
     <app-card [carDetails]="car" fromWho="home"></app-card>
-  }
-  @if (cars.length === 0) {
+    }
+    @if (cars.length === 0) {
     <p class="col-span-full text-center text-gray-500">No cars available</p>
-  }
-</div>
+    }
+  </div>
+</app-layout>
