@@ -10,6 +10,7 @@ import { AccordionModule } from 'primeng/accordion';
 import { CheckboxModule } from 'primeng/checkbox';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { PriceRangeFilterComponent } from '../price-range-filter/price-range-filter.component';
 
 @Component({
   selector: 'app-filter',
@@ -26,6 +27,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
     CheckboxModule,
     RadioButtonModule,
     InputNumberModule,
+    PriceRangeFilterComponent,
   ],
   templateUrl: './filter.component.html',
   styleUrl: './filter.component.css',
@@ -59,4 +61,8 @@ export class FilterComponent {
   ];
   transmissionTypes: String[] = ['Any', 'Automatic', 'Manual'];
   fuelTypes: String[] = ['Gasoline', 'Diesel', 'Electric', 'Hybrid'];
+
+  onPriceRangeChange(range: { min: number | null; max: number | null }) {
+    console.log('Price range changed:', range);
+  }
 }
