@@ -1,0 +1,136 @@
+<section class="bg-white w-fit min-h-screen max-w-[290px]">
+    <div class="pt-5 px-5">
+        <div class="font-bold flex items-center justify-between w-full min-w-[250px]">
+            <h3 class="text-lg whitespace-nowrap">Filter by:</h3>
+            <button class="text-[#d2d2d2] text-sm whitespace-nowrap flex items-center gap-1">
+                Reset all
+                <i class="pi pi-times text-sm"></i>
+            </button>
+        </div>
+
+        <div class="mt-6">
+            <p-iconfield>
+                <p-inputicon styleClass="pi pi-search" />
+                <input type="text" pInputText placeholder="Search" class="w-full" />
+            </p-iconfield>
+        </div>
+        <div class="mt-6 mb-3 flex justify-between items-center">
+            <span class="text-sm font-bold">AVAILABLE NOW ONLY</span>
+            <p-toggleswitch [(ngModel)]="checked" />
+        </div>
+    </div>
+    <p-divider />
+    <div>
+        <p-accordion [value]="['0']" [multiple]="true">
+            <p-accordion-panel value="0">
+                <p-accordion-header>
+                    <p class="text-sm font-bold">PRICE RANGE / HOUR</p>
+                </p-accordion-header>
+                <p-accordion-content>
+                    <!-- <div class="relative h-8 bg-gray-200 rounded-full overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-r from-green-400 via-yellow-400 to-red-500"></div>
+
+                        <div class="absolute left-0 bottom-0 transform translate-y-4 -translate-x-1/2 text-xs">
+                            <span class="font-medium">$22.00</span>
+                        </div>
+                        <div class="absolute right-0 bottom-0 transform translate-y-4 translate-x-1/2 text-xs">
+                            <span class="font-medium">$98.50</span>
+                        </div>
+                    </div> -->
+
+                    <!-- <div class="flex justify-between mt-2 text-sm text-gray-600">
+                        <span>Low</span>
+                        <span>High</span>
+                    </div> -->
+                    <div class="flex items-center gap-2 w-full max-w-md">
+                        <div class="flex-1">
+                            <div class="bg-gray-100 rounded-md px-4 py-2">
+                                <div class="flex items-center">
+                                    <span class="text-gray-700 mr-1">$</span>
+                                    <input type="number"
+                                        class="bg-transparent w-full focus:outline-none text-gray-800 font-semibold"
+                                        step="0.01" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-gray-500 font-medium">TO</div>
+
+                        <div class="flex-1">
+                            <div class="bg-gray-100 rounded-md px-4 py-2">
+                                <div class="flex items-center">
+                                    <span class="text-gray-700 mr-1">$</span>
+                                    <input type="number"
+                                        class="bg-transparent w-full focus:outline-none text-gray-800 font-semibold"
+                                        step="0.01" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </p-accordion-content>
+            </p-accordion-panel>
+            <p-accordion-panel value="1">
+                <p-accordion-header>
+                    <p class="text-sm font-bold">CAR BRAND</p>
+                </p-accordion-header>
+                <p-accordion-content>
+                    <div class="grid grid-cols-2 gap-y-2">
+                        @for (brand of brands; track $index) {
+                        <div class="flex items-center">
+                            <p-checkbox name="group" [value]="brand" [(ngModel)]="selectedBrands" />
+                            <label [for]="brand" class="ml-2"> {{ brand }} </label>
+                        </div>
+                        }
+                    </div>
+                </p-accordion-content>
+            </p-accordion-panel>
+            <p-accordion-panel value="2">
+                <p-accordion-header>
+                    <p class="text-sm font-bold">BODYSTYLE</p>
+                </p-accordion-header>
+                <p-accordion-content>
+                    <div class="grid grid-cols-2 gap-y-2">
+                        @for (type of carBodyTypes; track $index) {
+                        <div class="flex items-center">
+                            <p-checkbox name="group" [value]="type" [(ngModel)]="selectedBodyTypes" />
+                            <label [for]="type" class="ml-2"> {{ type }} </label>
+                        </div>
+                        }
+                    </div>
+                </p-accordion-content>
+            </p-accordion-panel>
+            <p-accordion-panel value="3">
+                <p-accordion-header>
+                    <p class="text-sm font-bold">TRANSMISSION</p>
+                </p-accordion-header>
+                <p-accordion-content>
+                    <div class="grid grid-cols-1 gap-y-2">
+                        @for (transmission of transmissionTypes; track $index) {
+                        <div class="flex items-center">
+                            <p-radiobutton name="group" [value]="transmission"
+                                [(ngModel)]="selectedTransmissionTypes" />
+                            <label [for]="transmission" class="ml-2"> {{ transmission }} </label>
+                        </div>
+                        }
+                    </div>
+                </p-accordion-content>
+            </p-accordion-panel>
+            <p-accordion-panel value="4">
+                <p-accordion-header>
+                    <p class="text-sm font-bold">FUEL TYPE</p>
+                </p-accordion-header>
+                <p-accordion-content>
+                    <div class="grid grid-cols-2 gap-y-2">
+                        @for (fuel of fuelTypes; track $index) {
+                        <div class="flex items-center">
+                            <p-check-box name="group" [value]="fuel" [(ngModel)]="selectedFuelTypes" />
+                            <label [for]="fuel" class="ml-2"> {{ fuel }} </label>
+                        </div>
+                        }
+                    </div>
+                </p-accordion-content>
+            </p-accordion-panel>
+        </p-accordion>
+
+    </div>
+</section>
