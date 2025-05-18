@@ -1,7 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { LayoutComponent } from '../../../core/pages/layout/layout.component';
 import { FilterComponent } from '../../components/ui/filter/filter.component';
-import { Car } from '../../../core/interfaces/car';
 import { CarsService } from '../../../core/services/cars.service';
 import { CardComponent } from '../../../shared/components/ui/card/card.component';
 import { DrawerModule } from 'primeng/drawer';
@@ -17,6 +16,9 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { FilterStateService } from '../../../core/services/filter-state.service';
 import { FilterSidebarComponent } from '../../components/ui/filter-sidebar/filter-sidebar.component';
 import { CommonModule } from '@angular/common';
+import { Cars } from '../../../core/interfaces/cars';
+import { CarService } from '../../../core/services/car.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-cars',
@@ -35,20 +37,34 @@ import { CommonModule } from '@angular/common';
     ButtonModule,
     ToggleSwitchModule,
     FilterSidebarComponent,
-    FormsModule,
     CommonModule,
+    // Removed duplicate FormsModule
   ],
   templateUrl: './cars.component.html',
   styleUrl: './cars.component.css',
 })
-export class CarsComponent implements OnInit {
+export class CarsComponent implements OnInit, OnDestroy {
   visible: boolean = false;
   visible2: boolean = false;
   checked: boolean = false;
-  selectedCar: Car | null = null;
+  selectedCar: Cars | null = null;
 
   pickupDate: Date | null = null;
   dropoffDate: Date | null = null;
+  
+  cars!: Cars[];
+  filterdCars!: Cars[];
+  _carService = inject(CarService);
+  _filterService = inject(FilterStateService);
+  isFavorite = false;
+  insurance: string[] = [
+    'No insurance',
+    'Vehicle protection',
+    '3rd Party liability',
+  ];
+  selectedInsurance: string = this.insurance[0];
+  
+  private subscriptions = new Subscription();
 
   get rentalDuration() {
     if (this.pickupDate && this.dropoffDate) {
@@ -62,12 +78,12 @@ export class CarsComponent implements OnInit {
 
   get totalPrice() {
     if (this.selectedCar && this.rentalDuration) {
-      return this.selectedCar.total_price_per_hour * this.rentalDuration;
+      return this.selectedCar.totalPricePerHour * this.rentalDuration;
     }
     return 0;
   }
 
-  showCarDetails(car: Car | null) {
+  showCarDetails(car: Cars | null) {
     this.selectedCar = car;
     this.visible = true;
   }
@@ -76,27 +92,33 @@ export class CarsComponent implements OnInit {
     this.visible2 = false;
   }
 
-  cars!: Car[];
-  filterdCars!: Car[];
-  _carsService = inject(CarsService);
-  _filterService = inject(FilterStateService);
-  isFavorite = false;
-  insurance: string[] = [
-    'No insurance',
-    'Vehicle protection',
-    '3rd Party liability',
-  ];
-  selectedInsurance: string = this.insurance[0];
-
   toggleFavorite() {
     this.isFavorite = !this.isFavorite;
   }
 
   ngOnInit(): void {
-    this.cars = this._carsService.getCars();
-    this.filterdCars = [...this.cars];
-    this._filterService.currentFilters$.subscribe((filters) => {
-      this.filterdCars = this._carsService.filterCars(this.cars, filters);
-    });
+    // Load cars first
+    this.subscriptions.add(
+      this._carService.getCars().subscribe({
+        next: (cars) => {
+          this.cars = cars;
+          this.filterdCars = [...this.cars];
+          
+          // Then subscribe to filter changes
+          this.subscriptions.add(
+            this._filterService.currentFilters$.subscribe((filters) => {
+              this.filterdCars = this._carService.filterCars(this.cars, filters);
+            })
+          );
+        },
+        error: (err) => {
+          console.error('Error loading cars:', err);
+        }
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 }

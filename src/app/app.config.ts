@@ -10,16 +10,26 @@ import {
   withEventReplay,
 } from '@angular/platform-browser';
 
+// import  auraLightBlue  from '@primeng/themes/aura';
+// import auraLightBlue from '@primeng/themes/aura-light-blue';
+
+import { provideHttpClient } from '@angular/common/http';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
-    provideClientHydration(withEventReplay()),
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {
         preset: Aura,
+        options: {
+          darkModeSelector: false,
+          // darkModeSelector: false || 'none'
+        },
       },
     }),
+    provideRouter(routes),
+    provideClientHydration(withEventReplay()),
+    provideHttpClient(),
   ],
 };

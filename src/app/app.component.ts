@@ -1,26 +1,15 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { InputTextModule } from 'primeng/inputtext';
-import { IconFieldModule } from 'primeng/iconfield';
-import { InputIconModule } from 'primeng/inputicon';
-import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
-import { register } from 'swiper/element/bundle';
-import { CarSliderComponent } from './feature/components/ui/car-slider/car-slider.component';
-
-register();
+import { CardComponent } from './shared/components/ui/card/card.component';
+import { HeroComponent } from "./shared/components/ui/hero/hero.component";
+import { NavbarComponent } from "./core/layout/navbar/navbar.component";
+import { CommonModule } from '@angular/common';
+import { BrandIconsComponent } from "./feature/pages/landing/components/brand-icons/brand-icons.component";
+import { FooterComponent } from "./core/layout/footer/footer.component";
 
 @Component({
   selector: 'app-root',
-  imports: [
-    RouterOutlet,
-    InputTextModule,
-    FormsModule,
-    IconFieldModule,
-    InputIconModule,
-    ButtonModule,
-    CarSliderComponent,
-  ],
+  imports: [RouterOutlet, HeroComponent, NavbarComponent, BrandIconsComponent, FooterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })

@@ -1,0 +1,28 @@
+<div class="py-8 bg-white">
+  <div class="text-center max-w-2xl mx-auto mb-10">
+    <h1 class="text-3xl md:text-4xl font-bold text-dark-blue mb-4">
+      Our Featured Cars
+    </h1>
+    <p class="text-dark-blue text-base md:text-lg">
+      A set of impressive cars you won't find anywhere else.
+    </p>
+    <a class="mt-6 inline-flex items-center px-5 py-3 text-sm font-medium text-white bg-light-blue rounded-lg hover:bg-blue-700 hover:cursor-pointer focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-light-blue"
+       [class.disabled]="!cars.length"
+       [style.pointer-events]="!cars.length ? 'none' : 'auto'"
+       (click)="cars.length ? viewAllCars() : null">
+      View All Cars
+      <svg class="rtl:rotate-180 w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M1 5h12m0 0L9 1m4 4L9 9" />
+      </svg>
+    </a>
+  </div>
+
+  @if(cars.length != 0){
+    <app-card-carousel [carDetails]="cars" fromWho="landing"></app-card-carousel>
+  }
+  @else{
+    <h1 class="text-dark-blue text-center my-5">no Cars Now</h1>
+  }
+
+</div>

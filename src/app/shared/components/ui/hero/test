@@ -1,0 +1,196 @@
+import { Component, ElementRef, OnInit, ViewChild, OnDestroy, PLATFORM_ID, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import * as THREE from 'three';
+
+@Component({
+  selector: 'app-hero',
+  imports: [],
+  templateUrl: './hero.component.html',
+  styleUrl: './hero.component.css'
+})
+
+export class HeroComponent implements OnInit, OnDestroy {
+  @ViewChild('carContainer') carContainer!: ElementRef;
+
+  private scene!: THREE.Scene;
+  private camera!: THREE.PerspectiveCamera;
+  private renderer!: THREE.WebGLRenderer;
+  private carModel!: THREE.Object3D;
+  private controls!: any; // OrbitControls type
+  private animationId!: number;
+  private isBrowser: boolean;
+  private THREE: typeof THREE | null = null;
+  private GLTFLoader: any = null;
+  private OrbitControls: any = null;
+
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+  }
+
+  async ngOnInit(): Promise<void> {
+    if (this.isBrowser) {
+      await this.loadThreeJS();
+      this.initThreeJS();
+      this.animate();
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.isBrowser) {
+      this.cleanUp();
+    }
+  }
+
+  private async loadThreeJS(): Promise<void> {
+    try {
+      this.THREE = await import('three');
+      const threeStdlib = await import('three-stdlib');
+      this.GLTFLoader = threeStdlib.GLTFLoader;
+      this.OrbitControls = threeStdlib.OrbitControls;
+    } catch (error) {
+      console.error('Error loading Three.js libraries:', error);
+    }
+  }
+
+  private initThreeJS(): void {
+    if (!this.THREE || !this.carContainer) return;
+
+    // Scene
+    this.scene = new this.THREE.Scene();
+    this.scene.background = null;
+    // Camera
+    this.camera = new this.THREE.PerspectiveCamera(
+      75,
+      this.carContainer.nativeElement.offsetWidth / this.carContainer.nativeElement.offsetHeight,
+      0.1,
+      1000
+    );
+    this.camera.position.set(9, 4, 4);
+
+    // Renderer with proper color space and tone mapping
+    this.renderer = new this.THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true
+    });
+    this.renderer.outputColorSpace = this.THREE.SRGBColorSpace;
+    this.renderer.toneMapping = this.THREE.ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure = 1.5; // Increased exposure for brighter results
+
+    this.renderer.setSize(
+      this.carContainer.nativeElement.offsetWidth,
+      this.carContainer.nativeElement.offsetHeight
+    );
+    this.renderer.setPixelRatio(window.devicePixelRatio);
+    this.carContainer.nativeElement.appendChild(this.renderer.domElement);
+
+    // Enhanced lighting setup - brighter and more balanced
+    const ambientLight = new this.THREE.AmbientLight(0xffffff, 2.0); // Increased intensity
+    this.scene.add(ambientLight);
+
+    // Main directional light - brighter and from better angle
+    const directionalLight = new this.THREE.DirectionalLight(0xffffff, 3.0);
+    directionalLight.position.set(10, 20, 10);
+    directionalLight.castShadow = true;
+    this.scene.add(directionalLight);
+
+    // Additional fill light from the front
+    const fillLight = new this.THREE.DirectionalLight(0xffffff, 1.5);
+    fillLight.position.set(0, 10, 10);
+    this.scene.add(fillLight);
+
+    // Optional: Add hemisphere light for more natural ambient
+    const hemisphereLight = new this.THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
+    this.scene.add(hemisphereLight);
+
+      // Controls - Enable rotation only on drag
+      this.controls = new this.OrbitControls(this.camera, this.renderer.domElement);
+      this.controls.enableZoom = false;
+      this.controls.enablePan = false;
+      this.controls.enableRotate = true; // Enable rotation
+      this.controls.autoRotate = false; // Disable auto-rotation
+      this.controls.rotateSpeed = 0.2; // Adjust rotation speed if needed
+
+      //adjust vertical angles rotation limmit
+      this.controls.minPolarAngle = Math.PI / 2.5;
+      this.controls.maxPolarAngle = Math.PI / 2.5;
+
+
+    this.loadCarModel();
+    window.addEventListener('resize', () => this.onWindowResize());
+}
+
+private loadCarModel(): void {
+    if (!this.THREE || !this.GLTFLoader) return;
+
+    const loader = new this.GLTFLoader();
+    loader.load('assets/models/ferrari_599_gto.glb', (gltf: any) => {
+      if (this.carModel) {
+        this.scene.remove(this.carModel);
+      }
+
+      this.carModel = gltf.scene;
+      this.carModel.scale.set(3, 3.5, 3);
+      this.carModel.position.y = -0.5;
+
+      // Traverse through all materials in the model and optimize them
+      this.carModel.traverse((child: any) => {
+        if (child.isMesh) {
+          if (child.material) {
+            // Adjust material properties for better appearance
+            child.material.roughness = 0.2; // Slightly more roughness for realism
+            child.material.metalness = 0.9; // Slightly less metalness to prevent over-reflection
+            child.material.envMapIntensity = 1.5; // Increased environment map intensity
+
+            child.material.needsUpdate = true;
+          }
+        }
+      });
+
+      this.scene.add(this.carModel);
+    }, undefined, (error: any) => {
+      console.error('Error loading GLTF model:', error);
+    });
+}
+  private animate(): void {
+    if (!this.THREE) return;
+
+    this.animationId = requestAnimationFrame(() => this.animate());
+
+
+
+    if (this.controls) {
+      this.controls.update();
+    }
+
+    if (this.renderer && this.scene && this.camera) {
+      this.renderer.render(this.scene, this.camera);
+    }
+  }
+
+  private onWindowResize(): void {
+    if (!this.camera || !this.renderer) return;
+
+    this.camera.aspect = this.carContainer.nativeElement.offsetWidth / this.carContainer.nativeElement.offsetHeight;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(
+      this.carContainer.nativeElement.offsetWidth,
+      this.carContainer.nativeElement.offsetHeight
+    );
+  }
+
+  private cleanUp(): void {
+    if (this.animationId) {
+      cancelAnimationFrame(this.animationId);
+    }
+
+    if (this.renderer) {
+      this.renderer.dispose();
+    }
+
+    if (this.controls) {
+      this.controls.dispose();
+    }
+
+    window.removeEventListener('resize', () => this.onWindowResize());
+  }
+}

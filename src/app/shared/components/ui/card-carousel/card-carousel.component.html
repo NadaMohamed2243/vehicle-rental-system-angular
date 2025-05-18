@@ -1,0 +1,9 @@
+@if (carDetails) {
+  <div class="card text-center">
+    <p-carousel [value]="carDetails" [numVisible]="4" [numScroll]="1" [circular]="true" [responsiveOptions]="responsiveOptions" autoplayInterval="3000" >
+      <ng-template let-car pTemplate="item" class="py-50">
+          <app-card [carDetails]="car" [fromWho]="fromWho"></app-card>
+      </ng-template>
+  </p-carousel>
+  </div>
+}
