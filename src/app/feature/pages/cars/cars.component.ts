@@ -15,6 +15,8 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { FilterStateService } from '../../../core/services/filter-state.service';
+import { FilterSidebarComponent } from '../../components/ui/filter-sidebar/filter-sidebar.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-cars',
@@ -32,18 +34,46 @@ import { FilterStateService } from '../../../core/services/filter-state.service'
     FormsModule,
     ButtonModule,
     ToggleSwitchModule,
+    FilterSidebarComponent,
+    FormsModule,
+    CommonModule,
   ],
   templateUrl: './cars.component.html',
   styleUrl: './cars.component.css',
 })
 export class CarsComponent implements OnInit {
   visible: boolean = false;
+  visible2: boolean = false;
   checked: boolean = false;
   selectedCar: Car | null = null;
+
+  pickupDate: Date | null = null;
+  dropoffDate: Date | null = null;
+
+  get rentalDuration() {
+    if (this.pickupDate && this.dropoffDate) {
+      const diffTime = Math.abs(
+        this.dropoffDate.getTime() - this.pickupDate.getTime()
+      );
+      return Math.ceil(diffTime / (1000 * 60 * 60));
+    }
+    return 0;
+  }
+
+  get totalPrice() {
+    if (this.selectedCar && this.rentalDuration) {
+      return this.selectedCar.total_price_per_hour * this.rentalDuration;
+    }
+    return 0;
+  }
 
   showCarDetails(car: Car | null) {
     this.selectedCar = car;
     this.visible = true;
+  }
+
+  onDrawerHide() {
+    this.visible2 = false;
   }
 
   cars!: Car[];
