@@ -11,7 +11,7 @@ import { PromoCardsComponent } from "../../components/promo-cards/promo-cards.co
   selector: 'app-home',
   imports: [MostPopularComponent, NearbyCarsComponent, CarBrandsComponent, PromoCardsComponent],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  styleUrl: './home.component.css',
 })
 export class HomeComponent{
 }

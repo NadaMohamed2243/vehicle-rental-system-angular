@@ -1,0 +1,9 @@
+<section class="fixed bottom-0 z-10 w-full rounded-t-3xl bg-white border-t border-[#d2d2d2] p-4 xs:px-7 md:hidden">
+    <div class="flex justify-around">
+        @for (link of links; track link.img) {
+        <a [routerLink]="link.route" routerLinkActive="active">
+            <i class="pi pi-{{link.img}}" style="color: #d2d2d2; font-size: 1.3rem"></i>
+        </a>
+        }
+    </div>
+</section>

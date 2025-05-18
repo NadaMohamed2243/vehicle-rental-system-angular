@@ -1,75 +1,124 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { LayoutComponent } from '../../../core/pages/layout/layout.component';
+import { FilterComponent } from '../../components/ui/filter/filter.component';
+import { CarsService } from '../../../core/services/cars.service';
+import { CardComponent } from '../../../shared/components/ui/card/card.component';
+import { DrawerModule } from 'primeng/drawer';
+import { AvatarModule } from 'primeng/avatar';
+import { CarSliderComponent } from '../../components/ui/car-slider/car-slider.component';
+import { TabsModule } from 'primeng/tabs';
+import { DividerModule } from 'primeng/divider';
+import { DatePickerModule } from 'primeng/datepicker';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { FilterStateService } from '../../../core/services/filter-state.service';
+import { FilterSidebarComponent } from '../../components/ui/filter-sidebar/filter-sidebar.component';
+import { CommonModule } from '@angular/common';
 import { Cars } from '../../../core/interfaces/cars';
 import { CarService } from '../../../core/services/car.service';
-import { Router, ActivatedRoute } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { Observable, switchMap } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-cars',
-  standalone: true,
-  imports: [CommonModule],
+  imports: [
+    LayoutComponent,
+    FilterComponent,
+    CardComponent,
+    DrawerModule,
+    AvatarModule,
+    CarSliderComponent,
+    TabsModule,
+    DividerModule,
+    DatePickerModule,
+    RadioButtonModule,
+    FormsModule,
+    ButtonModule,
+    ToggleSwitchModule,
+    FilterSidebarComponent,
+    CommonModule,
+    // Removed duplicate FormsModule
+  ],
   templateUrl: './cars.component.html',
-  styleUrls: ['./cars.component.css']
+  styleUrl: './cars.component.css',
 })
-export class CarsComponent implements OnInit {
-  cars: Cars[] = [];
-  isLoading = true;
-  errorMessage: string | null = null;
+export class CarsComponent implements OnInit, OnDestroy {
+  visible: boolean = false;
+  visible2: boolean = false;
+  checked: boolean = false;
+  selectedCar: Cars | null = null;
 
-  _carsService = inject(CarService);
-  _router = inject(Router);
-  _route = inject(ActivatedRoute);
+  pickupDate: Date | null = null;
+  dropoffDate: Date | null = null;
+  
+  cars!: Cars[];
+  filterdCars!: Cars[];
+  _carService = inject(CarService);
+  _filterService = inject(FilterStateService);
+  isFavorite = false;
+  insurance: string[] = [
+    'No insurance',
+    'Vehicle protection',
+    '3rd Party liability',
+  ];
+  selectedInsurance: string = this.insurance[0];
+  
+  private subscriptions = new Subscription();
 
-  filtration: string | null = null;
-  type: string | null = null;
-  brand: string | null = null;
-
-  ngOnInit(): void {
-    this._route.queryParams.pipe(
-      switchMap(params => {
-        this.filtration = params['filtration'] || null;
-        this.type = params['type'] || null;
-        this.brand = params['brand'] || null;
-
-        console.log('Query params:', {
-          filtration: this.filtration,
-          type: this.type,
-          brand: this.brand
-        });
-
-        return this.loadCars();
-      })
-    ).subscribe({
-      next: (cars) => {
-        this.cars = cars;
-        this.isLoading = false;
-        this.errorMessage = null;
-        console.log('Loaded cars:', this.cars);
-      },
-      error: (err) => {
-        console.error('Error loading cars:', err);
-        this.isLoading = false;
-        this.errorMessage = 'Failed to load cars. Please try again later.';
-        this.cars = [];
-      }
-    });
+  get rentalDuration() {
+    if (this.pickupDate && this.dropoffDate) {
+      const diffTime = Math.abs(
+        this.dropoffDate.getTime() - this.pickupDate.getTime()
+      );
+      return Math.ceil(diffTime / (1000 * 60 * 60));
+    }
+    return 0;
   }
 
-  loadCars(): Observable<Cars[]> {
-    this.isLoading = true;
-    this.errorMessage = null;
-
-    if (this.type) {
-      return this._carsService.getCarsByType(this.type);
-    } else if (this.brand) {
-      return this._carsService.getCarsByBrand(this.brand);
-    } else if (this.filtration === 'most-popular') {
-      return this._carsService.getMostPopularCars();
-    } else if (this.filtration === 'NearBy') {
-      return this._carsService.getNearByCars();
-    } else {
-      return this._carsService.getCars();
+  get totalPrice() {
+    if (this.selectedCar && this.rentalDuration) {
+      return this.selectedCar.totalPricePerHour * this.rentalDuration;
     }
+    return 0;
+  }
+
+  showCarDetails(car: Cars | null) {
+    this.selectedCar = car;
+    this.visible = true;
+  }
+
+  onDrawerHide() {
+    this.visible2 = false;
+  }
+
+  toggleFavorite() {
+    this.isFavorite = !this.isFavorite;
+  }
+
+  ngOnInit(): void {
+    // Load cars first
+    this.subscriptions.add(
+      this._carService.getCars().subscribe({
+        next: (cars) => {
+          this.cars = cars;
+          this.filterdCars = [...this.cars];
+          
+          // Then subscribe to filter changes
+          this.subscriptions.add(
+            this._filterService.currentFilters$.subscribe((filters) => {
+              this.filterdCars = this._carService.filterCars(this.cars, filters);
+            })
+          );
+        },
+        error: (err) => {
+          console.error('Error loading cars:', err);
+        }
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 }

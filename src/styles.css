@@ -1,24 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
 
-
-
 @import "tailwindcss";
-@plugin "tailwindcss-primeui";
-
-/* @import "primeicons/primeicons.css";
-@import 'primeng/resources/themes/saga-blue/theme.css';
-@import 'primeng/resources/primeng.min.css';
-@import 'primeicons/primeicons.css'; */
-
-
-/* @import 'primeng/resources/themes/aura-light-blue/theme.css'; */
-
-
-
+@import "primeicons/primeicons.css";
+@import "swiper/css";
+@import "swiper/css/navigation";
+@import "swiper/css/pagination";
 @theme {
-  --color-light-blue: #007EFC;
-  --color-dark-blue: #0D274E;
+  --color-light-blue: #007efc;
+  --color-dark-blue: #0d274e;
   /* --color-white: #FFFFFF; */
-  --color-grayLight: #F4F6F6;
-  --color-red: #F0334A;
+  --color-grayLight: #f4f6f6;
+  --color-red: #f0334a;
+  --dark-2: #1f1f1f;
+  --dark-4: #2d2d2d;
 }

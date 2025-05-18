@@ -107,4 +107,46 @@ export class CarService {
       map(cars => cars.filter((car) => car.brand === brand))
     );
   }
+
+  filterCars(cars: Cars[], filters: any): Cars[] {
+      return cars.filter((car) => {
+        if (filters.searchText) {
+          const searchText = filters.searchText.toLowerCase();
+          return (
+            car.brand.toLowerCase().includes(searchText) ||
+            car.model.toLowerCase().includes(searchText) ||
+            car.year.toString().includes(searchText)
+          );
+        }
+        if (filters.priceRange) {
+          const { min, max } = filters.priceRange;
+          if (min !== null && car.totalPricePerHour < min) {
+            return false;
+          }
+          if (max !== null && car.totalPricePerHour > max) {
+            return false;
+          }
+        }
+        if (filters.brands && filters.brands.length > 0) {
+          return filters.brands.includes(car.brand);
+        }
+        if (filters.bodyTypes && filters.bodyTypes.length > 0) {
+          return filters.bodyTypes.includes(car.type);
+        }
+        if (filters.transmission) {
+          return (
+            car.transmission === filters.transmission ||
+            filters.transmission === 'Any'
+          );
+        }
+        if (filters.fuelTypes && filters.fuelTypes.length > 0) {
+          return filters.fuelTypes.includes(car.fuel_type);
+        }
+        if (filters.availableNow) {
+          return car.availabilityStatus === 'Available';
+        }
+        return true;
+      });
+    }
+  
 }
