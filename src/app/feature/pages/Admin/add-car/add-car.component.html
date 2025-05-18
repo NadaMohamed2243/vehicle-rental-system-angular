@@ -108,15 +108,15 @@
           <!-- Daily Rate -->
           <div>
             <p-floatLabel variant="on">
-              <input id="daily_rate" pInputText type="number" formControlName="daily_rate" class="w-full" />
-              <label for="daily_rate">Daily Rate (EGP)</label>
+              <input id="totalPricePerDay" pInputText type="number" formControlName="totalPricePerDay" class="w-full" />
+              <label for="totalPricePerDay">Price Per Day(EGP)</label>  
             </p-floatLabel>
           </div>
           <!-- Hourly Rate -->
           <div>
             <p-floatLabel variant="on">
-              <input id="hourly_rate" pInputText type="number" formControlName="hourly_rate" class="w-full" />
-              <label for="hourly_rate">Hourly Rate (EGP)</label>
+              <input id="totalPricePerHour" pInputText type="number" formControlName="totalPricePerHour" class="w-full" />
+              <label for="totalPricePerHour">Price Per Hour (EGP)</label>
             </p-floatLabel>
           </div>
         </div>
@@ -125,24 +125,24 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <p-floatLabel variant="on">
-              <p-calendar formControlName="rental_rate_per_day" 
-                        inputId="rental_rate_per_day"
+              <p-calendar formControlName="lastMaintenanceDate" 
+                        inputId="lastMaintenanceDate"
                         [showIcon]="true" 
                         dateFormat="dd/mm/yy"
                         [showButtonBar]="true"
                         class="w-full"></p-calendar>
-              <label for="rental_rate_per_day">Rental Date</label>
+              <label for="lastMaintenanceDate">last Maintenance Date</label>
             </p-floatLabel>
           </div>
           <div>
             <p-floatLabel variant="on">
-              <p-calendar formControlName="rental_rate_per_hour" 
-                        inputId="rental_rate_per_hour"
+              <p-calendar formControlName="nextMaintenanceDue" 
+                        inputId="nextMaintenanceDue"
                         [showIcon]="true" 
-                        [timeOnly]="true" 
-                        hourFormat="12"
+                        dateFormat="dd/mm/yy"
+                        [showButtonBar]="true"
                         class="w-full"></p-calendar>
-              <label for="rental_rate_per_hour">Rental Time</label>
+              <label for="nextMaintenanceDue">next Maintenance Due</label>
             </p-floatLabel>
           </div>
         </div>

@@ -5,7 +5,7 @@ import { TabViewModule } from 'primeng/tabview';
 import { CardModule } from 'primeng/card';
 import { Router } from '@angular/router';
 import { AdmincarsService } from '../../../../core/services/admincars.service';
-import { Car } from '../../../../core/interfaces/car';
+import { Cars } from '../../../../core/interfaces/cars';
 
 
 @Component({
@@ -17,10 +17,10 @@ import { Car } from '../../../../core/interfaces/car';
 })
 export class CarCardsComponent implements OnInit {
   constructor(private _AdmincarService: AdmincarsService,private router: Router) {}
-  cars: Car[] = [];
-  availableCars: Car[] = [];
-  occupiedCars: Car[] = [];
-  selectedCar: any = null;
+  cars: Cars[] = [];
+  availableCars: Cars[] = [];
+  occupiedCars: Cars[] = [];
+  selectedCar: Cars | null = null;
 
   
   ngOnInit(): void {
@@ -28,17 +28,25 @@ export class CarCardsComponent implements OnInit {
   }
 //load cars from the service
   loadCars() {
-    this.cars = this._AdmincarService.getAllCars();
-    this.availableCars = this._AdmincarService.getAvailableCars();
-    this.occupiedCars = this._AdmincarService.getOccupiedCars();
+     this._AdmincarService.getAllCars().subscribe((res: Cars[]) => {
+    this.cars = res;
+  });
+
+  this._AdmincarService.getAvailableCars().subscribe((res: Cars[]) => {
+    this.availableCars = res;
+  });
+
+  this._AdmincarService.getOccupiedCars().subscribe((res: Cars[]) => {
+    this.occupiedCars = res;
+  });
   }
 
   // to open car card details
-  selectCar(car: any) {
+  selectCar(car: Cars) {
     this.selectedCar = car;
   }
 
-  editCar(car: any) {
+  editCar(car: Cars) {
   this.router.navigateByUrl('dashboard/add-car', {
     state: { car }
   });

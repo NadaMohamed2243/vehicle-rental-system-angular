@@ -15,7 +15,7 @@
             <p-card
               *ngFor="let car of cars"
               (click)="selectCar(car)"
-              header=" {{ car.license_plate }}"
+              header=" {{ car.licensePlate }}"
               class="cursor-pointer hover:shadow-lg transition duration-300"
             >
             <hr class="my-2 border-gray-200" />
@@ -33,7 +33,7 @@
             </div>
             <div class="flex items-center gap-2">
               <i class="pi pi-dollar text-gray-400"></i>
-              <p>{{ car.rental_rate_per_day }} / day</p>
+              <p>{{ car.totalPricePerDay }} / day</p>
             </div>
             </p-card>
           </div>
@@ -46,7 +46,7 @@
             <p-card
               *ngFor="let car of availableCars"
               (click)="selectCar(car)"
-              header="{{ car.license_plate }}"
+              header="{{ car.licensePlate }}"
               subheader="Available"
               class="cursor-pointer hover:shadow-lg transition duration-300"
             >
@@ -65,7 +65,7 @@
             </div>
             <div class="flex items-center gap-2">
               <i class="pi pi-dollar text-gray-400"></i>
-              <p>{{ car.rental_rate_per_day }} / day</p>
+              <p>{{ car.rentalRatePerDay}} / day</p>
             </div>
             </p-card>
           </div>
@@ -78,20 +78,20 @@
             <p-card
               *ngFor="let car of occupiedCars"
               (click)="selectCar(car)"
-              header="{{ car.license_plate }}"
+              header="{{ car.licensePlate }}"
               subheader="Occupied"
               class="cursor-pointer hover:shadow-lg transition duration-300"
             >
             <hr class="my-2 border-gray-200" />
             <div class="flex items-center gap-2">
               <i class="pi pi-compass text-gray-500"></i>
-              <p>{{ car.odometer_reading }} km</p>
+              <p>{{ car.odometerReading }} km</p>
             </div>
             <hr class="my-2 border-gray-200" />
             
             <div class="flex items-center gap-2">
               <i class="pi pi-calendar-clock text-gray-500"></i>
-              <p>{{ car.expected_return_date }}</p>
+              <p>{{ car.expectedReturnDate }}</p>
             </div>
             </p-card>
           </div>
@@ -109,24 +109,24 @@
       <h3 class="text-lg font-semibold">{{ selectedCar.brand }} {{ selectedCar.model }}</h3>
       <button (click)="selectedCar = null" class="cursor-pointer text-gray-500 hover:text-red-500"><i class="pi pi-times"></i></button>
     </div>
-    <img [src]="selectedCar.car_photos[0]" alt="Car Image" class="w-full mb-4 rounded-md">
+    <img [src]="selectedCar.carPhotos[0]" alt="Car Image" class="w-full mb-4 rounded-md">
     <p><strong>Year:</strong> {{ selectedCar.year }}</p>
-    <p><strong>Plate:</strong> {{ selectedCar.license_plate }}</p>
+    <p><strong>Plate:</strong> {{ selectedCar.licensePlate }}</p>
     <p><strong>Type:</strong> {{ selectedCar.type }}</p>
     <p><strong>Seats:</strong> {{ selectedCar.seats }}</p>
-    <p><strong>Rate:</strong> ${{ selectedCar.rental_rate_per_day }} / day</p>
+    <p><strong>Rate:</strong> ${{ selectedCar.rentalRatePerDay }} / day</p>
 
 
     <!-- in case => occupied car -->
-   <div *ngIf="selectedCar.availability_status !== 'Available'">
+   <div *ngIf="selectedCar.availabilityStatus !== 'Available'">
     <hr class="my-2 border-gray-200"/>
     <div class="flex items-center gap-2 mb-2">
       <i class="pi pi-compass text-gray-400"></i>
-      <span>Odometer: {{ selectedCar.odometer_reading }} km</span>
+      <span>Odometer: {{ selectedCar.odometerReading }} km</span>
     </div>
     <div class="flex items-center gap-2 mb-2">
       <i class="pi pi pi-calendar-clock text-gray-400"></i>
-      <span>Expected Return date: {{ selectedCar.expected_return_date }}</span>
+      <span>Expected Return date: {{ selectedCar.expectedReturnDate }}</span>
     </div>
    </div>
 
@@ -135,7 +135,7 @@
     <div class="flex justify-end gap-3 mt-4">
       <button
         (click)="editCar(selectedCar)"
-        [disabled]="selectedCar.availability_status !== 'Available'"
+        [disabled]="selectedCar.availabilityStatus"
         class="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <i class="pi pi-pencil"></i>
@@ -143,7 +143,7 @@
       </button>
   
       <button
-        [disabled]="selectedCar.availability_status !== 'Available'"
+        [disabled]="selectedCar.availabilityStatus"
         class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <i class="pi pi-trash"></i>
