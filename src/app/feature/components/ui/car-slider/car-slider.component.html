@@ -1,0 +1,9 @@
+<div class="w-full h-full">
+    <swiper-container #swiperContainer>
+        @for (img of carImages; track img) {
+        <swiper-slide class="flex items-center justify-center">
+            <img [src]="img" alt="Car Image" class="rounded-lg h-[250px]" height="300px" />
+        </swiper-slide>
+        }
+    </swiper-container>
+</div>

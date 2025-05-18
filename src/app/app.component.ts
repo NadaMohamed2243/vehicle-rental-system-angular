@@ -11,7 +11,7 @@ import { FooterComponent } from "./core/layout/footer/footer.component";
   selector: 'app-root',
   imports: [RouterOutlet, HeroComponent, NavbarComponent, BrandIconsComponent, FooterComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
 export class AppComponent {
   title = 'VehicleRentalSystem';

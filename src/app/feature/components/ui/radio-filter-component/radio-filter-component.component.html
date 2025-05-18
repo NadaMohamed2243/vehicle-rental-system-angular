@@ -1,0 +1,9 @@
+<div class="grid grid-cols-1 gap-y-2">
+    @for (item of items; track $index) {
+    <div class="flex items-center">
+        <p-radiobutton name="group" [value]="item" [(ngModel)]="selectedItem"
+            (ngModelChange)="onSelectedItemChange()" />
+        <label [for]="item" class="ml-2"> {{ item }} </label>
+    </div>
+    }
+</div>

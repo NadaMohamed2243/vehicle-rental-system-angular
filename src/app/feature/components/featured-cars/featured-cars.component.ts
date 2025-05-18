@@ -1,22 +1,41 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CardCarouselComponent } from "../../../shared/components/ui/card-carousel/card-carousel.component";
-import { Car } from '../../../core/interfaces/car';
-import { CarsService } from '../../../core/services/cars.service';
+import { Cars } from '../../../core/interfaces/cars';
+import { CarService } from '../../../core/services/car.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-featured-cars',
-  imports: [CardCarouselComponent],
+  imports: [CardCarouselComponent, CommonModule],
   templateUrl: './featured-cars.component.html',
-  styleUrl: './featured-cars.component.css',
+  styleUrls: ['./featured-cars.component.css']
 })
 export class FeaturedCarsComponent implements OnInit {
-  cars!:Car[]
-  _carsService=inject(CarsService)
-  _router = inject(Router)
+  cars: Cars[] = [];
+  isLoading = true;
+  errorMessage: string | null = null;
+
+  _carsService = inject(CarService);
+  _router = inject(Router);
+
   ngOnInit(): void {
-    this.cars=this._carsService.getCars().slice(0, 10);
+    this._carsService.getCars().subscribe({
+      next: (cars) => {
+        this.cars = cars.slice(0, 10);
+        this.isLoading = false;
+        this.errorMessage = null;
+        console.log(cars)
+      },
+      error: (err) => {
+        console.error('Error loading featured cars:', err);
+        this.isLoading = false;
+        this.errorMessage = 'Failed to load featured cars. Please try again later.';
+        this.cars = [];
+      }
+    });
   }
+
   viewAllCars() {
     this._router.navigate(['/cars'], {
       queryParams: { filtration: 'all' }

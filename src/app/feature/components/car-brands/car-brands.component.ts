@@ -1,52 +1,60 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CarsService } from '../../../core/services/cars.service';
+import { CarService } from '../../../core/services/car.service';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-car-brands',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './car-brands.component.html',
-  styleUrl: './car-brands.component.css',
+  styleUrls: ['./car-brands.component.css']
 })
-export class CarBrandsComponent {
+export class CarBrandsComponent implements OnInit {
   popularBrands: { brand: string; count: number }[] = [];
+  isLoading = true;
+  errorMessage: string | null = null;
 
-  _carsService = inject(CarsService);
+  _carService = inject(CarService);
   _router = inject(Router);
 
   ngOnInit(): void {
-    this.popularBrands = this._carsService.getPopularBrands();
+    this._carService.getPopularBrands().subscribe({
+      next: (brands) => {
+        this.popularBrands = brands;
+        this.isLoading = false;
+        this.errorMessage = null;
+      },
+      error: (err) => {
+        console.error('Error loading brands:', err);
+        this.isLoading = false;
+        this.errorMessage = 'Failed to load car brands. Please try again later.';
+      }
+    });
   }
 
   viewCarsFromBrand(brand: string): void {
     this._router.navigate(['/cars'], { queryParams: { brand } });
   }
 
-  // i don't know cars icon 2, 3,5,7 (should handel)
   getBrandLogo(brand: string): string {
-    switch (brand.toLowerCase()) {
-      case 'honda':
-        return '/images/honda.png';
-      case 'skoda':
-        return '/icons/icon11.png';
-      case 'Hyundai':
-        return '/icons/icon10.png';
-      case 'nissan':
-        return '/icons/icon9.png';
-      case 'ford':
-        return '/icons/icon8.png';
-      case 'chevrolet':
-        return '/icons/icon6.png';
-      case 'toyota':
-        return '/icons/icon4.png';
-      case 'audi':
-        return '/icons/icon1.png';
-      case 'bmw':
-        return '/images/bmw.png';
-      case 'mercedes':
-        return '/images/mercedes.png';
-      default:
-        return '/images/logo2.png';
-    }
+    const brandLower = brand.toLowerCase();
+    const logoMap: {[key: string]: string} = {
+      'honda': '/images/honda.png',
+      'skoda': '/icons/icon11.png',
+      'hyundai': '/icons/icon10.png',
+      'nissan': '/icons/icon9.png',
+      'ford': '/icons/icon8.png',
+      'chevrolet': '/icons/icon6.png',
+      'toyota': '/icons/icon4.png',
+      'audi': '/icons/icon1.png',
+      'bmw': '/images/bmw.png',
+      'mercedes': '/images/mercedes.png',
+      'ferrari': '/images/ferrari.png',
+      'volkswagen': '/images/vw.png',
+      'kia': '/images/kia.png',
+      'mazda': '/images/mazda.png'
+    };
+
+    return logoMap[brandLower] || '/images/logo2.png';
   }
 }
