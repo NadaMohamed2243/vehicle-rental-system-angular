@@ -1,6 +1,6 @@
 import { Component, input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { Car } from '../../../../core/interfaces/car';
+import { Cars } from '../../../../core/interfaces/cars';
 import { StarRatingComponent } from "../star-rating/star-rating.component";
 
 
@@ -11,7 +11,7 @@ import { StarRatingComponent } from "../star-rating/star-rating.component";
   styleUrl: './card.component.css'
 })
 export class CardComponent {
-  carDetails = input<Car>()
+  carDetails = input<Cars>()
   fromWho = input<'landing' | 'home' | 'car'>()
   isFavorite = false;
 
@@ -20,6 +20,6 @@ export class CardComponent {
   }
   getTargetRoute(): string {
     const source = this.fromWho();
-    return source === 'home' ? '/payment' : '/cars';
+    return source === 'home' ? '/payment' : '/login';
   }
 }

@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { Carousel } from 'primeng/carousel';
 import { ButtonModule } from 'primeng/button';
-import { Car } from '../../../../core/interfaces/car';
+import { Cars } from '../../../../core/interfaces/cars';
 import { CardComponent } from '../card/card.component';
 
 @Component({
@@ -23,7 +23,7 @@ export class CardCarouselComponent implements OnInit {
   // carDetails = input.required<Car[]>();
   // fromWho = input<any>()
 
-  @Input({ required: true }) carDetails!: Car[];
+  @Input({ required: true }) carDetails!: Cars[];
   @Input() fromWho?: any;
   ngOnInit(): void {
     // console.log("carDetails:", this.carDetails);

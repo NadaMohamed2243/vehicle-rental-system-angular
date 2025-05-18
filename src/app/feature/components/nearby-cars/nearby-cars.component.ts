@@ -1,21 +1,45 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Car } from '../../../core/interfaces/car';
-import { CarsService } from '../../../core/services/cars.service';
+import { Cars } from '../../../core/interfaces/cars';
+import { CarService } from '../../../core/services/car.service';
 import { CardCarouselComponent } from "../../../shared/components/ui/card-carousel/card-carousel.component";
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-nearby-cars',
-  imports: [CardCarouselComponent],
+  imports: [CardCarouselComponent, CommonModule],
   templateUrl: './nearby-cars.component.html',
-  styleUrl: './nearby-cars.component.css',
+  styleUrls: ['./nearby-cars.component.css']
 })
-export class NearbyCarsComponent {
-  cars!:Car[]
-  _carsService=inject(CarsService)
-  _router = inject(Router)
+export class NearbyCarsComponent implements OnInit {
+  cars: Cars[] = [];
+  isLoading = true;
+  errorMessage: string | null = null;
+  userCity: string = '';
+
+  _carsService = inject(CarService);
+  _router = inject(Router);
+
   ngOnInit(): void {
-    this.cars=this._carsService.getNearByCars().slice(0, 10);
+    this.loadNearbyCars();
+  }
+
+  loadNearbyCars(): void {
+    this.isLoading = true;
+    this.errorMessage = null;
+
+    this._carsService.getNearByCars().subscribe({
+      next: (cars) => {
+        this.cars = cars.slice(0, 10);
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error loading nearby cars:', err);
+        this.isLoading = false;
+        this.errorMessage = 'Failed to load nearby cars. Please try again later.';
+        this.cars = [];
+      }
+    });
   }
 
   viewNearByCars() {
