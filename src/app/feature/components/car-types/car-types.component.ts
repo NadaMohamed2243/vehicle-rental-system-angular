@@ -18,6 +18,10 @@ export class CarTypesComponent implements OnInit {
   _router = inject(Router);
 
   ngOnInit(): void {
+    this.getFinalCars();
+  }
+
+  getFinalCars() {
     this._carService.getPopularTypes().subscribe({
       next: (types) => {
         this.popularTypes = types;

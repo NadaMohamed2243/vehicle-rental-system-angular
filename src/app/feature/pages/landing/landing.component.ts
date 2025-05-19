@@ -7,10 +7,11 @@ import { WhyChooseRentlyComponent } from './components/why-choose-rently/why-cho
 import { FeaturedCarsComponent } from "../../components/featured-cars/featured-cars.component";
 import { CarTypesComponent } from "../../components/car-types/car-types.component";
 import { PromoCardsComponent } from "../../components/promo-cards/promo-cards.component";
+import { FooterComponent } from "../../../core/layout/footer/footer.component";
 
 @Component({
   selector: 'app-landing',
-  imports: [NavbarComponent,  HeroComponent,  BrandIconsComponent, HowItWorksComponent , WhyChooseRentlyComponent, FeaturedCarsComponent, CarTypesComponent, PromoCardsComponent],
+  imports: [NavbarComponent, HeroComponent, BrandIconsComponent, HowItWorksComponent, WhyChooseRentlyComponent, FeaturedCarsComponent, CarTypesComponent, PromoCardsComponent, FooterComponent],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.css'
 })

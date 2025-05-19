@@ -7,9 +7,8 @@
       Our most popular cars have very high ratings from our customers.
     </p>
     <a class="mt-6 inline-flex items-center px-5 py-3 text-sm font-medium text-white bg-light-blue rounded-lg hover:bg-blue-700 hover:cursor-pointer focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-light-blue"
-       [class.disabled]="!cars.length"
-       [style.pointer-events]="!cars.length ? 'none' : 'auto'"
-       (click)="cars.length ? viewMostPopularCars() : null">
+      [class.disabled]="!cars.length" [style.pointer-events]="!cars.length ? 'none' : 'auto'"
+      (click)="cars.length ? viewMostPopularCars() : null">
       View All Most Popular Cars
       <svg class="rtl:rotate-180 w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -19,10 +18,10 @@
   </div>
 
   @if(cars.length != 0){
-    <app-card-carousel [carDetails]="cars" fromWho="home"></app-card-carousel>
+  <app-card-carousel [carDetails]="cars" fromWho="home"></app-card-carousel>
   }
   @else{
-    <h1 class="text-dark-blue text-center my-5">no Cars Now</h1>
+  <h1 class="text-dark-blue text-center my-5">no Cars Now</h1>
   }
 
 </div>
