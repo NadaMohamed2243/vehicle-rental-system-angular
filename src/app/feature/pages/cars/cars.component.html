@@ -4,10 +4,10 @@
         <app-filter-sidebar></app-filter-sidebar>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 p-4 m-5">
             <p-button (click)="visible2 = true" icon="pi pi-bars" class="md:hidden" />
-            @for (car of filterdCars; track car._id) {
+            @for (car of filteredCars; track car._id) {
             <app-card [carDetails]="car" fromWho="car" (click)="showCarDetails(car)"></app-card>
             }
-            @if (filterdCars.length === 0) {
+            @if (filteredCars.length === 0) {
             <p class="col-span-full text-center text-gray-500">No cars available</p>
             }
         </div>
