@@ -115,12 +115,6 @@ export class CarsComponent implements OnInit, OnDestroy {
             this.type = params['type'] || null;
             this.brand = params['brand'] || null;
 
-            console.log('Query params:', {
-              filtration: this.filtration,
-              type: this.type,
-              brand: this.brand,
-            });
-
             return this.loadCars();
           })
         )
@@ -130,7 +124,6 @@ export class CarsComponent implements OnInit, OnDestroy {
             this.filteredCars = [...this.cars];
             this.isLoading = false;
             this.errorMessage = null;
-            console.log('Loaded cars:', this.cars);
           },
           error: (err) => {
             console.error('Error loading cars:', err);
