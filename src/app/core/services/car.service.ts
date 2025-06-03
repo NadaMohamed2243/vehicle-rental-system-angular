@@ -20,7 +20,7 @@ export class CarService {
   // Fetch all cars from API
   getCars(): Observable<Cars[]> {
     return this.http.get<Cars[]>('http://localhost:5000/api/cars').pipe(
-      map(cars => {
+      map((cars) => {
         this._cars = cars;
         return cars;
       })
@@ -30,7 +30,7 @@ export class CarService {
   // Get popular cars (sorted by rating)
   getMostPopularCars(): Observable<Cars[]> {
     return this.getCars().pipe(
-      map(cars => {
+      map((cars) => {
         this._popularCars = [...cars]
           .filter((car) => (car.rating || 0) > 3.5)
           .sort((a, b) => (b.rating || 0) - (a.rating || 0));
@@ -43,9 +43,11 @@ export class CarService {
   getNearByCars(): Observable<Cars[]> {
     this.userCity = this._userService.getUser().location.city;
     return this.getCars().pipe(
-      map(cars => {
+      map((cars) => {
         this._nearbyCars = cars.filter(
-          (car) => car.exhibition?.location.toLowerCase() === this.userCity.toLowerCase()
+          (car) =>
+            car.exhibition?.location.toLowerCase() ===
+            this.userCity.toLowerCase()
         );
         return this._nearbyCars;
       })
@@ -55,7 +57,7 @@ export class CarService {
   // Get popular car types
   getPopularTypes(): Observable<{ type: string; count: number }[]> {
     return this.getCars().pipe(
-      map(cars => {
+      map((cars) => {
         const typeCounts: { [key: string]: number } = {};
 
         cars.forEach((car) => {
@@ -73,17 +75,31 @@ export class CarService {
     );
   }
 
+  getFuelTypes(): Observable<string[]> {
+    return this.getCars().pipe(
+      map((cars) => {
+        const fuelTypesSet = new Set<string>();
+        cars.forEach((car) => {
+          if (car.fuel_type) {
+            fuelTypesSet.add(car.fuel_type);
+          }
+        });
+        return Array.from(fuelTypesSet).sort();
+      })
+    );
+  }
+
   // Get cars by type
   getCarsByType(type: string): Observable<Cars[]> {
     return this.getCars().pipe(
-      map(cars => cars.filter((car) => car.type === type))
+      map((cars) => cars.filter((car) => car.type === type))
     );
   }
 
   // Get popular car brands
   getPopularBrands(): Observable<{ brand: string; count: number }[]> {
     return this.getCars().pipe(
-      map(cars => {
+      map((cars) => {
         const brandCounts: { [key: string]: number } = {};
 
         cars.forEach((car) => {
@@ -104,49 +120,51 @@ export class CarService {
   // Get cars by brand
   getCarsByBrand(brand: string): Observable<Cars[]> {
     return this.getCars().pipe(
-      map(cars => cars.filter((car) => car.brand === brand))
+      map((cars) => cars.filter((car) => car.brand === brand))
     );
   }
 
   filterCars(cars: Cars[], filters: any): Cars[] {
-      return cars.filter((car) => {
-        if (filters.searchText) {
-          const searchText = filters.searchText.toLowerCase();
-          return (
-            car.brand.toLowerCase().includes(searchText) ||
-            car.model.toLowerCase().includes(searchText) ||
-            car.year.toString().includes(searchText)
-          );
-        }
-        if (filters.priceRange) {
-          const { min, max } = filters.priceRange;
-          if (min !== null && car.totalPricePerHour < min) {
-            return false;
-          }
-          if (max !== null && car.totalPricePerHour > max) {
-            return false;
-          }
-        }
-        if (filters.brands && filters.brands.length > 0) {
-          return filters.brands.includes(car.brand);
-        }
-        if (filters.bodyTypes && filters.bodyTypes.length > 0) {
-          return filters.bodyTypes.includes(car.type);
-        }
-        if (filters.transmission) {
-          return (
-            car.transmission === filters.transmission ||
-            filters.transmission === 'Any'
-          );
-        }
-        if (filters.fuelTypes && filters.fuelTypes.length > 0) {
-          return filters.fuelTypes.includes(car.fuel_type);
-        }
-        if (filters.availableNow) {
-          return car.availabilityStatus === 'Available';
-        }
-        return true;
-      });
+    if (!filters || Object.keys(filters).length === 0) {
+      return cars;
     }
-  
+    return cars.filter((car) => {
+      if (filters.searchText) {
+        const searchText = filters.searchText.toLowerCase();
+        const matchesSearch =
+          car.brand.toLowerCase().includes(searchText) ||
+          car.model.toLowerCase().includes(searchText) ||
+          car.year.toString().includes(searchText);
+        if (!matchesSearch) return false;
+      }
+
+      if (filters.priceRange) {
+        const { min, max } = filters.priceRange;
+        if (min !== null && car.totalPricePerHour < min) return false;
+        if (max !== null && car.totalPricePerHour > max) return false;
+      }
+
+      if (filters.brands?.length > 0) {
+        if (!filters.brands.includes(car.brand)) return false;
+      }
+
+      if (filters.bodyTypes?.length > 0) {
+        if (!filters.bodyTypes.includes(car.type)) return false;
+      }
+
+      if (filters.transmission && filters.transmission !== 'Any') {
+        if (car.transmission !== filters.transmission) return false;
+      }
+
+      if (filters.fuelTypes?.length > 0) {
+        if (!filters.fuelTypes.includes(car.fuel_type)) return false;
+      }
+
+      if (filters.availableNow) {
+        if (car.availabilityStatus !== 'Available') return false;
+      }
+
+      return true;
+    });
+  }
 }
