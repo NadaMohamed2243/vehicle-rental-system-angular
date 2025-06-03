@@ -109,10 +109,10 @@ export class RegisterComponent implements OnInit{
       formData.append('lng', this.registerForm.get('lng')?.value );
       this._authService.registerClient(formData).subscribe({
   next: (response) => {
-    console.log('Register success:', response);
-     localStorage.setItem('token', response.token);
+      console.log('Register success:', response);
+      localStorage.setItem('token', response.token);
       // Navigate to another page
-      this._router.navigate(['/']);
+      this._router.navigate(['/home']);
     },
     error: err => console.error('Error:', err)
     });

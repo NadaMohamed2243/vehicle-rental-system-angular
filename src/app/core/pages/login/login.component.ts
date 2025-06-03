@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthapiService } from '../../services/authapi.service';
 
 @Component({
   selector: 'app-login',
@@ -10,18 +11,26 @@ import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angula
 })
 export class LoginComponent {
   _router=inject(Router);
+  _authService=inject(AuthapiService);
+
   loginForm: FormGroup = new FormGroup({
     email: new FormControl('', [Validators.required,Validators.email]),
     password: new FormControl('', [Validators.required,Validators.minLength(6)]),
   });
-  
+
 
   onSubmit() {
     console.log(this.loginForm.value);
     if (this.loginForm.valid) {
       console.log('Sending data to API', this.loginForm.value);
+       this._authService.login(this.loginForm.value).subscribe({
+        next: (res) => {
+          localStorage.setItem('token', res.token);
+          console.log('Logged in:', res);
+        },
+        error: (err) => console.error('Login error:', err)
+    });
       this._router.navigate(['/home']);
-      // Api
     } else {
       this.loginForm.markAllAsTouched();
     }
