@@ -6,6 +6,7 @@ import {
   PLATFORM_ID,
   OnInit,
   ViewChild,
+  Input,
 } from '@angular/core';
 import { register } from 'swiper/element/bundle';
 
@@ -20,11 +21,7 @@ register();
 })
 export class CarSliderComponent implements OnInit {
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
-  carImages: string[] = [
-    'images/8d682647-469f-4362-91d0-9298c5353e1a.webp',
-    'images/2025KiaSportage-exterior-03.jpg',
-    'images/f7af76f2-2025-kia-sportage-whichcar-australia-02.jpg',
-  ];
+  @Input() carImages: string[] | undefined = [];
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {

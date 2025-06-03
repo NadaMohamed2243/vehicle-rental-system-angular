@@ -27,7 +27,7 @@
             </ng-template>
             <ng-template #content>
                 <div>
-                    <app-car-slider></app-car-slider>
+                    <app-car-slider [carImages]="selectedCar?.carPhotos"></app-car-slider>
                 </div>
                 <div class="flex justify-between pt-5">
                     <p class="font-semibold text-[#8c8c8c] text-sm">{{selectedCar?.brand}}</p>
