@@ -5,56 +5,56 @@
                 src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=blue&shade=600" alt="Your Company">
             <h2 class="mt-7 text-center text-3xl font-bold tracking-tight text-gray-900">Register</h2>
         </div>
-    
+
         <div class="mt-7 sm:mx-auto sm:w-full sm:max-w-3xl">
             <form [formGroup]="registerForm" class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6" (ngSubmit)="onSubmit()">
                 <!-- first Name -->
                 <div>
-                    <label for="fName" class="block text-sm font-medium text-gray-700">First Name</label>
-                    <input type="text" name="fName" id="name" formControlName="fName"
+                    <label for="first_name" class="block text-sm font-medium text-gray-700">First Name</label>
+                    <input type="text" name="first_name" id="name" formControlName="first_name"
                         class="mt-2 block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-light-blue sm:text-sm">
-                        @if(registerForm.get('fName')?.touched && registerForm.get('fName')?.errors){
-                            @if(registerForm.get('fName')?.getError('required')){
+                        @if(registerForm.get('first_name')?.touched && registerForm.get('first_name')?.errors){
+                            @if(registerForm.get('first_name')?.getError('required')){
                                 <div class="rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
                                     <p class="font-semibold text-sm">Name is required.</p>
                                 </div>
                             }
-                            @if(registerForm.get('fName')?.getError('minlength')){
+                            @if(registerForm.get('first_name')?.getError('minlength')){
                                 <div class="rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
                                     <p class="font-semibold  text-sm">Name should be at least 3 characters long.</p>
                                 </div>
                             }
-                            @if(registerForm.get('fName')?.getError('maxlength')){
+                            @if(registerForm.get('first_name')?.getError('maxlength')){
                                 <div class=" rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
                                     <p class="font-semibold  text-sm">Name cannot exceed 50 characters.</p>
                                 </div>
                             }
                         }
-    
+
                     </div>
                 <!-- last Name -->
                 <div>
-                    <label for="lName" class="block text-sm font-medium text-gray-700">Last Name</label>
-                    <input type="text" name="lName" id="name" formControlName="lName"
+                    <label for="last_name" class="block text-sm font-medium text-gray-700">Last Name</label>
+                    <input type="text" name="last_name" id="name" formControlName="last_name"
                         class="mt-2 block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-light-blue sm:text-sm">
-                        @if(registerForm.get('lName')?.touched && registerForm.get('lName')?.errors){
-                            @if(registerForm.get('lName')?.getError('required')){
+                        @if(registerForm.get('last_name')?.touched && registerForm.get('last_name')?.errors){
+                            @if(registerForm.get('last_name')?.getError('required')){
                                 <div class="rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
                                     <p class="font-semibold text-sm">Name is required.</p>
                                 </div>
                             }
-                            @if(registerForm.get('lName')?.getError('minlength')){
+                            @if(registerForm.get('last_name')?.getError('minlength')){
                                 <div class="rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
                                     <p class="font-semibold  text-sm">Name should be at least 3 characters long.</p>
                                 </div>
                             }
-                            @if(registerForm.get('lName')?.getError('maxlength')){
+                            @if(registerForm.get('last_name')?.getError('maxlength')){
                                 <div class=" rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
                                     <p class="font-semibold  text-sm">Name cannot exceed 50 characters.</p>
                                 </div>
                             }
                         }
-    
+
                     </div>
                 <!-- Email -->
                 <div>
@@ -74,33 +74,33 @@
                             }
                         }
                 </div>
-    
+
                 <!-- Phone -->
                 <div>
-                    <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
-                    <input type="tel" name="phone" id="phone" autocomplete="tel" formControlName="phone"
+                    <label for="phone_number" class="block text-sm font-medium text-gray-700">Phone</label>
+                    <input type="tel" name="phone_number" id="phone_number" autocomplete="tel" formControlName="phone_number"
                         class="mt-2 block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-light-blue sm:text-sm">
-                        @if(registerForm.get('phone')?.touched && registerForm.get('phone')?.errors){
-                            @if(registerForm.get('phone')?.getError('required')){
+                        @if(registerForm.get('phone_number')?.touched && registerForm.get('phone_number')?.errors){
+                            @if(registerForm.get('phone_number')?.getError('required')){
                               <div class="rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
-                                <p class="font-semibold text-sm">Phone is required.</p>
+                                <p class="font-semibold text-sm">phone_number is required.</p>
                               </div>
                             }
-                            @if(registerForm.get('phone')?.getError('pattern')){
+                            @if(registerForm.get('phone_number')?.getError('pattern')){
                               <div class="rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
                                 <p class="font-semibold text-sm">Enter a valid Egyptian phone number (starts with 010, 011, 012, or 015).</p>
                               </div>
                             }
                           }
                 </div>
-    
-               
+
+
                 <!-- Password -->
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                     <input type="password" formControlName="password" name="password" id="password" autocomplete="new-password" required
                         class="mt-2 block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-light-blue sm:text-sm">
-                     
+
                 @if(registerForm.get('password')?.touched && registerForm.get('password')?.errors){
                     @if(registerForm.get('password')?.getError('required')){
                     <div class="rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
@@ -114,7 +114,7 @@
                     }
                 }
                 </div>
-    
+
                 <!--Confirm Password-->
                 <div>
                     <label for="repassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
@@ -127,7 +127,7 @@
                               </div>
                             }
                           }
-                        
+
                           @if(registerForm.errors?.['passwordsMismatch'] && registerForm.get('cPassword')?.touched){
                             <div class="rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
                               <p class="font-semibold text-sm">Passwords do not match.</p>
@@ -137,10 +137,10 @@
                  <!-- Location -->
                  <div>
                     <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
-                    <select  
+                    <select
                     formControlName="location"
-                    name="location" 
-                    id="location" 
+                    name="location"
+                    id="location"
                     class="mt-2 mb-0 block w-full rounded-md bg-white px-3 py-2  text-gray-800 outline outline-1 outline-gray-300 focus:outline-2 focus:outline-light-blue sm:text-sm"
                     >
                     <option  value="" disabled selected>Select Closest location</option>
@@ -156,26 +156,26 @@
                         }
                     }
                  </div>
-                
-    
-    
-                <!--License-->
+
+
+
+                <!--driver_license-->
                 <div class="sm:col-span-2">
                     <label for="license" class="text-sm font-medium me-4 text-gray-700">Driver License (Photo)</label>
-                    <input type="file" formControlName="licenseImage" name="license" id="license" accept="image/*" (change)="onFileSelected($event)"
+                    <input type="file" formControlName="driver_license" name="driver_license" id="license" accept="image/*" (change)="onFileSelected($event)"
                         class="hidden" />
                     <label for="license"
                         class="mt-2 inline-block cursor-pointer rounded-md bg-light-blue px-4 py-2 text-sm text-white hover:bg-blue-500">
                         Choose Image
                     </label>
-                    @if(registerForm.get('licenseImage')?.touched && registerForm.get('licenseImage')?.errors){
-                        @if(registerForm.get('licenseImage')?.getError('required')){
+                    @if(registerForm.get('driver_license')?.touched && registerForm.get('driver_license')?.errors){
+                        @if(registerForm.get('driver_license')?.getError('required')){
                           <div class="mt-2 rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
                             <p class="font-semibold text-sm">License image is required.</p>
                           </div>
                         }
                       }
-                    
+
                     @if(licensePreview){
                     <div class="mt-2">
                         <p class="text-sm text-gray-500 mb-2">Preview:</p>
@@ -183,7 +183,7 @@
                     </div>
                     }
                 </div>
-                
+
                 <!--Submit Button-->
                 <div class="sm:col-span-2">
                     <button type="submit"
@@ -197,3 +197,4 @@
         </div>
     </div>
 </div>
+

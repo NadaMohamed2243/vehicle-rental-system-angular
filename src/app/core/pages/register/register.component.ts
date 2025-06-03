@@ -1,4 +1,5 @@
-import { Component, inject } from '@angular/core';
+import {  AuthapiService } from './../../services/authapi.service';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CustomValidatorService } from '../../services/validators/custom-validator.service';
 import { Router, RouterLink } from '@angular/router';
@@ -9,7 +10,24 @@ import { Router, RouterLink } from '@angular/router';
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit{
+  ngOnInit(): void {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.registerForm.patchValue({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+        },
+        (error) => {
+          console.warn('Geolocation error:', error);
+        }
+      );
+    } else {
+      console.warn('Geolocation not supported');
+    }
+  }
   licensePreview: string | ArrayBuffer | null = null;
   selectedFile: File | null = null;
   locations: { label: string; value: string }[] = [
@@ -47,6 +65,7 @@ export class RegisterComponent {
   ];
   _router=inject(Router)
   _customValidator=inject(CustomValidatorService)
+  _authService=inject(AuthapiService);
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -61,23 +80,42 @@ export class RegisterComponent {
   }
 
   registerForm: FormGroup = new FormGroup({
-    lName:new FormControl('', [Validators.required,Validators.minLength(3),Validators.maxLength(50)]),
-    fName: new FormControl('', [Validators.required,Validators.minLength(3),Validators.maxLength(50)]),
-    email: new FormControl('', [Validators.required,Validators.email]),
-    password: new FormControl('', [Validators.required,Validators.minLength(6)]),
+    first_name: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]),
+    last_name: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     cPassword: new FormControl('', [Validators.required]),
-    phone: new FormControl('', [Validators.required,Validators.pattern(/^01[0125][0-9]{8}$/)]),
+    phone_number: new FormControl('', [Validators.required, Validators.pattern(/^01[0125][0-9]{8}$/)]),
     location: new FormControl('', [Validators.required]),
-    licenseImage: new FormControl('', [Validators.required])
+    driver_license: new FormControl('', [Validators.required]),
+    lat: new FormControl(''),
+    lng: new FormControl('')
   },{ validators:this._customValidator.matchPasswords() });
-  
+
 
   onSubmit() {
-    console.log(this.registerForm.value);
-    if (this.registerForm.valid) {
+    if (this.registerForm.valid  && this.selectedFile) {
       console.log('Sending data to API', this.registerForm.value);
-      this._router.navigate(['/login']);
       // Api
+      const formData = new FormData();
+      formData.append('first_name', this.registerForm.get('first_name')?.value);
+      formData.append('last_name', this.registerForm.get('last_name')?.value);
+      formData.append('email', this.registerForm.get('email')?.value);
+      formData.append('password', this.registerForm.get('password')?.value);
+      formData.append('phone_number', this.registerForm.get('phone_number')?.value);
+      formData.append('location', this.registerForm.get('location')?.value);
+      formData.append('driver_license', this.selectedFile);
+      formData.append('lat', this.registerForm.get('lat')?.value );
+      formData.append('lng', this.registerForm.get('lng')?.value );
+      this._authService.registerClient(formData).subscribe({
+  next: (response) => {
+    console.log('Register success:', response);
+     localStorage.setItem('token', response.token);
+      // Navigate to another page
+      this._router.navigate(['/']);
+    },
+    error: err => console.error('Error:', err)
+    });
     } else {
       this.registerForm.markAllAsTouched();
     }
