@@ -45,7 +45,7 @@ export class CarService {
     return this.getCars().pipe(
       map(cars => {
         this._nearbyCars = cars.filter(
-          (car) => car.exhibition?.location.toLowerCase() === this.userCity.toLowerCase()
+          (car) => car.agent?.location.toLowerCase() === this.userCity.toLowerCase()
         );
         return this._nearbyCars;
       })
@@ -148,5 +148,5 @@ export class CarService {
         return true;
       });
     }
-  
+
 }
