@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class PriceRangeFilterComponent {
   minPrice: number = 0;
-  maxPrice: number = 100000;
+  maxPrice: number = 1000;
 
   @Output() priceChange = new EventEmitter<{
     min: number | null;

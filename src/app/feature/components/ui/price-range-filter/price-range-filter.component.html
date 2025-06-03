@@ -2,9 +2,9 @@
     <div class="flex-1">
         <div class="bg-gray-100 rounded-md px-4 py-2">
             <div class="flex items-center">
-                <span class="text-gray-700 mr-1">$</span>
+                <span class="text-gray-700 mr-1">EG</span>
                 <input type="number" class="bg-transparent w-full focus:outline-none text-gray-800 font-semibold"
-                    step="0.01" [(ngModel)]="minPrice" (ngModelChange)="onPriceChange()" />
+                    step="1" [(ngModel)]="minPrice" (ngModelChange)="onPriceChange()" />
             </div>
         </div>
     </div>
@@ -14,9 +14,9 @@
     <div class="flex-1">
         <div class="bg-gray-100 rounded-md px-4 py-2">
             <div class="flex items-center">
-                <span class="text-gray-700 mr-1">$</span>
+                <span class="text-gray-700 mr-1">EG</span>
                 <input type="number" class="bg-transparent w-full focus:outline-none text-gray-800 font-semibold"
-                    step="0.01" [(ngModel)]="maxPrice" (ngModelChange)="onPriceChange()" />
+                    step="1" [(ngModel)]="maxPrice" (ngModelChange)="onPriceChange()" />
             </div>
         </div>
     </div>
