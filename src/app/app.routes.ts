@@ -15,6 +15,7 @@ import { AddCarComponent } from './feature/pages/Admin/add-car/add-car.component
 import { AcceptUserComponent } from './feature/pages/Admin/accept-user/accept-user.component';
 import { CarCardsComponent } from './feature/pages/Admin/car-cards/car-cards.component';
 import { OverviewComponent } from './feature/pages/Admin/overview/overview.component';
+import { MainRegisterComponent } from './core/pages/main-register/main-register.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'landing', pathMatch: 'full' },
@@ -27,7 +28,7 @@ export const routes: Routes = [
   { path: 'forgetPassword', component: ForgetPasswordComponent },
   { path: 'pendingResetPassword', component: PendingResetPasswordComponent },
   { path: 'resetPassword', component: ResetPasswordComponent },
-
+  {path:'register',component:MainRegisterComponent},
   {
     path: 'dashboard',
     component: DashboardComponent,
