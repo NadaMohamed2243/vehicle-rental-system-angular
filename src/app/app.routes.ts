@@ -1,3 +1,4 @@
+import { AgentRegisterComponent } from './core/pages/agent-register/agent-register.component';
 import { Routes } from '@angular/router';
 import { NotFoundComponent } from './core/pages/not-found/not-found.component';
 import { LoginComponent } from './core/pages/login/login.component';
@@ -21,7 +22,8 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'cars', component: CarsComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
+  { path: 'clientRegister', component: RegisterComponent },
+  { path: 'agentRegister', component: AgentRegisterComponent },
   { path: 'forgetPassword', component: ForgetPasswordComponent },
   { path: 'pendingResetPassword', component: PendingResetPasswordComponent },
   { path: 'resetPassword', component: ResetPasswordComponent },

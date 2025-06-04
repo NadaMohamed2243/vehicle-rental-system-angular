@@ -22,10 +22,12 @@ export class RegisterComponent implements OnInit{
         },
         (error) => {
           console.warn('Geolocation error:', error);
+          alert('Error getting your location. Please allow location access or try again.');
         }
       );
     } else {
       console.warn('Geolocation not supported');
+       alert('Geolocation is not supported by your browser.');
     }
   }
   licensePreview: string | ArrayBuffer | null = null;
