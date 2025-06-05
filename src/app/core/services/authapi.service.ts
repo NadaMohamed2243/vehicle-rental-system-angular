@@ -31,4 +31,12 @@ export class AuthapiService {
   login(credentials: LoginData): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.baseUrl}/login`, credentials);
   }
+
+  forgotPassword(data: { email: string }) {
+    return this.http.post(`${this.baseUrl}/forgot-password`, data );
+  }
+
+  resetPassword(token: string, password: string) {
+    return this.http.post(`${this.baseUrl}/reset-password/${token}`, { password });
+  }
 }

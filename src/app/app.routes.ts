@@ -30,7 +30,7 @@ export const routes: Routes = [
   { path: 'agentRegister', component: AgentRegisterComponent },
   { path: 'forgetPassword', component: ForgetPasswordComponent },
   { path: 'pendingResetPassword', component: PendingResetPasswordComponent },
-  { path: 'resetPassword', component: ResetPasswordComponent },
+  { path: 'reset-password/:token', component: ResetPasswordComponent },
   {path:'register',component:MainRegisterComponent},
   {
     path: 'dashboard',

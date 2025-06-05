@@ -14,6 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class RegisterComponent implements OnInit{
   licensePreview: string | ArrayBuffer | null = null;
   selectedFile: File | null = null;
+  error:string |null=null;
   locations: { label: string; value: string }[] = [
     { label: 'Cairo', value: 'cairo' },
     { label: 'Giza', value: 'giza' },
@@ -187,7 +188,10 @@ export class RegisterComponent implements OnInit{
       // Navigate to another page
       this._router.navigate(['/home']);
     },
-    error: err => console.error('Error:', err)
+    error: err => {
+      this.error= err.error.error
+      console.log(err.error.error);
+    }
     });
     } else {
       this.registerForm.markAllAsTouched();

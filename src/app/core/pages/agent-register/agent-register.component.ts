@@ -26,6 +26,7 @@ export class AgentRegisterComponent implements OnInit {
 
   licensePreview: string | ArrayBuffer | null = null;
   selectedFile: File | null = null;
+  error:string|null=null;
 
   // Location options
   locations = [
@@ -251,7 +252,10 @@ export class AgentRegisterComponent implements OnInit {
           localStorage.setItem('token', res.token);
           this._router.navigate(['/home']);
         },
-        error: (err) => console.error('Register error:', err),
+        error: (err) => {
+          this.error= err.error.error
+      console.log(err.error.error);
+        },
       });
     } else {
       console.log('Form is invalid', this.agentRegisterForm.errors);
