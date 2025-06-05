@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthapiService } from './../../services/authapi.service';
 import { CustomValidatorService } from '../../services/validators/custom-validator.service';
 
+
 @Component({
   selector: 'app-agent-register',
   templateUrl: './agent-register.component.html',
@@ -155,18 +156,15 @@ export class AgentRegisterComponent implements OnInit {
     setTimeout(() => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          // Dismiss loading snackbar
           if (loadingSnackBar) {
             loadingSnackBar.dismiss();
           }
 
-          // Update form with coordinates
           this.agentRegisterForm.patchValue({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           });
 
-          // Show success message
           this._notification.open('Location obtained successfully!', 'Close', {
             duration: 3000,
             panelClass: ['snackbar-success'],
@@ -175,24 +173,22 @@ export class AgentRegisterComponent implements OnInit {
         (error) => {
           console.warn('Geolocation error:', error);
 
-          // Dismiss loading snackbar
           if (loadingSnackBar) {
             loadingSnackBar.dismiss();
           }
 
-          // Show appropriate error message based on error code
           let errorMessage = 'Error getting your location. Please try again.';
 
           switch (error.code) {
-            case 1: // PERMISSION_DENIED
+            case 1:
               errorMessage =
                 'Location access denied. Please allow location access in your browser and try again.';
               break;
-            case 2: // POSITION_UNAVAILABLE
+            case 2:
               errorMessage =
                 'Location information unavailable. Please check your connection and try again.';
               break;
-            case 3: // TIMEOUT
+            case 3:
               errorMessage = 'Location request timed out. Please try again.';
               break;
           }
@@ -203,12 +199,12 @@ export class AgentRegisterComponent implements OnInit {
           });
         },
         {
-          enableHighAccuracy: false, // Set to false for faster response
+          enableHighAccuracy: false,
           timeout: 10000,
-          maximumAge: 300000, // 5 minutes
+          maximumAge: 300000,
         }
       );
-    }, 100); // Small delay to ensure loading message appears
+    }, 100);
   }
 
   onFileSelected(event: Event): void {

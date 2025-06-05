@@ -3,6 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthapiService } from '../../services/authapi.service';
 
+
 @Component({
   selector: 'app-login',
   imports: [ReactiveFormsModule,RouterLink],
@@ -26,11 +27,10 @@ export class LoginComponent {
        this._authService.login(this.loginForm.value).subscribe({
         next: (res) => {
           localStorage.setItem('token', res.token);
-          console.log('Logged in:', res);
+          this._router.navigate(['/home']);
         },
         error: (err) => console.error('Login error:', err)
     });
-      this._router.navigate(['/home']);
     } else {
       this.loginForm.markAllAsTouched();
     }

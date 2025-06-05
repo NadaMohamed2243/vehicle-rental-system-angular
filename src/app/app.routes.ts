@@ -16,12 +16,15 @@ import { AcceptUserComponent } from './feature/pages/Admin/accept-user/accept-us
 import { CarCardsComponent } from './feature/pages/Admin/car-cards/car-cards.component';
 import { OverviewComponent } from './feature/pages/Admin/overview/overview.component';
 import { MainRegisterComponent } from './core/pages/main-register/main-register.component';
+import { RoleGuard } from './role.guard';
+import { AuthGuard } from './auth.guard';
+import { UnauthorizedComponent } from './core/pages/unauthorized/unauthorized.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'landing', pathMatch: 'full' },
   { path: 'landing', component: LandingComponent },
-  { path: 'home', component: HomeComponent },
-  { path: 'cars', component: CarsComponent },
+  { path: 'home', component: HomeComponent ,canActivate: [AuthGuard]}, //must logged in
+  { path: 'cars', component: CarsComponent ,canActivate: [AuthGuard]},
   { path: 'login', component: LoginComponent },
   { path: 'clientRegister', component: RegisterComponent },
   { path: 'agentRegister', component: AgentRegisterComponent },
@@ -32,6 +35,8 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
+      canActivate: [RoleGuard], //must login and is admin
+      data: { roles: ['admin'] },
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'car-cards', component: CarCardsComponent },
@@ -40,6 +45,6 @@ export const routes: Routes = [
       { path: 'overview', component: OverviewComponent },
     ],
   },
-
+  {path:'unauthorized',component:UnauthorizedComponent},
   { path: '**', component: NotFoundComponent },
 ];
