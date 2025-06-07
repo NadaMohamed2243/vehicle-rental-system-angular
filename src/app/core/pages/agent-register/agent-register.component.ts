@@ -1,21 +1,35 @@
-import {  AuthapiService } from './../../services/authapi.service';
-import { Component, inject, OnInit } from '@angular/core';
-import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CustomValidatorService } from '../../services/validators/custom-validator.service';
+import { Component, OnInit, inject } from '@angular/core';
+import {
+  FormGroup,
+  FormControl,
+  Validators,
+  FormArray,
+  FormBuilder,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+import { AuthapiService } from './../../services/authapi.service';
+import { CustomValidatorService } from '../../services/validators/custom-validator.service';
+
+
 @Component({
-  selector: 'app-register',
-  imports: [ReactiveFormsModule,RouterLink],
-  templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  selector: 'app-agent-register',
+  templateUrl: './agent-register.component.html',
+  styleUrls: ['./agent-register.component.css'],
+  imports: [ReactiveFormsModule, RouterLink],
 })
-export class RegisterComponent implements OnInit{
+export class AgentRegisterComponent implements OnInit {
+  agentRegisterForm!: FormGroup;
+  workingHoursFormArray!: FormArray;
+
   licensePreview: string | ArrayBuffer | null = null;
   selectedFile: File | null = null;
-  error:string |null=null;
-  locations: { label: string; value: string }[] = [
+  error:string|null=null;
+
+  // Location options
+  locations = [
     { label: 'Cairo', value: 'cairo' },
     { label: 'Giza', value: 'giza' },
     { label: 'Alexandria', value: 'alexandria' },
@@ -46,17 +60,70 @@ export class RegisterComponent implements OnInit{
     { label: 'New Cairo', value: 'new_cairo' },
     { label: 'Obour', value: 'obour' },
     { label: '10th of Ramadan', value: 'tenth_ramadan' },
-    { label: 'Badr', value: 'badr' }
+    { label: 'Badr', value: 'badr' },
   ];
-  _router=inject(Router)
-  _customValidator=inject(CustomValidatorService)
-  _authService=inject(AuthapiService);
-  _notification = inject(MatSnackBar);
+
+  // Days of week for working hours
+  daysOfWeek = [
+    { name: 'Monday', value: 'mon' },
+    { name: 'Tuesday', value: 'tue' },
+    { name: 'Wednesday', value: 'wed' },
+    { name: 'Thursday', value: 'thu' },
+    { name: 'Friday', value: 'fri' },
+    { name: 'Saturday', value: 'sat' },
+    { name: 'Sunday', value: 'sun' },
+  ];
+
+  // Injected services
+  private _fb = inject(FormBuilder);
+  private _router = inject(Router);
+  private _customValidator = inject(CustomValidatorService);
+  private _authService = inject(AuthapiService);
+  private _notification = inject(MatSnackBar);
 
   ngOnInit(): void {
-     // Get user location and patch to form or show notification on error
+    // Initialize working hours form array
+    this.workingHoursFormArray = this._fb.array(
+      this.daysOfWeek.map(() =>
+        this._fb.group({
+          selected: [false],
+          from: ['09:00'],
+          to: ['17:00'],
+        })
+      )
+    );
+
+    // Initialize main form group
+    this.agentRegisterForm = new FormGroup(
+      {
+        company_name: new FormControl('', [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(50),
+        ]),
+        email: new FormControl('', [Validators.required, Validators.email]),
+        password: new FormControl('', [
+          Validators.required,
+          Validators.minLength(6),
+        ]),
+        cPassword: new FormControl('', [Validators.required]),
+        phone_number: new FormControl('', [
+          Validators.required,
+          Validators.pattern(/^01[0125][0-9]{8}$/),
+        ]),
+        location: new FormControl('', [Validators.required]),
+        ID_document: new FormControl('', [Validators.required]),
+        lat: new FormControl(''),
+        lng: new FormControl(''),
+        working_hours: new FormControl('', [Validators.required]),
+      },
+      { validators: this._customValidator.matchPasswords() }
+    );
+
+    // Get user location and patch to form or show notification on error
     this.getUserLocation();
   }
+
   getUserLocation(): void {
     // Check if geolocation is supported
     if (!navigator.geolocation) {
@@ -94,7 +161,7 @@ export class RegisterComponent implements OnInit{
             loadingSnackBar.dismiss();
           }
 
-          this.registerForm.patchValue({
+          this.agentRegisterForm.patchValue({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           });
@@ -153,48 +220,47 @@ export class RegisterComponent implements OnInit{
     }
   }
 
-  registerForm: FormGroup = new FormGroup({
-    first_name: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]),
-    last_name: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    cPassword: new FormControl('', [Validators.required]),
-    phone_number: new FormControl('', [Validators.required, Validators.pattern(/^01[0125][0-9]{8}$/)]),
-    location: new FormControl('', [Validators.required]),
-    driver_license: new FormControl('', [Validators.required]),
-    lat: new FormControl(''),
-    lng: new FormControl('')
-  },{ validators:this._customValidator.matchPasswords() });
+  getDayControl(index: number, controlName: string): FormControl {
+    return (this.workingHoursFormArray.at(index) as FormGroup).get(
+      controlName
+    ) as FormControl;
+  }
 
+  updateWorkingHoursString(): void {
+    const workingDays = this.workingHoursFormArray.controls
+      .map((control, index) => {
+        if (control.get('selected')?.value) {
+          const day = this.daysOfWeek[index].value;
+          const from = control.get('from')?.value;
+          const to = control.get('to')?.value;
+          return `${day}:${from}-${to}`;
+        }
+        return null;
+      })
+      .filter(day => day !== null);
 
-  onSubmit() {
-    if (this.registerForm.valid  && this.selectedFile) {
-      console.log('Sending data to API', this.registerForm.value);
-      // Api
-      const formData = new FormData();
-      formData.append('first_name', this.registerForm.get('first_name')?.value);
-      formData.append('last_name', this.registerForm.get('last_name')?.value);
-      formData.append('email', this.registerForm.get('email')?.value);
-      formData.append('password', this.registerForm.get('password')?.value);
-      formData.append('phone_number', this.registerForm.get('phone_number')?.value);
-      formData.append('location', this.registerForm.get('location')?.value);
-      formData.append('driver_license', this.selectedFile);
-      formData.append('lat', this.registerForm.get('lat')?.value );
-      formData.append('lng', this.registerForm.get('lng')?.value );
-      this._authService.registerClient(formData).subscribe({
-  next: (response) => {
-      console.log('Register success:', response);
-      localStorage.setItem('token', response.token);
-      // Navigate to another page
-      this._router.navigate(['/home']);
-    },
-    error: err => {
-      this.error= err.error.error
+    const workingHoursString = workingDays.join(';');
+    this.agentRegisterForm.patchValue({ working_hours: workingHoursString });
+  }
+
+  onSubmit(): void {
+    this.updateWorkingHoursString();
+    if (this.agentRegisterForm.valid && this.selectedFile) {
+      console.log('Sending data to API', this.agentRegisterForm.value);
+      this._authService.registerAgent(this.agentRegisterForm.value, this.selectedFile).subscribe({
+        next: (res) => {
+          localStorage.setItem('token', res.token);
+          this._router.navigate(['/home']);
+        },
+        error: (err) => {
+          this.error= err.error.error
       console.log(err.error.error);
-    }
-    });
+        },
+      });
     } else {
-      this.registerForm.markAllAsTouched();
+      console.log('Form is invalid', this.agentRegisterForm.errors);
+      this.agentRegisterForm.markAllAsTouched();
     }
   }
 }
+
