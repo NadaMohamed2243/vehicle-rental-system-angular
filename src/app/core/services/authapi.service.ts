@@ -39,4 +39,18 @@ export class AuthapiService {
   resetPassword(token: string, password: string) {
     return this.http.post(`${this.baseUrl}/reset-password/${token}`, { password });
   }
+completeGoogleProfile(data: FormData, token: string) {
+  return this.http.post<{ token: string }>(
+    'http://localhost:5000/api/auth/google/complete-profile',
+    data,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+}
+
+
+
 }

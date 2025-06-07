@@ -19,6 +19,7 @@ import { MainRegisterComponent } from './core/pages/main-register/main-register.
 import { RoleGuard } from './role.guard';
 import { AuthGuard } from './auth.guard';
 import { UnauthorizedComponent } from './core/pages/unauthorized/unauthorized.component';
+import { CompleteProfileComponent } from './core/pages/complete-profile/complete-profile.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'landing', pathMatch: 'full' },
@@ -32,6 +33,8 @@ export const routes: Routes = [
   { path: 'pendingResetPassword', component: PendingResetPasswordComponent },
   { path: 'reset-password/:token', component: ResetPasswordComponent },
   {path:'register',component:MainRegisterComponent},
+  { path: 'complete-profile', component: CompleteProfileComponent },
+
   {
     path: 'dashboard',
     component: DashboardComponent,
