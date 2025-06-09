@@ -6,10 +6,10 @@ import { NavbarComponent } from "./core/layout/navbar/navbar.component";
 import { CommonModule } from '@angular/common';
 import { BrandIconsComponent } from "./feature/pages/landing/components/brand-icons/brand-icons.component";
 import { FooterComponent } from "./core/layout/footer/footer.component";
-
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HeroComponent, NavbarComponent, BrandIconsComponent],
+  imports: [RouterOutlet, HeroComponent, NavbarComponent, BrandIconsComponent,MatSnackBarModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
