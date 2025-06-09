@@ -7,22 +7,27 @@ import {
   OnDestroy,
   PLATFORM_ID,
   Inject,
+  AfterViewInit,
+  OnChanges,
+  SimpleChanges,
+  ElementRef,
+  ViewChild,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 declare var L: any;
 
 export interface Location {
-  lat: number;
-  lng: number;
-  address?: string;
+  lat: number | undefined;
+  lng: number | undefined;
+  address?: string | null;
 }
 
 @Component({
   selector: 'app-map',
   standalone: true,
   template: `
-    <div id="map" class="w-full h-[250px] rounded-lg"></div>
+    <div #mapContainer [id]="mapId" class="w-full h-[250px] rounded-lg"></div>
     <div class="mt-2 text-sm text-gray-600">
       @if (distance) {
       <p>Distance to car: {{ distance }} km</p>
@@ -36,12 +41,18 @@ export interface Location {
   `,
   styleUrls: ['./map.component.css'],
 })
-export class MapComponent implements OnInit, OnDestroy {
-  @Input() carLocation!: Location | undefined;
+export class MapComponent
+  implements OnInit, AfterViewInit, OnDestroy, OnChanges
+{
+  @Input() carLocation!: Location | null;
   @Input() userLocation?: Location | null;
   @Input() enableDeliverySelection: boolean = true;
   @Output() deliveryLocationSelected = new EventEmitter<Location>();
 
+  @ViewChild('mapContainer', { static: false })
+  mapContainerRef!: ElementRef<HTMLDivElement>;
+
+  mapId = 'map-' + Math.random().toString(36).substring(2, 10);
   private map: any;
   private carMarker: any;
   private userMarker: any;
@@ -53,18 +64,45 @@ export class MapComponent implements OnInit, OnDestroy {
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   ngOnInit() {
+    // Do nothing here
+  }
+
+  ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {
-      this.loadLeaflet();
+      setTimeout(() => this.loadLeaflet(), 0);
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['carLocation'] && !changes['carLocation'].firstChange) {
+      this.destroyMap();
+      if (isPlatformBrowser(this.platformId)) {
+        setTimeout(() => this.loadLeaflet(), 0);
+      }
     }
   }
 
   ngOnDestroy() {
+    this.destroyMap();
+  }
+
+  private destroyMap() {
     if (this.map) {
       this.map.remove();
+      this.map = null;
+    }
+    // Remove map container content to ensure a clean slate
+    if (this.mapContainerRef?.nativeElement) {
+      this.mapContainerRef.nativeElement.innerHTML = '';
     }
   }
 
   private loadLeaflet() {
+    // Wait for the map container to exist in the DOM
+    if (!this.mapContainerRef?.nativeElement) {
+      setTimeout(() => this.loadLeaflet(), 50);
+      return;
+    }
     if (typeof L !== 'undefined') {
       this.initializeMap();
       return;
@@ -86,13 +124,23 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   private initializeMap() {
-    // Initialize map centered on car location
-    this.map = L.map('map').setView(
-      [this.carLocation?.lat, this.carLocation?.lng],
+    if (
+      !this.carLocation ||
+      this.carLocation.lat == null ||
+      this.carLocation.lng == null
+    )
+      return;
+    const mapElement = this.mapContainerRef?.nativeElement;
+    if (!mapElement) return;
+
+    // Defensive: Remove any previous map instance from this container
+    mapElement.innerHTML = '';
+
+    this.map = L.map(this.mapId).setView(
+      [this.carLocation.lat, this.carLocation.lng],
       13
     );
 
-    // Add tile layer (OpenStreetMap)
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors',
     }).addTo(this.map);
@@ -104,7 +152,6 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   private addCarMarker() {
-    // Car icon
     const carIcon = L.icon({
       iconUrl: 'https://cdn-icons-png.flaticon.com/512/3774/3774278.png',
       iconSize: [40, 40],
@@ -131,7 +178,6 @@ export class MapComponent implements OnInit, OnDestroy {
   private createUserMarker() {
     if (!this.userLocation) return;
 
-    // User icon
     const userIcon = L.icon({
       iconUrl: 'https://cdn-icons-png.flaticon.com/512/1077/1077114.png',
       iconSize: [30, 30],
@@ -145,7 +191,6 @@ export class MapComponent implements OnInit, OnDestroy {
       .addTo(this.map)
       .bindPopup('Your Location');
 
-    // Fit map to show both markers
     const group = new L.featureGroup([this.carMarker, this.userMarker]);
     this.map.fitBounds(group.getBounds().pad(0.1));
   }
@@ -181,12 +226,10 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   private setDeliveryLocation(location: Location) {
-    // Remove existing delivery marker
     if (this.deliveryMarker) {
       this.map.removeLayer(this.deliveryMarker);
     }
 
-    // Delivery icon
     const deliveryIcon = L.icon({
       iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
       iconSize: [35, 35],
@@ -207,7 +250,6 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   private getAddressFromCoordinates(location: Location) {
-    // Using Nominatim (free geocoding service)
     const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.lat}&lon=${location.lng}`;
 
     fetch(url)
