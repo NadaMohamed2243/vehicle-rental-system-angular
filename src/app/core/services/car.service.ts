@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { Cars } from '../../core/interfaces/cars';
-import { UserService } from './user.service';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable, map, switchMap } from 'rxjs';
+import { GeoLocationService } from './geo-location.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,11 +11,12 @@ export class CarService {
   private _cars: Cars[] = [];
   private _popularCars: Cars[] = [];
   private _nearbyCars: Cars[] = [];
-
-  _userService = inject(UserService);
   userCity: string = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private geoLocationService: GeoLocationService
+  ) {}
 
   // Fetch all cars from API
   getCars(): Observable<Cars[]> {
@@ -39,16 +40,45 @@ export class CarService {
     );
   }
 
-  // Get nearby cars based on user's city
+  // Get nearby cars based on user's city from user service and /me endpoint
+  // Uncomment this method when the /me endpoint is implemented and we want the approach based on user location in the time of the user registration
+  // getNearByCars(): Observable<Cars[]> {
+  //   this.userCity = this._userService.getUser().location.city;
+  //   return this.getCars().pipe(
+  //     map((cars) => {
+  //       this._nearbyCars = cars.filter(
+  //         (car) =>
+  //           car.agent?.location.toLowerCase() === this.userCity.toLowerCase()
+  //       );
+  //       return this._nearbyCars;
+  //     })
+  //   );
+  // }
+
+  // Get nearby cars based on user's current location using IP geolocation
+  // we want this approach based on user location in the time of the booking not in the time of the user registration
   getNearByCars(): Observable<Cars[]> {
-    this.userCity = this._userService.getUser().location.city;
-    return this.getCars().pipe(
+    return this.geoLocationService.getLocation().pipe(
+      switchMap((location) => {
+        // Get the mapped city value through the service
+        this.userCity =
+          this.geoLocationService.mapCityToLocation(location.city) ||
+          location.city.toLowerCase();
+        return this.getCars();
+      }),
       map((cars) => {
-        this._nearbyCars = cars.filter(
-          (car) =>
-            car.agent?.location.toLowerCase() === this.userCity.toLowerCase()
-        );
-        return this._nearbyCars;
+        const nearbyCars = cars.filter((car) => {
+          if (!car.agent?.location) return false;
+
+          // Normalize the car location using the same service
+          const carLocation =
+            this.geoLocationService.mapCityToLocation(car.agent.location) ||
+            car.agent.location.toLowerCase();
+          return carLocation === this.userCity;
+        });
+
+        this._nearbyCars = nearbyCars;
+        return nearbyCars;
       })
     );
   }
