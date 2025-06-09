@@ -26,8 +26,9 @@ export class CarSliderComponent implements OnInit {
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
       const swiperEl: any = document.querySelector('swiper-container');
+      if (!swiperEl) return; // Prevent error if not found
       const swiperParams = {
-        slidesPerView: 'auto',
+        slidesPerView: 1,
         injectStyles: [
           `
           .swiper-button-next,
@@ -36,27 +37,18 @@ export class CarSliderComponent implements OnInit {
           }
         `,
         ],
-        spaceBetween: 0, // No gap between slides
-        freeMode: true, // Enables free scrolling
-        grabCursor: true, // Shows grab cursor
-        mousewheel: true, // Allows mousewheel scrolling
-        resistance: false, // Disables edge resistance
+        spaceBetween: 10,
+        pagination: { clickable: true },
+        freeMode: true,
+        grabCursor: true,
+        mousewheel: true,
+        resistance: false,
         scrollbar: {
-          // Optional scrollbar
           draggable: true,
         },
       };
       Object.assign(swiperEl, swiperParams);
       swiperEl.initialize();
-
-      setTimeout(() => {
-        Object.assign(swiperEl.nativeElement, {
-          slidesPerView: 1,
-          spaceBetween: 10,
-          pagination: { clickable: true },
-        });
-        swiperEl.nativeElement.initialize();
-      }, 1000);
     }
   }
 }
