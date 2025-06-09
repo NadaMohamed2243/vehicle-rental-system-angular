@@ -61,6 +61,7 @@ export class CarsComponent implements OnInit, OnDestroy {
   cars: Cars[] = [];
   filteredCars: Cars[] = [];
   selectedCar: Cars | null = null;
+  selectedCarLocation: Location | null = null;
 
   // Rental Details
   pickupDate: Date | null = null;
@@ -179,6 +180,15 @@ export class CarsComponent implements OnInit, OnDestroy {
   showCarDetails(car: Cars | null): void {
     this.selectedCar = car;
     this.visible = true;
+    if (car) {
+      this.selectedCarLocation = {
+        lat: car.agent.lat,
+        lng: car.agent.lng,
+        address: car.agent.location,
+      };
+    } else {
+      this.selectedCarLocation = null;
+    }
   }
 
   onDrawerHide(): void {
