@@ -19,6 +19,10 @@ import { Cars } from '../../../core/interfaces/cars';
 import { CarService } from '../../../core/services/car.service';
 import { Subscription, Observable, switchMap } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
+import {
+  MapComponent,
+  Location,
+} from '../../../shared/components/ui/map/map.component';
 
 @Component({
   selector: 'app-cars',
@@ -39,6 +43,7 @@ import { Router, ActivatedRoute } from '@angular/router';
     ButtonModule,
     ToggleSwitchModule,
     FilterSidebarComponent,
+    MapComponent,
   ],
   templateUrl: './cars.component.html',
   styleUrls: ['./cars.component.css'],
@@ -71,6 +76,14 @@ export class CarsComponent implements OnInit, OnDestroy {
   filtration: string | null = null;
   type: string | null = null;
   brand: string | null = null;
+
+  // Map related properties
+  userLocation: Location | null = {
+    lat: 31.408507,
+    lng: 31.81227,
+    address: 'Your current location',
+  };
+  selectedDeliveryLocation: Location | null = null;
 
   // Services
   private _carService = inject(CarService);
@@ -174,5 +187,10 @@ export class CarsComponent implements OnInit, OnDestroy {
 
   toggleFavorite(): void {
     this.isFavorite = !this.isFavorite;
+  }
+
+  onDeliveryLocationSelected(location: Location) {
+    this.selectedDeliveryLocation = location;
+    console.log('Delivery location selected:', location);
   }
 }
