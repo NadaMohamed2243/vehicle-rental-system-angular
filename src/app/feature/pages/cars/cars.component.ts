@@ -19,6 +19,10 @@ import { Cars } from '../../../core/interfaces/cars';
 import { CarService } from '../../../core/services/car.service';
 import { Subscription, Observable, switchMap } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
+import {
+  MapComponent,
+  Location,
+} from '../../../shared/components/ui/map/map.component';
 
 @Component({
   selector: 'app-cars',
@@ -39,6 +43,7 @@ import { Router, ActivatedRoute } from '@angular/router';
     ButtonModule,
     ToggleSwitchModule,
     FilterSidebarComponent,
+    MapComponent,
   ],
   templateUrl: './cars.component.html',
   styleUrls: ['./cars.component.css'],
@@ -56,6 +61,7 @@ export class CarsComponent implements OnInit, OnDestroy {
   cars: Cars[] = [];
   filteredCars: Cars[] = [];
   selectedCar: Cars | null = null;
+  selectedCarLocation: Location | null = null;
 
   // Rental Details
   pickupDate: Date | null = null;
@@ -71,6 +77,14 @@ export class CarsComponent implements OnInit, OnDestroy {
   filtration: string | null = null;
   type: string | null = null;
   brand: string | null = null;
+
+  // Map related properties
+  userLocation: Location | null = {
+    lat: 31.408507,
+    lng: 31.81227,
+    address: 'Your current location',
+  };
+  selectedDeliveryLocation: Location | null = null;
 
   // Services
   private _carService = inject(CarService);
@@ -115,12 +129,6 @@ export class CarsComponent implements OnInit, OnDestroy {
             this.type = params['type'] || null;
             this.brand = params['brand'] || null;
 
-            console.log('Query params:', {
-              filtration: this.filtration,
-              type: this.type,
-              brand: this.brand,
-            });
-
             return this.loadCars();
           })
         )
@@ -130,7 +138,6 @@ export class CarsComponent implements OnInit, OnDestroy {
             this.filteredCars = [...this.cars];
             this.isLoading = false;
             this.errorMessage = null;
-            console.log('Loaded cars:', this.cars);
           },
           error: (err) => {
             console.error('Error loading cars:', err);
@@ -173,6 +180,15 @@ export class CarsComponent implements OnInit, OnDestroy {
   showCarDetails(car: Cars | null): void {
     this.selectedCar = car;
     this.visible = true;
+    if (car) {
+      this.selectedCarLocation = {
+        lat: car.agent.lat,
+        lng: car.agent.lng,
+        address: car.agent.location,
+      };
+    } else {
+      this.selectedCarLocation = null;
+    }
   }
 
   onDrawerHide(): void {
@@ -181,5 +197,10 @@ export class CarsComponent implements OnInit, OnDestroy {
 
   toggleFavorite(): void {
     this.isFavorite = !this.isFavorite;
+  }
+
+  onDeliveryLocationSelected(location: Location) {
+    this.selectedDeliveryLocation = location;
+    console.log('Delivery location selected:', location);
   }
 }
