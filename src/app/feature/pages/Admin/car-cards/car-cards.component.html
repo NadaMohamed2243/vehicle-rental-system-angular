@@ -113,8 +113,9 @@
     <p><strong>Year:</strong> {{ selectedCar.year }}</p>
     <p><strong>Plate:</strong> {{ selectedCar.licensePlate }}</p>
     <p><strong>Type:</strong> {{ selectedCar.type }}</p>
+    <p><strong>Fuel Type:</strong> {{ selectedCar.fuel_type}}</p>
     <p><strong>Seats:</strong> {{ selectedCar.seats }}</p>
-    <p><strong>Rate:</strong> ${{ selectedCar.rentalRatePerDay }} / day</p>
+    <p><strong>rental Rate:</strong> EGP {{ selectedCar.rentalRatePerDay }} / day</p>
 
 
     <!-- in case => occupied car -->
@@ -122,7 +123,7 @@
     <hr class="my-2 border-gray-200"/>
     <div class="flex items-center gap-2 mb-2">
       <i class="pi pi-compass text-gray-400"></i>
-      <span>Odometer: {{ selectedCar.odometerReading }} km</span>
+      <span>Odometer Reading: {{ selectedCar.odometerReading }} km</span>
     </div>
     <div class="flex items-center gap-2 mb-2">
       <i class="pi pi pi-calendar-clock text-gray-400"></i>
@@ -135,16 +136,16 @@
     <div class="flex justify-end gap-3 mt-4">
       <button
         (click)="editCar(selectedCar)"
-        [disabled]="selectedCar.availabilityStatus"
-        class="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        [disabled]="selectedCar.availabilityStatus !== 'Available'"
+        class="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <i class="pi pi-pencil"></i>
         Edit
       </button>
   
       <button
-        [disabled]="selectedCar.availabilityStatus"
-        class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        [disabled]="selectedCar.availabilityStatus !== 'Available'"
+        class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <i class="pi pi-trash"></i>
         Delete

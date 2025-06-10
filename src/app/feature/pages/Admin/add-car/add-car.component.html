@@ -43,8 +43,8 @@
          <!-- License Plate -->
          <div>
           <p-floatLabel variant="on">
-            <input id="license_plate" pInputText formControlName="license_plate" class="w-full" />
-            <label for="license_plate">License Plate</label>
+            <input id="licensePlate" pInputText formControlName="licensePlate" class="w-full" />
+            <label for="licensePlate">License Plate</label>
           </p-floatLabel>
         </div>
         </div>
@@ -97,8 +97,8 @@
         <!-- Odometer -->
         <div>
           <p-floatLabel variant="on">
-            <input id="odometer" pInputText formControlName="odometer" class="w-full" />
-            <label for="odometer">Odometer (km)</label>
+            <input id="odometerReading" pInputText formControlName="odometerReading" class="w-full" />
+            <label for="odometerReading">Odometer (km)</label>
           </p-floatLabel>
         </div>
         </div>
@@ -157,8 +157,9 @@
           </div>
           <div>
             <p-floatLabel variant="on">
-              <input id="availability_status" pInputText formControlName="availability_status" class="w-full" />
-              <label for="availability_status">Availability Status</label>
+              <input id="availabilityStatus" pInputText formControlName="availabilityStatus" class="w-full" />
+              <label for="availabilityStatus">Availability Status</label>
+              <!-- <p-dropdown [options]="availabilityOptions" formControlName="availability_status" placeholder="Select Availability"></p-dropdown> -->
             </p-floatLabel>
           </div>
         </div>
@@ -166,8 +167,8 @@
         <!-- Notes -->
         <div class="grid grid-cols-1 gap-4">
           <p-floatLabel variant="on">
-            <textarea id="notes" pInputTextarea formControlName="condition_notes" rows="3" class="w-full shadow-sm border border-gray-200 rounded"></textarea>
-            <label for="notes">Notes</label>
+            <textarea id="conditionNotes" pInputTextarea formControlName="conditionNotes" rows="3" class="w-full shadow-sm border border-gray-200 rounded"></textarea>
+            <label for="conditionNotes">Notes</label>
           </p-floatLabel>
         </div>
 
@@ -188,7 +189,8 @@
       <div class="grid grid-cols-1 gap-2 mb-6">
         <label class="text-sm font-medium text-gray-700">Main Image</label>
         <p-fileUpload mode="basic" chooseLabel="Choose File" accept="image/*" 
-                     (onSelect)="onImageSelected($event)" class="w-full"></p-fileUpload>
+                     (onSelect)="onImageSelected($event)" class="w-full">
+        </p-fileUpload>
       </div>
 
       <div *ngIf="imagePreview" class="mb-6">

@@ -8,9 +8,11 @@ import { MessageModule } from 'primeng/message';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { FileUploadModule } from 'primeng/fileupload';
 import { CalendarModule } from 'primeng/calendar';
+// import { DropdownModule } from 'primeng/dropdown';
 import { Router } from '@angular/router';
 import { AdmincarsService } from '../../../../core/services/admincars.service';
-import { Car } from '../../../../core/interfaces/car';
+// import { Car } from '../../../../core/interfaces/car';
+
 
 
 @Component({
@@ -27,16 +29,22 @@ export class AddCarComponent {
   additionalImagesPreviews: string[] = [];
   carData: any;
   formTitle: string = 'Add Car';
+//   availabilityOptions = [
+//   { label: 'Available', value: 'available' },
+//   { label: 'Rented', value: 'rented' },
+//   { label: 'Maintenance', value: 'maintenance' }
+// ];
+
 
 
 
   constructor(private fb: FormBuilder, private _AdmincarService:AdmincarsService ,private router: Router) {
     this.carForm = this.fb.group({
-      car_id: [''],
+      _id: [''],
       brand: ['', Validators.required],
       model: ['', Validators.required],
       year: [null, [Validators.required, Validators.min(1990)]],
-      license_plate: ['', Validators.required],
+      licensePlate: ['', Validators.required],
       type: ['', Validators.required],
       transmission: ['', Validators.required],
       fuel_type: ['', Validators.required],
@@ -45,28 +53,29 @@ export class AddCarComponent {
       mileage: [null, Validators.required],
       totalPricePerDay: [null, Validators.required],
       totalPricePerHour: [null, Validators.required],
-      availability_status: ['', Validators.required],
+      availabilityStatus: ['', Validators.required],
       current_location: ['', Validators.required],
-      deposit_required: [null],
-      insurance_status: [''],
+      depositRequired: [null],
+      insuranceStatus: [''],
       lastMaintenanceDate: [''],
       nextMaintenanceDue: [''],
-      condition_notes: [''],
-      fuel_level: [''],
-      odometer_reading: [null],
+      conditionNotes: [''],
+      fuelLevel: [''],
+      odometerReading : [null],
       date_added_to_fleet: [''],
-      last_rented_date: [''],
-      expected_return_date: [''],
+      lastRentedDate: [''],
+      expectedReturnDate: [''],
       rating: [null],
       rental_history: [[]],
-      car_photos: [null, Validators.required],
+      carPhotos: [null, Validators.required],
+      additional_images: [null],
     });
   }
 
   onImageSelected(event: any) {
     const file = event.files?.[0] || event.target?.files?.[0];
     if (file) {
-      this.carForm.patchValue({ car_photos: file });
+      this.carForm.patchValue({ carPhotos: file });
 
       const reader = new FileReader();
       reader.onload = () => {
@@ -124,7 +133,7 @@ export class AddCarComponent {
 
     if (this.carData) {
       // editing an existing car
-      this._AdmincarService.updateCar(this.carData.id, formData).subscribe({
+      this._AdmincarService.updateCar(this.carData._id, formData).subscribe({
         next: (res:any) => {
           console.log('Car updated successfully', res);
           this.router.navigate(['dashboard/car-cards']);
@@ -162,39 +171,56 @@ export class AddCarComponent {
 prefillForm() {
   if (this.carData) {
     this.carForm.patchValue({
-      car_id: this.carData.id || '',
+      _id: this.carData._id || '',
       brand: this.carData.brand || '',
       model: this.carData.model || '',
       year: this.carData.year || '',
-      license_plate: this.carData.license_plate || '',
+      licensePlate: this.carData.licensePlate || '',
       type: this.carData.type || '',
       transmission: this.carData.transmission || '',
       fuel_type: this.carData.fuel_type || '',
       seats: this.carData.seats || '',
       color: this.carData.color || '',
       mileage: this.carData.mileage || '',
-      rental_rate_per_day: this.carData.rental_rate_per_day || '',
-      rental_rate_per_hour: this.carData.rental_rate_per_hour || '',
-      availability_status: this.carData.availability_status || '',
-      current_location: this.carData.current_location || '',
-      deposit_required: this.carData.deposit_required || '',
-      insurance_status: this.carData.insurance_status || '',
+      availabilityStatus: this.carData.availabilityStatus || '',
+      // current_location: this.carData.current_location || '',
+      depositRequired: this.carData.depositRequired || '',
+      insuranceStatus: this.carData.insuranceStatus || '',
       lastMaintenanceDate: this.carData.lastMaintenanceDate || '',
       nextMaintenanceDue: this.carData.nextMaintenanceDue || '',
-      condition_notes: this.carData.condition_notes || '',
-      fuel_level: this.carData.fuel_level || '',
-      odometer_reading: this.carData.odometer_reading || '',
-      date_added_to_fleet: this.carData.date_added_to_fleet || '',
-      last_rented_date: this.carData.last_rented_date || '',
-      expected_return_date: this.carData.expected_return_date || '',
+      conditionNotes: this.carData.conditionNotes || '',
+      fuelLevel: this.carData.fuelLevel || '',
+      odometerReading : this.carData.odometerReading || '',
+      lastRentedDate: this.carData.lastRentedDate || '',
+      expectedReturnDate: this.carData.expectedReturnDate || '',
       rating: this.carData.rating || '',
       rental_history: this.carData.rental_history || [],
       totalPricePerDay: this.carData.totalPricePerDay || '',
       totalPricePerHour: this.carData.totalPricePerHour || '',
-      car_photos: this.carData.car_photos || null,
+      carPhotos: this.carData.carPhotos || null,
     });
+
+   if (this.carData.carPhotos) {
+      if (Array.isArray(this.carData.carPhotos) && this.carData.carPhotos.length > 0) {
+        this.imagePreview = this.carData.carPhotos[0];  
+      }
+      else if (typeof this.carData.carPhotos === 'string') {
+        this.imagePreview = this.carData.carPhotos;
+      }
+    }
+    //additionalImagesPreviews
+    if (this.carData.additional_images && Array.isArray(this.carData.additional_images)) {
+      this.additionalImagesPreviews = this.carData.additional_images.map((img: string) => img);
+    } else if (typeof this.carData.additional_images === 'string') {
+      this.additionalImagesPreviews = [this.carData.additional_images];
+    }
+
+
   }
 }
 
   
 }
+
+
+

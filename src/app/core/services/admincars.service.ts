@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Cars } from '../../core/interfaces/cars';
-import { Observable, of ,map} from 'rxjs'; //use it until i use httpClient (get data from api), when i use it i will remove it
+import { Observable ,map} from 'rxjs'; 
 import { HttpClient } from '@angular/common/http';
 
 
@@ -23,44 +23,26 @@ export class AdmincarsService {
 
 
     getAvailableCars(): Observable<Cars[]> {
-    return of(this._cars.filter(car => car.availabilityStatus === 'Available'));
+    return this.getAllCars().pipe(
+    map(cars => cars.filter(car => car.availabilityStatus === 'Available'))
+    );
   }
 
   getOccupiedCars(): Observable<Cars[]> {
-    return of(this._cars.filter(car => car.availabilityStatus !== 'Available'));
+    return this.getAllCars().pipe(
+    map(cars => cars.filter(car => car.availabilityStatus !== 'Available'))
+  );
   }
 
  
 
-
- updateCar(carId: number, formData: FormData): Observable<any> {
-  const updatedCar: any = {};  
-
-  formData.forEach((value, key) => {
-    updatedCar[key] = value;  
-  });
-
-  const carIndex = this._cars.findIndex(car => car._id === carId.toString());
-  if (carIndex !== -1) {
-    this._cars[carIndex] = { ...this._cars[carIndex], ...updatedCar };
-    return of({ success: true, message: 'Car updated successfully', car: this._cars[carIndex] });
+  updateCar(carId: number, formData: FormData): Observable<any> {
+    return this.http.put<any>(`http://localhost:5000/api/cars/${carId}`, formData);
   }
-  return of({ success: false, message: 'Car not found' });
-}
 
-//addCar method
-addCar(formData: FormData): Observable<any> {
-  const newCar: any = {};  
-
-  formData.forEach((value, key) => {
-    newCar[key] = value;  
-  });
-
-  newCar['id'] = this._cars.length + 1;
-  this._cars.push(newCar);  
-
-  return of({ success: true, message: 'Car added successfully', car: newCar });
-}
+  addCar(formData: FormData): Observable<any> {
+    return this.http.post<any>('http://localhost:5000/api/cars', formData);
+  }
 
 
  
