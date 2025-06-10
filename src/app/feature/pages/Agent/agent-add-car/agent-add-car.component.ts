@@ -1,215 +1,183 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
+import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';    
 import { InputTextModule } from 'primeng/inputtext';
-import { ButtonModule } from 'primeng/button';
+import { ButtonModule } from 'primeng/button';  
 import { MessageModule } from 'primeng/message';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { FileUploadModule } from 'primeng/fileupload';
 import { CalendarModule } from 'primeng/calendar';
 import { Router } from '@angular/router';
-import { AdmincarsService } from '../../../../core/services/admincars.service';
 
 @Component({
-  selector: 'app-add-car',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
-    InputTextModule,
-    ButtonModule,
-    MessageModule,
-    FloatLabelModule,
-    FileUploadModule,
-    CalendarModule
-  ],
+  selector: 'app-agent-add-car',
+   standalone: true,
+  imports: [CommonModule,ReactiveFormsModule,FormsModule,InputTextModule,ButtonModule,MessageModule,FloatLabelModule,FileUploadModule,CalendarModule],
   templateUrl: './agent-add-car.component.html',
-  styleUrl: './agent-add-car.component.css'
+  styleUrls: ['./agent-add-car.component.css']
 })
+
+
 export class AgentAddCarComponent {
-
+  formTitle: string = 'Add New Car';
   carForm: FormGroup;
-  submitted = false;
-  imagePreview: string | ArrayBuffer | null = null;
+  mainImage: File | null = null;
+  additionalImages: File[] = [];
+  documents: File[] = [];
+  imagePreview: string | null = null;
   additionalImagesPreviews: string[] = [];
-  carData: any;
-  formTitle: string = 'Add Car';
 
-  constructor(private fb: FormBuilder, private _AdmincarService: AdmincarsService, private router: Router) {
-    this.carForm = this.fb.group({
-      _id: [''],
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private router: Router
+  ) {
+   this.carForm = this.fb.group({
       brand: ['', Validators.required],
       model: ['', Validators.required],
-      year: [null, [Validators.required, Validators.min(1990)]],
+      year: ['', Validators.required],
       licensePlate: ['', Validators.required],
       type: ['', Validators.required],
-      transmission: ['', Validators.required],
+      seats: ['', Validators.required],
       fuel_type: ['', Validators.required],
-      seats: [null, [Validators.required, Validators.min(1)]],
       color: ['', Validators.required],
-      mileage: [null, Validators.required],
-      totalPricePerDay: [null, Validators.required],
-      totalPricePerHour: [null, Validators.required],
-      availabilityStatus: ['', Validators.required],
+      transmission: ['', Validators.required],
+      odometerReading: ['', Validators.required],
+      totalPricePerDay: ['', Validators.required],
+      totalPricePerHour: ['', Validators.required],
+      lastMaintenanceDate: [null],
+      nextMaintenanceDue: [null],
       current_location: ['', Validators.required],
-      depositRequired: [null],
-      insuranceStatus: [''],
-      lastMaintenanceDate: [''],
-      nextMaintenanceDue: [''],
+      availabilityStatus: ['', Validators.required],
       conditionNotes: [''],
-      fuelLevel: [''],
-      odometerReading: [null],
-      date_added_to_fleet: [''],
-      lastRentedDate: [''],
-      expectedReturnDate: [''],
-      rating: [null],
-      rental_history: [[]],
-      carPhotos: [null, Validators.required],
-      additional_images: [null]
+      // depositRequired: [0, Validators.required],
+      // with_driver: [false]
     });
   }
 
+  ngOnInit(): void {
+  this.carForm.valueChanges.subscribe(value => {
+    console.log('Live form changes:', value);       // Log the form values in real-time
+  });
+}
+
+
   onImageSelected(event: any) {
-    const file = event.files?.[0] || event.target?.files?.[0];
+    const file = event.files[0];
     if (file) {
-      this.carForm.patchValue({ carPhotos: file });
+      this.mainImage = file;
       const reader = new FileReader();
       reader.onload = () => {
-        this.imagePreview = reader.result;
+        this.imagePreview = reader.result as string;
       };
       reader.readAsDataURL(file);
     }
   }
 
   onAdditionalImagesSelected(event: any) {
-    const files = event.files;
-    if (files && files.length > 0) {
-      this.carForm.patchValue({ additional_images: files });
-      this.additionalImagesPreviews = [];
-      Array.from(files).forEach((file: any) => {
-        const reader = new FileReader();
-        reader.onload = () => this.additionalImagesPreviews.push(reader.result as string);
-        reader.readAsDataURL(file);
-      });
+    for (let file of event.files) {
+      this.additionalImages.push(file);
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.additionalImagesPreviews.push(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   }
 
   removeAdditionalImage(preview: string) {
-    this.additionalImagesPreviews = this.additionalImagesPreviews.filter(img => img !== preview);
-    const files = this.carForm.get('additional_images')?.value;
-    this.carForm.patchValue({
-      additional_images: files.filter((file: any) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        return reader.result !== preview;
-      })
-    });
-  }
-
-  submitForm() {
-    this.submitted = true;
-
-    const mainImage: File = this.carForm.get('carPhotos')?.value;
-    const additionalImages: File[] = Array.from(this.carForm.get('additional_images')?.value || []);
-
-    const formData = new FormData();
-    if (mainImage) {
-      formData.append('images', mainImage);
-    }
-    additionalImages.forEach((file) => {
-      formData.append('images', file);
-    });
-
-    this._AdmincarService.uploadImages(formData).subscribe({
-      next: (res: any) => {
-        const imageUrls: string[] = res.imageUrls || [];
-        const carPhotos: string[] = imageUrls;
-
-        const formDataToSend = { ...this.carForm.value };
-        formDataToSend.carPhotos = carPhotos;
-
-        if (this.carData) {
-          this._AdmincarService.updateCar(this.carData._id, formDataToSend).subscribe({
-            next: (res) => {
-              this.router.navigate(['dashboard/car-cards']);
-            },
-            error: (err) => {
-              console.error('Error updating car', err);
-            }
-          });
-        } else {
-          this._AdmincarService.addCar(formDataToSend).subscribe({
-            next: (res) => {
-              this.router.navigate(['dashboard/car-cards']);
-            },
-            error: (err) => {
-              console.error('Error adding car', err);
-            }
-          });
-        }
-      },
-      error: (err) => {
-        console.error('Error uploading images', err);
-      }
-    });
-  }
-
-  ngOnInit(): void {
-    const navigation = history.state;
-    if (navigation && navigation.car) {
-      this.carData = navigation.car;
-      this.formTitle = 'Update Car';
-      this.prefillForm();
+    const index = this.additionalImagesPreviews.indexOf(preview);
+    if (index !== -1) {
+      this.additionalImagesPreviews.splice(index, 1);
+      this.additionalImages.splice(index, 1);
     }
   }
 
-  prefillForm() {
-    if (this.carData) {
-      this.carForm.patchValue({
-        _id: this.carData._id || '',
-        brand: this.carData.brand || '',
-        model: this.carData.model || '',
-        year: this.carData.year || '',
-        licensePlate: this.carData.licensePlate || '',
-        type: this.carData.type || '',
-        transmission: this.carData.transmission || '',
-        fuel_type: this.carData.fuel_type || '',
-        seats: this.carData.seats || '',
-        color: this.carData.color || '',
-        mileage: this.carData.mileage || '',
-        availabilityStatus: this.carData.availabilityStatus || '',
-        current_location: this.carData.current_location || '',
-        depositRequired: this.carData.depositRequired || '',
-        insuranceStatus: this.carData.insuranceStatus || '',
-        lastMaintenanceDate: this.carData.lastMaintenanceDate || '',
-        nextMaintenanceDue: this.carData.nextMaintenanceDue || '',
-        conditionNotes: this.carData.conditionNotes || '',
-        fuelLevel: this.carData.fuelLevel || '',
-        odometerReading: this.carData.odometerReading || '',
-        lastRentedDate: this.carData.lastRentedDate || '',
-        expectedReturnDate: this.carData.expectedReturnDate || '',
-        rating: this.carData.rating || '',
-        rental_history: this.carData.rental_history || [],
-        totalPricePerDay: this.carData.totalPricePerDay || '',
-        totalPricePerHour: this.carData.totalPricePerHour || '',
-        carPhotos: this.carData.carPhotos || null
-      });
-
-      if (this.carData.carPhotos) {
-        if (Array.isArray(this.carData.carPhotos) && this.carData.carPhotos.length > 0) {
-          this.imagePreview = this.carData.carPhotos[0];
-        } else if (typeof this.carData.carPhotos === 'string') {
-          this.imagePreview = this.carData.carPhotos;
-        }
-      }
-
-      if (this.carData.additional_images && Array.isArray(this.carData.additional_images)) {
-        this.additionalImagesPreviews = this.carData.additional_images.map((img: string) => img);
-      } else if (typeof this.carData.additional_images === 'string') {
-        this.additionalImagesPreviews = [this.carData.additional_images];
-      }
+  onDocumentsSelected(event: any) {
+    for (let file of event.files) {
+      this.documents.push(file);
     }
   }
+
+ submitForm() {
+  console.log('Form submitted:', this.carForm.value);
+  if (this.carForm.invalid) return;
+
+  const formValues = this.carForm.value;
+  const formData = new FormData();
+
+  // car details
+  formData.append('brand', formValues.brand);
+  formData.append('model', formValues.model);
+  formData.append('year', formValues.year.toString());
+  formData.append('licensePlate', formValues.licensePlate);
+  formData.append('type', formValues.type);
+  formData.append('seats', formValues.seats.toString());
+  formData.append('fuel_type', formValues.fuel_type);
+  formData.append('color', formValues.color);
+  formData.append('transmission', formValues.transmission);
+  formData.append('odometerReading', formValues.odometerReading.toString());
+  formData.append('totalPricePerDay', formValues.totalPricePerDay.toString());
+  formData.append('totalPricePerHour', formValues.totalPricePerHour.toString());
+  // formData.append('depositRequired', formValues.depositRequired.toString());
+  // formData.append('with_driver', formValues.with_driver.toString());
+  formData.append('availabilityStatus', formValues.availabilityStatus);
+  formData.append('conditionNotes', formValues.conditionNotes || '');
+  formData.append('current_location', formValues.current_location);
+
+  if (formValues.lastMaintenanceDate) {
+    formData.append('lastMaintenanceDate', new Date(formValues.lastMaintenanceDate).toISOString());
+  }
+
+  if (formValues.nextMaintenanceDue) {
+    formData.append('nextMaintenanceDue', new Date(formValues.nextMaintenanceDue).toISOString());
+  }
+
+  // add agentId from localStorage
+  // For demonstration, we will set a static agentId.
+
+  localStorage.setItem('agentId', '665f18309d4f9e7123456755')
+
+  const agentId = localStorage.getItem('agentId');
+if (agentId) {
+  formData.append('agent', agentId);
+} else {
+  console.error('agentId is missing from localStorage!');
+}
+
+
+  // add images and documents
+  // main image
+  if (this.mainImage) {
+    formData.append('carPhotos', this.mainImage); // index 0
+  }
+// additional images
+  this.additionalImages.forEach((img) => {
+    formData.append('carPhotos', img); // index 1+
+  });
+
+  this.documents.forEach((doc) => {
+    formData.append('carPhotos', doc); // append المستندات في نفس array
+  });
+
+  // log the formData for debugging
+  for (let pair of formData.entries()) {
+    console.log(pair[0] + ':', pair[1]);
+  }
+
+  // send the formData to the server
+  this.http.post('http://localhost:5000/api/cars', formData).subscribe({
+    next: (res: any) => {
+      console.log('Car added successfully:', res);
+      this.router.navigate(['/agent-dashboard/agent-car-cards']);
+    },
+    error: (err: any) => {
+      console.error('Error while adding car:', err);
+    }
+  });
+}
+
 }

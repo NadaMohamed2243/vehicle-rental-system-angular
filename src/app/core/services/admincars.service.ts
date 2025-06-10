@@ -44,9 +44,6 @@ export class AdmincarsService {
     return this.http.post<any>('http://localhost:5000/api/cars', formData);
   }
 
- uploadImages(formData: FormData): Observable<any> {
-    return this.http.post(`http://localhost:5000/api/upload`, formData);
-  }
-  
+ 
  
 }
