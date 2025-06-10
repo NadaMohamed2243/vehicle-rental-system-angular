@@ -5,9 +5,9 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
   providedIn: 'root'
 })
 export class CustomValidatorService {
-  
+
   constructor() { }
-  
+
   matchPasswords(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const password = control.get('password')?.value;
@@ -19,5 +19,6 @@ export class CustomValidatorService {
 
     return null;
   };
+  
 }
 }

@@ -5,13 +5,29 @@ import { NearbyCarsComponent } from "../../components/nearby-cars/nearby-cars.co
 import { CarTypesComponent } from "../../components/car-types/car-types.component";
 import { CarBrandsComponent } from "../../components/car-brands/car-brands.component";
 import { PromoCardsComponent } from "../../components/promo-cards/promo-cards.component";
+import { LayoutComponent } from "../../../core/pages/layout/layout.component";
+import { FooterComponent } from "../../../core/layout/footer/footer.component";
 
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
-  imports: [MostPopularComponent, NearbyCarsComponent, CarBrandsComponent, PromoCardsComponent],
+  imports: [MostPopularComponent, NearbyCarsComponent, CarBrandsComponent, PromoCardsComponent, LayoutComponent, FooterComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
 export class HomeComponent{
+
+    constructor(private route: ActivatedRoute, private router: Router) {}
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      const token = params['token'];
+      if (token) {
+        localStorage.setItem('token', token);
+        // Optionally remove token from URL
+        this.router.navigate([], { queryParams: {} });
+      }
+    });
+  }
 }

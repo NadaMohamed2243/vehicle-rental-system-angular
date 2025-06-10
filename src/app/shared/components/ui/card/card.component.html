@@ -46,7 +46,7 @@
       @if(fromWho()!="landing"){
       <!-- Heart Favorite Icon -->
       <button (click)="toggleFavorite()"
-        class="absolute top-10 right-2 z-10 bg-gray-50 p-1 rounded-full shadow-md hover:bg-gray-100"
+        class="absolute top-10 right-2 z-10 bg-gray-50 p-1 rounded-full shadow-md hover:bg-gray-100 cursor-pointer"
         aria-label="Add to favorites">
         @if (isFavorite) {
         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6 text-red-600">
@@ -70,7 +70,7 @@
 
     <div class="p-5 flex flex-col flex-grow bg-white rounded-lg">
       <div class="flex justify-between gap-5">
-        <h5 class="mb-2 text-xl font-bold tracking-tight text-dark-blue break-words max-w-[85%]">
+        <h5 class="mb-2 text-lg font-bold tracking-tight text-dark-blue break-words max-w-[85%]">
           {{carDetails()?.brand}} {{carDetails()?.model}} {{carDetails()?.year}}
         </h5>
         <p class="mb-4 text-sm sm:text-base font-medium text-gray-500 flex-grow">

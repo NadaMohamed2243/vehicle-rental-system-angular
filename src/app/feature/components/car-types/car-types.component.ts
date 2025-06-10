@@ -18,12 +18,15 @@ export class CarTypesComponent implements OnInit {
   _router = inject(Router);
 
   ngOnInit(): void {
+    this.getFinalCars();
+  }
+
+  getFinalCars() {
     this._carService.getPopularTypes().subscribe({
       next: (types) => {
         this.popularTypes = types;
         this.isLoading = false;
         this.errorMessage = null;
-        console.log(types)
       },
       error: (err) => {
         console.error('Error loading car types:', err);

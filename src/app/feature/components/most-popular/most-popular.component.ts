@@ -28,11 +28,10 @@ export class MostPopularComponent implements OnInit {
     });
   }
 
-  getCars(){
+  getCars() {
     this._carService.getMostPopularCars().subscribe({
       next: (data) => {
         this.cars = data.slice(0, 10);
-        console.log(data);
         this.isLoading = false;
       },
       error: (err) => {

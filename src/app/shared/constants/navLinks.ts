@@ -10,7 +10,7 @@ export const sidebarLinks: NavLink[] = [
   },
   {
     img: 'car',
-    route: '/car',
+    route: '/cars',
   },
   {
     img: 'calendar',
@@ -23,6 +23,10 @@ export const sidebarLinks: NavLink[] = [
   {
     img: 'history',
     route: '/history',
+  },
+  {
+    img: 'user',
+    route: '/profile',
   },
 ];
 export const bottombarLinks: NavLink[] = [
@@ -32,7 +36,7 @@ export const bottombarLinks: NavLink[] = [
   },
   {
     img: 'car',
-    route: '/car',
+    route: '/cars',
   },
   {
     img: 'calendar',
@@ -46,4 +50,8 @@ export const bottombarLinks: NavLink[] = [
     img: 'history',
     route: '/history',
   },
+  {
+    img: 'user',
+    route: '/profile',
+  }
 ];
