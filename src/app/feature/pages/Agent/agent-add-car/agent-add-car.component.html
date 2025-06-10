@@ -1,0 +1,222 @@
+<h1 class="text-center text-3xl font-bold">{{ formTitle }}</h1>
+
+<div class="flex flex-col md:flex-row gap-4 p-4 ml-12 ">
+
+  <div class="flex-1">
+    <div class="border border-gray-200 rounded-lg p-6 bg-white shadow-sm">
+      <h3 class="text-lg font-medium mb-4">Car Specifications</h3>
+      <hr class=" mb-4 text-gray-300"/>
+      <form [formGroup]="carForm" (ngSubmit)="submitForm()" class="space-y-4">
+        
+        <!-- Error Message -->
+        <!-- <p-message *ngIf="carForm.invalid && submitted" severity="error" class="w-full">
+          Data is incomplete or incorrect
+        </p-message> -->
+
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Brand -->
+          <div>
+          <p-floatLabel variant="on">
+            <input id="brand" pInputText formControlName="brand" class="w-full" />
+            <label for="brand">Brand</label>
+          </p-floatLabel>
+          </div>
+          <!-- Model -->
+        <div >
+          <p-floatLabel variant="on">
+            <input id="model" pInputText formControlName="model" class="w-full" />
+            <label for="model">Model</label>
+          </p-floatLabel>
+        </div>
+        </div>
+
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Year -->
+        <div>
+          <p-floatLabel variant="on">
+            <input id="year" pInputText formControlName="year" class="w-full" />
+            <label for="year">Year</label>
+          </p-floatLabel>
+        </div>
+         <!-- License Plate -->
+         <div>
+          <p-floatLabel variant="on">
+            <input id="licensePlate" pInputText formControlName="licensePlate" class="w-full" />
+            <label for="licensePlate">License Plate</label>
+          </p-floatLabel>
+        </div>
+        </div>
+
+       
+
+        <!-- Type and Seats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p-floatLabel variant="on">
+              <input id="type" pInputText formControlName="type" class="w-full" />
+              <label for="type">Type</label>
+            </p-floatLabel>
+          </div>
+          <div>
+            <p-floatLabel variant="on">
+              <input id="seats" pInputText formControlName="seats" class="w-full" />
+              <label for="seats">Seats</label>
+            </p-floatLabel>
+          </div>
+        </div>
+
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Fuel Type -->
+        <div>
+          <p-floatLabel variant="on">
+            <input id="fuel_type" pInputText formControlName="fuel_type" class="w-full" />
+            <label for="fuel_type">Fuel Type</label>
+          </p-floatLabel>
+        </div>
+        <!-- Color -->
+        <div>
+          <p-floatLabel variant="on">
+            <input id="color" pInputText formControlName="color" class="w-full" />
+            <label for="color">Color</label>
+          </p-floatLabel>
+        </div>
+        </div>
+
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Transmission -->
+        <div>
+          <p-floatLabel variant="on">
+            <input id="transmission" pInputText formControlName="transmission" class="w-full" />
+            <label for="transmission">Transmission</label>
+          </p-floatLabel>
+        </div>
+        <!-- Odometer -->
+        <div>
+          <p-floatLabel variant="on">
+            <input id="odometerReading" pInputText formControlName="odometerReading" class="w-full" />
+            <label for="odometerReading">Odometer (km)</label>
+          </p-floatLabel>
+        </div>
+        </div>
+
+        <!-- Rental Rates -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <!-- Daily Rate -->
+          <div>
+            <p-floatLabel variant="on">
+              <input id="totalPricePerDay" pInputText type="number" formControlName="totalPricePerDay" class="w-full" />
+              <label for="totalPricePerDay">Price Per Day(EGP)</label>  
+            </p-floatLabel>
+          </div>
+          <!-- Hourly Rate -->
+          <div>
+            <p-floatLabel variant="on">
+              <input id="totalPricePerHour" pInputText type="number" formControlName="totalPricePerHour" class="w-full" />
+              <label for="totalPricePerHour">Price Per Hour (EGP)</label>
+            </p-floatLabel>
+          </div>
+        </div>
+
+        <!-- Rental Rates with Calendar Selection -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p-floatLabel variant="on">
+              <p-calendar formControlName="lastMaintenanceDate" 
+                        inputId="lastMaintenanceDate"
+                        [showIcon]="true" 
+                        dateFormat="dd/mm/yy"
+                        [showButtonBar]="true"
+                        class="w-full"></p-calendar>
+              <label for="lastMaintenanceDate">last Maintenance Date</label>
+            </p-floatLabel>
+          </div>
+          <div>
+            <p-floatLabel variant="on">
+              <p-calendar formControlName="nextMaintenanceDue" 
+                        inputId="nextMaintenanceDue"
+                        [showIcon]="true" 
+                        dateFormat="dd/mm/yy"
+                        [showButtonBar]="true"
+                        class="w-full"></p-calendar>
+              <label for="nextMaintenanceDue">next Maintenance Due</label>
+            </p-floatLabel>
+          </div>
+        </div>
+
+        <!-- Location and Availability -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p-floatLabel variant="on">
+              <input id="current_location" pInputText formControlName="current_location" class="w-full" />
+              <label for="current_location">Current Location</label>
+            </p-floatLabel>
+          </div>
+          <div>
+            <p-floatLabel variant="on">
+              <input id="availabilityStatus" pInputText formControlName="availabilityStatus" class="w-full" />
+              <label for="availabilityStatus">Availability Status</label>
+              <!-- <p-dropdown [options]="availabilityOptions" formControlName="availability_status" placeholder="Select Availability"></p-dropdown> -->
+            </p-floatLabel>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="grid grid-cols-1 gap-4">
+          <p-floatLabel variant="on">
+            <textarea id="conditionNotes" pInputTextarea formControlName="conditionNotes" rows="3" class="w-full shadow-sm border border-gray-200 rounded"></textarea>
+            <label for="conditionNotes">Notes</label>
+          </p-floatLabel>
+        </div>
+
+        <!-- Save Button -->
+        <div class="pt-4">
+          <button pButton type="submit" label="Save" class="w-full"></button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- upload photos-->
+  <div class="flex-1">
+    <div class="border border-gray-200 rounded-lg p-6 bg-white shadow-sm">
+      <h3 class="text-lg font-medium mb-4">Upload Car Images</h3>
+      <hr class="p-4 text-gray-300"/>
+      
+      <div class="grid grid-cols-1 gap-2 mb-6">
+        <label class="text-sm font-medium text-gray-700">Main Image</label>
+        <p-fileUpload mode="basic" chooseLabel="Choose File" accept="image/*" 
+                     (onSelect)="onImageSelected($event)" class="w-full">
+        </p-fileUpload>
+      </div>
+
+      <div *ngIf="imagePreview" class="mb-6">
+        <h4 class="text-sm font-medium text-gray-700 mb-2">Preview</h4>
+        <img [src]="imagePreview" class="w-full h-48 object-contain border border-gray-300 rounded-lg" />
+      </div>
+
+      <div class="grid grid-cols-1 gap-2">
+        <label class="text-sm font-medium text-gray-700">Additional Images</label>
+        <p-fileUpload mode="basic" chooseLabel="Choose Files" accept="image/*" multiple="true"
+                     (onSelect)="onAdditionalImagesSelected($event)" class="w-full"></p-fileUpload>
+      </div>
+
+      <div *ngIf="additionalImagesPreviews.length" class="mt-4">
+        <h4 class="text-sm font-medium text-gray-700 mb-2">Additional Images Preview</h4>
+        <div class="grid grid-cols-3 gap-2">
+          <div *ngFor="let preview of additionalImagesPreviews" class="relative">
+            <img [src]="preview" class="w-full h-24 object-cover border border-gray-300 rounded" />
+            <button pButton icon="pi pi-times" (click)="removeAdditionalImage(preview)" 
+                   class="delete top-0 right-0 p-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"></button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  
+</div>
