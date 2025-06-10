@@ -20,9 +20,10 @@
         <p-drawer [(visible)]="visible" position="right" styleClass="!w-full md:!w-80 lg:!w-[30rem]">
             <ng-template #header>
                 <div class="flex items-center gap-2">
-                    <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+                    <p-avatar
+                        image="https://plus.unsplash.com/premium_photo-1682089468743-5a31e96f8dd3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                         shape="circle" />
-                    <span class="font-bold">Amy Elsner</span>
+                    <span class="font-bold">{{selectedCar?.agent?.company_name}}</span>
                 </div>
             </ng-template>
             <ng-template #content>
@@ -87,7 +88,7 @@
                                                 inputId="icondisplay" [showTime]="true" [(ngModel)]="dropoffDate" />
                                         </div>
                                         <div class="mt-6 mb-3 flex justify-between items-center">
-                                            <span class="text-xs font-bold">EXTRA TIME</span>
+                                            <span class="text-xs font-bold">WITH DRIVER</span>
                                             <p-toggleswitch [(ngModel)]="checked" />
                                         </div>
                                     </div>
@@ -121,14 +122,15 @@
                                 <div class="w-full h-[80px] bg-light-blue flex justify-between items-center rounded-lg">
                                     <div class="ps-5">
                                         <p class="text-xs text-white font-semibold">BOOK VECHICLE</p>
-                                        <p class="text-sm text-white font-semibold">Ford Focus</p>
+                                        <p class="text-sm text-white font-semibold">{{selectedCar?.brand}}
+                                            {{selectedCar?.model}}</p>
                                     </div>
                                     <div>
                                         <p class="text-xs text-white font-semibold">FREE BOOKING</p>
                                         <p class="text-sm text-white font-semibold">10 minutes</p>
                                     </div>
                                     <div class="h-full">
-                                        <button class="bg-[#3e9efb] h-full w-[80px] rounded-lg"><i
+                                        <button class="bg-[#3e9efb] h-full w-[80px] rounded-lg cursor-pointer"><i
                                                 class="pi pi-angle-right" style="color: white"></i>
                                         </button>
                                     </div>
