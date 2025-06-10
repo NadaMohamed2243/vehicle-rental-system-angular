@@ -26,7 +26,7 @@ export interface Cars {
   totalPricePerHour: number
   totalPricePerDay: number
   carPhotos: string[]
-  exhibition: any
+  agent: string
   createdAt: string
   updatedAt: string
   __v: number

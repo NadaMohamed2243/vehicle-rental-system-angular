@@ -21,7 +21,7 @@ h1,h3{
     }
   } 
 
-  .p-float-label{
+  /* .p-float-label{
     label {
       color: #007EFC !important;
       
@@ -33,10 +33,10 @@ h1,h3{
     input:focus ~ label {
       color: #0D274E !important;
     }
-  } 
+  }  */
 
 
-  .p-calendar:enabled:focus {
+  /* .p-calendar:enabled:focus {
     border-color: #007EFC !important;
   } 
 
@@ -59,4 +59,34 @@ h1,h3{
     .p-fileupload-content {
       border: 1px dashed #007EFC;
     }
-  }
+  } */
+
+  /* Fix للـ PrimeNG Calendar */
+:host ::ng-deep .p-calendar {
+  width: 100% !important;
+}
+
+:host ::ng-deep .p-calendar .p-inputtext {
+  width: 100% !important;
+}
+
+:host ::ng-deep .p-calendar .p-datepicker {
+  min-width: 300px;
+}
+
+/* Fix للـ FloatLabel مع الـ Calendar */
+:host ::ng-deep p-floatlabel .p-calendar {
+  width: 100%;
+}
+
+:host ::ng-deep p-floatlabel label {
+  left: 0.75rem;
+  color: #6b7280;
+  transition: all 0.2s ease;
+}
+
+:host ::ng-deep p-floatlabel .p-float-label-active label {
+  top: -0.75rem;
+  font-size: 12px;
+  color: #3b82f6;
+}
