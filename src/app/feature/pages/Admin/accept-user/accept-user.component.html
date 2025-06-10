@@ -1,10 +1,10 @@
-<h1 class="text-center text-3xl font-bold">Manage Clients</h1>
+<h1 class="text-center text-3xl font-bold">Customers</h1>
 
 
   <div class="px-5 ml-12 m-2 border border-gray-200 rounded-lg bg-white shadow-sm p-4 ">
 
     <p-tabView >
-      <p-tabPanel header="Pending Clients">
+      <p-tabPanel header="Pending Customers">
         <div class="overflow-x-auto">
         <p-table [value]="pendingClients" stripedRows class="w-full min-w-[600px]">
             <ng-template pTemplate="header">
@@ -13,6 +13,7 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>City</th>
+                <th>License</th>
                 <th>Actions</th>
             </tr>
             </ng-template>
@@ -22,6 +23,7 @@
                 <td>{{ client.name }}</td>
                 <td>{{ client.email }}</td>
                 <td>{{ client.location.city }}</td>
+                <td>{{ client.license }}</td>
                 <td>
                   <p-button class="p-button-sm" icon="pi pi-check"  variant="outlined" severity="info" [rounded]="true" (click)="approveClient(client.id)"/>
                   <p-button class="p-button-sm" icon="pi pi-times" variant="outlined" severity="danger" [rounded]="true" (click)="rejectClient(client.id)" />
@@ -35,7 +37,7 @@
 
     
     <!-- approved Clients -->
-      <p-tabPanel header="Approved Clients">
+      <p-tabPanel header="Approved Customers">
         <div class="overflow-x-auto">
         <p-table [value]="approvedClients" stripedRows class="w-full min-w-[600px]">
             <ng-template pTemplate="header">
@@ -44,6 +46,8 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>City</th>
+                <th>License</th>
+                <th>Delete customer</th>
             </tr>
             </ng-template>
             <ng-template pTemplate="body" let-client>
@@ -52,6 +56,11 @@
                 <td>{{ client.name }}</td>
                 <td>{{ client.email }}</td>
                 <td>{{ client.location.city }}</td>
+                <td>{{ client.license }}</td>
+                <td>
+                  <p-button class="p-button-sm" icon="pi pi-trash" variant="outlined" severity="danger" [rounded]="true" (click)="rejectClient(client.id)" />
+                </td>
+                
             </tr>
             </ng-template>
         </p-table>

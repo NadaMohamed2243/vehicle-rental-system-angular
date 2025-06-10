@@ -12,7 +12,8 @@ export class UserService {
     email: 'john@example.com',
     location: {
       city: 'mansoura'
-    }
+    },
+    license: 'ABC123XYZ'
   };
 
 

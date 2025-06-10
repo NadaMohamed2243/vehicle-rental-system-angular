@@ -14,7 +14,8 @@ export class ClientService {
     location: {
       city: 'cairo'
     },
-    status: 'pending' 
+    status: 'pending' ,
+    license: 'ABC123XYZ'
     },{
     id: 456,
     name: 'esraa',
@@ -22,7 +23,8 @@ export class ClientService {
     location: {
       city: 'Alex'
     },
-    status: 'approved' 
+    status: 'approved' ,
+    license: 'XYZ456ABC'
   },
   {
     id: 789,
@@ -31,7 +33,8 @@ export class ClientService {
     location: {
       city: 'cairo'
     },
-    status: 'pending' 
+    status: 'pending' ,
+    license: 'LMN789DEF'
     },{
     id: 741,
     name: 'nada',
@@ -39,7 +42,8 @@ export class ClientService {
     location: {
       city: 'Alex'
     },
-    status: 'approved' 
+    status: 'approved' ,
+    license: 'GHI321JKL'
   },{
     id: 852,
     name: 'nouran',
@@ -47,7 +51,8 @@ export class ClientService {
     location: {
       city: 'Alex'
     },
-    status: 'approved' 
+    status: 'approved' ,
+    license: 'PQR654MNO'
   },{
     id: 963,
     name: 'lina',
@@ -55,7 +60,8 @@ export class ClientService {
     location: {
       city: 'Alex'
     },
-    status: 'pending' 
+    status: 'pending' ,
+    license: 'STU987VWX'
   },
 ]
 

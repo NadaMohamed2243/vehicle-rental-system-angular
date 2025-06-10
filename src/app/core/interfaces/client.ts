@@ -4,6 +4,7 @@ export interface Client {
     email: string;
     location: Location
     status: 'pending' | 'approved';
+    license: string;
 }
 
 export interface Location {
