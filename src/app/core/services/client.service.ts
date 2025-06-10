@@ -1,11 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Client } from '../../core/interfaces/client';
 import { Observable, of } from 'rxjs';    //use it until we use httpClient ,when deelivering data from the server
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClientService {
+
+  constructor(private http: HttpClient) {}
+  private apiURL = 'http://localhost:5000/api/auth';
+  private baseUrl = 'http://localhost:5000/';
+
+
   private _clients: Client [] = [
     {
     id: 123,
@@ -14,7 +21,7 @@ export class ClientService {
     location: {
       city: 'cairo'
     },
-    status: 'pending' 
+    status: 'pending'
     },{
     id: 456,
     name: 'esraa',
@@ -22,7 +29,7 @@ export class ClientService {
     location: {
       city: 'Alex'
     },
-    status: 'approved' 
+    status: 'approved'
   },
   {
     id: 789,
@@ -31,7 +38,7 @@ export class ClientService {
     location: {
       city: 'cairo'
     },
-    status: 'pending' 
+    status: 'pending'
     },{
     id: 741,
     name: 'nada',
@@ -39,7 +46,7 @@ export class ClientService {
     location: {
       city: 'Alex'
     },
-    status: 'approved' 
+    status: 'approved'
   },{
     id: 852,
     name: 'nouran',
@@ -47,7 +54,7 @@ export class ClientService {
     location: {
       city: 'Alex'
     },
-    status: 'approved' 
+    status: 'approved'
   },{
     id: 963,
     name: 'lina',
@@ -55,7 +62,7 @@ export class ClientService {
     location: {
       city: 'Alex'
     },
-    status: 'pending' 
+    status: 'pending'
   },
 ]
 
@@ -83,5 +90,19 @@ export class ClientService {
     return of(this._clients);
   }
 
-  constructor() { }
+  getClientProfile() {
+  const token = localStorage.getItem('token');
+  return this.http.get(`${this.apiURL}/client/profile`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  }
+  getDriverLicenseImageUrl(path: string): string {
+
+  const formattedPath = path.replace(/\\/g, '/'); // Ensure it's a valid URL path
+  return this.baseUrl + formattedPath;
+}
+
+
 }
