@@ -27,7 +27,11 @@ export class LoginComponent {
        this._authService.login(this.loginForm.value).subscribe({
         next: (res) => {
           localStorage.setItem('token', res.token);
-          this._router.navigate(['/home']);
+          if(res.user.role=="admin"){
+            this._router.navigate(['/dashboard']);
+          }else if(res.user.role=="client"){
+            this._router.navigate(['/home']);
+          }
         },
         error: (err) => console.error('Login error:', err)
     });
