@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -14,6 +14,7 @@ import { PriceRangeFilterComponent } from '../price-range-filter/price-range-fil
 import { CheckboxFilterComponentComponent } from '../checkbox-filter-component/checkbox-filter-component.component';
 import { RadioFilterComponentComponent } from '../radio-filter-component/radio-filter-component.component';
 import { FilterStateService } from '../../../../core/services/filter-state.service';
+import { CarService } from '../../../../core/services/car.service';
 
 @Component({
   selector: 'app-filter',
@@ -37,7 +38,7 @@ import { FilterStateService } from '../../../../core/services/filter-state.servi
   templateUrl: './filter.component.html',
   styleUrl: './filter.component.css',
 })
-export class FilterComponent {
+export class FilterComponent implements OnInit {
   searchText = '';
   availableNow = false;
   visible: boolean = false;
@@ -46,28 +47,44 @@ export class FilterComponent {
   selectedTransmissionType: string | null = null;
   selectedFuelTypes: any[] = [];
   checked: boolean = false;
-  brands: string[] = [
-    'Toyota',
-    'Volkswagen',
-    'Ford',
-    'Honda',
-    'Chevrolet',
-    'Nissan',
-    'Hyundai',
-    'Kia',
-    'BMW',
-    'Mercedes',
-  ];
-  carBodyTypes: string[] = [
-    'Sedan',
-    'Hatchback',
-    'Coupe',
-    'Convertible',
-    'Wagon',
-    'Sports Car',
-  ];
+  brands: string[] = [];
+  carBodyTypes: string[] = [];
   transmissionTypes: string[] = ['Any', 'Automatic', 'Manual'];
-  fuelTypes: string[] = ['Petrol', 'Diesel', 'Electric', 'Hybrid'];
+  fuelTypes: string[] = [];
+
+  _carService = inject(CarService);
+
+  _getBrands = this._carService.getPopularBrands().subscribe({
+    next: (brands) => {
+      this.brands = brands.map((brand) => brand.brand);
+    },
+    error: (err) => {
+      console.error('Error loading brands:', err);
+    },
+  });
+
+  _getBodyTypes = this._carService.getPopularTypes().subscribe({
+    next: (bodyTypes) => {
+      this.carBodyTypes = bodyTypes.map((type) => type.type);
+    },
+    error: (err) => {
+      console.error('Error loading body types:', err);
+    },
+  });
+
+  _getFuelTypes = this._carService.getFuelTypes().subscribe({
+    next: (fuelTypes) => {
+      this.fuelTypes = fuelTypes;
+    },
+    error: (err) => {
+      console.error('Error loading fuel types:', err);
+    },
+  });
+
+  ngOnInit(): void {
+    this._getBrands;
+    this._getBodyTypes;
+  }
 
   filterState = inject(FilterStateService);
 
@@ -103,5 +120,10 @@ export class FilterComponent {
     this.searchText = '';
     this.availableNow = false;
     this.filterState.resetFilters();
+    this.selectedBrands = [];
+    this.selectedBodyTypes = [];
+    this.selectedTransmissionType = 'Any';
+    this.selectedFuelTypes = [];
+    this.checked = false;
   }
 }

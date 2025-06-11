@@ -27,7 +27,6 @@ export class CarTypesComponent implements OnInit {
         this.popularTypes = types;
         this.isLoading = false;
         this.errorMessage = null;
-        console.log(types)
       },
       error: (err) => {
         console.error('Error loading car types:', err);

@@ -29,7 +29,6 @@ export class FeaturedCarsComponent implements OnInit {
         this.cars = cars.slice(0, 10);
         this.isLoading = false;
         this.errorMessage = null;
-        console.log(cars);
       },
       error: (err) => {
         console.error('Error loading featured cars:', err);

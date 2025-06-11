@@ -20,14 +20,15 @@
         <p-drawer [(visible)]="visible" position="right" styleClass="!w-full md:!w-80 lg:!w-[30rem]">
             <ng-template #header>
                 <div class="flex items-center gap-2">
-                    <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+                    <p-avatar
+                        image="https://plus.unsplash.com/premium_photo-1682089468743-5a31e96f8dd3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                         shape="circle" />
-                    <span class="font-bold">Amy Elsner</span>
+                    <span class="font-bold">{{selectedCar?.agent?.company_name}}</span>
                 </div>
             </ng-template>
             <ng-template #content>
                 <div>
-                    <app-car-slider></app-car-slider>
+                    <app-car-slider [carImages]="selectedCar?.carPhotos"></app-car-slider>
                 </div>
                 <div class="flex justify-between pt-5">
                     <p class="font-semibold text-[#8c8c8c] text-sm">{{selectedCar?.brand}}</p>
@@ -64,10 +65,16 @@
                         </p-tablist>
                         <p-tabpanels>
                             <p-tabpanel value="0">
-                                <iframe
-                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3405.196981909692!2d31.809816375401166!3d31.408698474265357!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14f9ef81e1d52301%3A0x3f7ab6e9d7296e9c!2sCars%20for%20all!5e0!3m2!1sen!2seg!4v1747162615641!5m2!1sen!2seg"
-                                    width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy"
-                                    class="rounded-lg" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                @if (selectedCar?.agent?.location) {
+                                <app-map [carLocation]="selectedCarLocation" [userLocation]="userLocation || undefined"
+                                    [enableDeliverySelection]="true"
+                                    (deliveryLocationSelected)="onDeliveryLocationSelected($event)">
+                                </app-map>
+                                } @else {
+                                <div class="w-full h-[250px] bg-gray-100 rounded-lg flex items-center justify-center">
+                                    <p class="text-gray-500">Location not available</p>
+                                </div>
+                                }
                                 <div class="card flex py-5">
                                     <div class="flex flex-col gap-5">
                                         <div class="flex flex-col gap-2">
@@ -81,7 +88,7 @@
                                                 inputId="icondisplay" [showTime]="true" [(ngModel)]="dropoffDate" />
                                         </div>
                                         <div class="mt-6 mb-3 flex justify-between items-center">
-                                            <span class="text-xs font-bold">EXTRA TIME</span>
+                                            <span class="text-xs font-bold">WITH DRIVER</span>
                                             <p-toggleswitch [(ngModel)]="checked" />
                                         </div>
                                     </div>
@@ -115,31 +122,48 @@
                                 <div class="w-full h-[80px] bg-light-blue flex justify-between items-center rounded-lg">
                                     <div class="ps-5">
                                         <p class="text-xs text-white font-semibold">BOOK VECHICLE</p>
-                                        <p class="text-sm text-white font-semibold">Ford Focus</p>
+                                        <p class="text-sm text-white font-semibold">{{selectedCar?.brand}}
+                                            {{selectedCar?.model}}</p>
                                     </div>
                                     <div>
                                         <p class="text-xs text-white font-semibold">FREE BOOKING</p>
                                         <p class="text-sm text-white font-semibold">10 minutes</p>
                                     </div>
                                     <div class="h-full">
-                                        <button class="bg-[#3e9efb] h-full w-[80px] rounded-lg"><i
+                                        <button class="bg-[#3e9efb] h-full w-[80px] rounded-lg cursor-pointer"><i
                                                 class="pi pi-angle-right" style="color: white"></i>
                                         </button>
                                     </div>
                                 </div>
                             </p-tabpanel>
                             <p-tabpanel value="1">
-                                <p class="m-0">
-                                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
-                                    doloremque laudantium, totam rem
-                                    aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae
-                                    vitae dicta sunt explicabo.
-                                    Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia
-                                    consequuntur magni
-                                    dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed
-                                    quia non numquam eius
-                                    modi.
-                                </p>
+                                <div class="flex flex-col gap-3">
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-sm font-bold">Brand</p>
+                                        <p class="text-sm">{{selectedCar?.brand}}</p>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-sm font-bold">Model</p>
+                                        <p class="text-sm">{{selectedCar?.model}}</p>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-sm font-bold">Year</p>
+                                        <p class="text-sm">{{selectedCar?.year}}</p>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-sm font-bold">Body Style</p>
+                                        <p class="text-sm">{{selectedCar?.type}}</p>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-sm font-bold">Transmission</p>
+                                        <p class="text-sm">{{selectedCar?.transmission}}</p>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-sm font-bold">Fuel Type</p>
+                                        <p class="text-sm">{{selectedCar?.fuel_type}}</p>
+                                    </div>
+                                </div>
+
                             </p-tabpanel>
                         </p-tabpanels>
                     </p-tabs>

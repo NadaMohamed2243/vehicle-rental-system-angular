@@ -1,3 +1,4 @@
+// will be deleted
 export interface Car {
   car_id: string
   brand: string

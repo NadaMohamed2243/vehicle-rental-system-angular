@@ -6,6 +6,7 @@ import {
   PLATFORM_ID,
   OnInit,
   ViewChild,
+  Input,
 } from '@angular/core';
 import { register } from 'swiper/element/bundle';
 
@@ -20,17 +21,14 @@ register();
 })
 export class CarSliderComponent implements OnInit {
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
-  carImages: string[] = [
-    'images/8d682647-469f-4362-91d0-9298c5353e1a.webp',
-    'images/2025KiaSportage-exterior-03.jpg',
-    'images/f7af76f2-2025-kia-sportage-whichcar-australia-02.jpg',
-  ];
+  @Input() carImages: string[] | undefined = [];
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
       const swiperEl: any = document.querySelector('swiper-container');
+      if (!swiperEl) return; // Prevent error if not found
       const swiperParams = {
-        slidesPerView: 'auto',
+        slidesPerView: 1,
         injectStyles: [
           `
           .swiper-button-next,
@@ -39,27 +37,18 @@ export class CarSliderComponent implements OnInit {
           }
         `,
         ],
-        spaceBetween: 0, // No gap between slides
-        freeMode: true, // Enables free scrolling
-        grabCursor: true, // Shows grab cursor
-        mousewheel: true, // Allows mousewheel scrolling
-        resistance: false, // Disables edge resistance
+        spaceBetween: 10,
+        pagination: { clickable: true },
+        freeMode: true,
+        grabCursor: true,
+        mousewheel: true,
+        resistance: false,
         scrollbar: {
-          // Optional scrollbar
           draggable: true,
         },
       };
       Object.assign(swiperEl, swiperParams);
       swiperEl.initialize();
-
-      setTimeout(() => {
-        Object.assign(swiperEl.nativeElement, {
-          slidesPerView: 1,
-          spaceBetween: 10,
-          pagination: { clickable: true },
-        });
-        swiperEl.nativeElement.initialize();
-      }, 1000);
     }
   }
 }
