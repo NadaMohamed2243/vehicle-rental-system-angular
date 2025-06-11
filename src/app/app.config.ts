@@ -14,6 +14,10 @@ import {
 // import auraLightBlue from '@primeng/themes/aura-light-blue';
 
 import { provideHttpClient } from '@angular/common/http';
+import { importProvidersFrom } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -31,5 +35,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
     provideHttpClient(),
+    importProvidersFrom(ReactiveFormsModule)
   ],
 };

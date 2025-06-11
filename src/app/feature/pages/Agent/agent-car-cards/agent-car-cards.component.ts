@@ -46,10 +46,14 @@ export class AgentCarCardsComponent implements OnInit {
     this.selectedCar = car;
   }
 
-  editCar(car: Cars) {
-  this.router.navigateByUrl('dashboard/add-car', {
-    state: { car }
-  });
+//   editCar(car: Cars) {
+//   this.router.navigateByUrl('dashboard/add-car', {
+//     state: { car }
+//   });
+// }
+
+editCar(car: any) {
+  this.router.navigate(['/agent-dashboard/agent-add-car', car._id]);
 }
 
 }

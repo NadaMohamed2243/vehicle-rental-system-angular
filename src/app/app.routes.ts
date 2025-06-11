@@ -68,6 +68,8 @@ export const routes: Routes = [
       // { path: '', redirectTo: 'agent-overview', pathMatch: 'full' },
       { path: 'agent-car-cards', component:  AgentCarCardsComponent },
       { path: 'agent-add-car', component: AgentAddCarComponent },
+      { path: 'agent-add-car/:id',component: AgentAddCarComponent }
+
       // { path: 'agent-overview', component: OverviewComponent },
     ],
   },
