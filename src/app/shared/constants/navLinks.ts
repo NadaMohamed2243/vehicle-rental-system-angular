@@ -24,6 +24,10 @@ export const sidebarLinks: NavLink[] = [
     img: 'history',
     route: '/history',
   },
+  {
+    img: 'user',
+    route: '/profile',
+  },
 ];
 export const bottombarLinks: NavLink[] = [
   {
@@ -46,4 +50,8 @@ export const bottombarLinks: NavLink[] = [
     img: 'history',
     route: '/history',
   },
+  {
+    img: 'user',
+    route: '/profile',
+  }
 ];
