@@ -1,16 +1,3 @@
-// export interface agent {
-//     id: number;
-//     name: string;
-//     email: string;
-//     location: Location
-//     status: 'pending' | 'approved';
-//     phone: string;
-//     carsNumber: number;
-// }
-
-// export interface Location {
-//   city: string
-// }
 
 
 export interface Agent {
@@ -20,7 +7,7 @@ export interface Agent {
   phone_number: string;
   location: string;
   ID_document: string;
-  verification_status: 'pending' | 'approved' | 'rejected';
+  verification_status: 'pending' | 'approved' | 'rejected'| 'banned';
   lat: number;
   lng: number;
   opening_hours: string;

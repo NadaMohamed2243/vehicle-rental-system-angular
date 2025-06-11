@@ -1,12 +1,9 @@
-<!-- <div>
-  <p-toast position="top-center"></p-toast>
-<p-confirmDialog></p-confirmDialog>
-</div> -->
+<!-- to show confirm delete message -->
 <div>
 <p-toast position="top-right"></p-toast>
 <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+</div>
 
-      </div>
 <h1 class="text-center text-3xl font-bold">Cars List</h1>
 
 <div class="flex flex-col-reverse md:flex-row gap-4 ml-4 mr-4 pl-12 mt-2">
@@ -102,7 +99,56 @@
           </div>
         </div>
       </p-tabPanel>
+
+
+       <!-- approved or rejected -->
+    <p-tabPanel header="Approved">
+  <div class="flex mt-4 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+      <p-card
+        *ngFor="let car of approvedCars"
+        (click)="selectCar(car)"
+        header="{{ car.licensePlate }}"
+        subheader="Approved"
+        class="cursor-pointer hover:shadow-lg transition duration-300"
+      >
+        <hr class="my-2 border-gray-200" />
+        <div class="flex items-center gap-2"><i class="pi pi-car text-gray-400"></i> <p>{{ car.brand }}</p></div>
+        <div class="flex items-center gap-2"><i class="pi pi-tag text-gray-400"></i> <p>{{ car.type }}</p></div>
+        <div class="flex items-center gap-2"><i class="pi pi-cog text-gray-400"></i> <p>{{ car.model }}</p></div>
+        <div class="flex items-center gap-2"><i class="pi pi-dollar text-gray-400"></i> <p>{{ car.rentalRatePerDay }} / day</p></div>
+      </p-card>
+    </div>
+  </div>
+</p-tabPanel>
+
+
+<p-tabPanel header="Rejected">
+  <div class="flex mt-4 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+      <p-card
+        *ngFor="let car of rejectedCars"
+        (click)="selectCar(car)"
+        header="{{ car.licensePlate }}"
+        subheader="Rejected"
+        class="cursor-pointer hover:shadow-lg transition duration-300"
+      >
+        <hr class="my-2 border-gray-200" />
+        <div class="flex items-center gap-2"><i class="pi pi-car text-gray-400"></i> <p>{{ car.brand }}</p></div>
+        <div class="flex items-center gap-2"><i class="pi pi-tag text-gray-400"></i> <p>{{ car.type }}</p></div>
+        <div class="flex items-center gap-2"><i class="pi pi-cog text-gray-400"></i> <p>{{ car.model }}</p></div>
+        <div class="flex items-center gap-2"><i class="pi pi-dollar text-gray-400"></i> <p>{{ car.rentalRatePerDay }} / day</p></div>
+      </p-card>
+    </div>
+  </div>
+</p-tabPanel>
+
     </p-tabView>
+
+   
+
+
+
   </div>
 
   <!-- Car Details -->

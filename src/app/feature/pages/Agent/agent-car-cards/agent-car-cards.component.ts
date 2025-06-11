@@ -10,7 +10,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessagesModule } from 'primeng/messages';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { provideAnimations } from '@angular/platform-browser/animations';
+// import { provideAnimations } from '@angular/platform-browser/animations';
 
 
 
@@ -21,7 +21,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
   imports: [CommonModule, FormsModule, TabViewModule, CardModule ,ConfirmDialogModule,MessagesModule,ToastModule],
   templateUrl: './agent-car-cards.component.html',
   styleUrl: './agent-car-cards.component.css',
-  providers: [ConfirmationService, MessageService,provideAnimations()]
+  providers: [ConfirmationService, MessageService]
 })
 export class AgentCarCardsComponent implements OnInit {
   constructor(private _AdmincarService: AdmincarsService,private router: Router, private confirmationService: ConfirmationService, private messageService: MessageService) {}
@@ -29,6 +29,8 @@ export class AgentCarCardsComponent implements OnInit {
   availableCars: Cars[] = [];
   occupiedCars: Cars[] = [];
   selectedCar: Cars | null = null;
+  approvedCars: Cars[] = [];
+  rejectedCars: Cars[] = [];
 
   
   ngOnInit(): void {
@@ -36,8 +38,10 @@ export class AgentCarCardsComponent implements OnInit {
   }
 //load cars from the service
   loadCars() {
-     this._AdmincarService.getAllCars().subscribe((res: Cars[]) => {
-    this.cars = res;
+      this._AdmincarService.getAllCars().subscribe((res: Cars[]) => {
+      this.cars = res;
+      this.approvedCars = res.filter(car => car.is_approved === true);
+      this.rejectedCars = res.filter(car => car.is_approved === false);
   });
 
   this._AdmincarService.getAvailableCars().subscribe((res: Cars[]) => {
