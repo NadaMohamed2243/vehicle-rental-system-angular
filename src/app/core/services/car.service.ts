@@ -20,7 +20,7 @@ export class CarService {
 
   // Fetch all cars from API
   getCars(): Observable<Cars[]> {
-    return this.http.get<Cars[]>('http://localhost:5000/api/cars').pipe(
+    return this.http.get<Cars[]>('http://localhost:5000/api/cars/approved').pipe(
       map((cars) => {
         this._cars = cars;
         return cars;
