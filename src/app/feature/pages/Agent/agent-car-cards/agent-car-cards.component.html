@@ -2,6 +2,11 @@
   <p-toast position="top-center"></p-toast>
 <p-confirmDialog></p-confirmDialog>
 </div> -->
+<div>
+<p-toast position="top-right"></p-toast>
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+
+      </div>
 <h1 class="text-center text-3xl font-bold">Cars List</h1>
 
 <div class="flex flex-col-reverse md:flex-row gap-4 ml-4 mr-4 pl-12 mt-2">
@@ -144,12 +149,16 @@
       </button>
   
       <button
+        (click)="confirmDeleteCar(selectedCar._id!)"
         [disabled]="selectedCar.availabilityStatus !== 'Available'"
         class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <i class="pi pi-trash"></i>
         Delete
       </button>
+
+      
+
     </div>
   </div>
 

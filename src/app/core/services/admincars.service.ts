@@ -44,6 +44,12 @@ export class AdmincarsService {
     return this.http.post<any>('http://localhost:5000/api/cars', formData);
   }
 
+
+  deleteCar(id: string) {
+    return this.http.delete(`http://localhost:5000/api/cars/${id}`);
+  }
+
+
  
  
 }

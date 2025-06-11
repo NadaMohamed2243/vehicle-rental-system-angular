@@ -6,17 +6,25 @@ import { CardModule } from 'primeng/card';
 import { Router } from '@angular/router';
 import { AdmincarsService } from '../../../../core/services/admincars.service';
 import { Cars } from '../../../../core/interfaces/cars';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MessagesModule } from 'primeng/messages';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { provideAnimations } from '@angular/platform-browser/animations';
+
+
 
 
 @Component({
   selector: 'app-agent-car-cards',
   standalone: true,
-  imports: [CommonModule, FormsModule, TabViewModule, CardModule],
- templateUrl: './agent-car-cards.component.html',
-  styleUrl: './agent-car-cards.component.css'
+  imports: [CommonModule, FormsModule, TabViewModule, CardModule ,ConfirmDialogModule,MessagesModule,ToastModule],
+  templateUrl: './agent-car-cards.component.html',
+  styleUrl: './agent-car-cards.component.css',
+  providers: [ConfirmationService, MessageService,provideAnimations()]
 })
 export class AgentCarCardsComponent implements OnInit {
-  constructor(private _AdmincarService: AdmincarsService,private router: Router) {}
+  constructor(private _AdmincarService: AdmincarsService,private router: Router, private confirmationService: ConfirmationService, private messageService: MessageService) {}
   cars: Cars[] = [];
   availableCars: Cars[] = [];
   occupiedCars: Cars[] = [];
@@ -46,14 +54,31 @@ export class AgentCarCardsComponent implements OnInit {
     this.selectedCar = car;
   }
 
-//   editCar(car: Cars) {
-//   this.router.navigateByUrl('dashboard/add-car', {
-//     state: { car }
-//   });
-// }
+  editCar(car: any) {
+    this.router.navigate(['/agent-dashboard/agent-add-car', car._id]);
+  }
 
-editCar(car: any) {
-  this.router.navigate(['/agent-dashboard/agent-add-car', car._id]);
-}
+
+  // delete
+  confirmDeleteCar(carId: string) {
+    console.log('Delete Car ID:', carId); 
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this car?',
+      header: 'Delete Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this._AdmincarService.deleteCar(carId).subscribe({
+          next: () => {
+            this.messageService.add({ severity: 'success', summary: 'Deleted', detail: 'Car deleted successfully' });
+            this.loadCars(); // Reload the cars after deletion
+          },
+          error: () => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete car' });
+          }
+        });
+      }
+    });
+  }
+
 
 }
