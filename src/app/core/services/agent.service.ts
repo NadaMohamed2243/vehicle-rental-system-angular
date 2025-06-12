@@ -1,73 +1,88 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Agent } from '../../core/interfaces/agent';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AgentService {
-  private _agents: Agent[] = [
-    {
-      _id: '1',
-      user_id: 'u1',
-      company_name: 'Rently Cairo',
-      phone_number: '01012345678',
-      location: 'Cairo',
-      ID_document: 'uploads/id_documents/agent1.jpg',
-      verification_status: 'pending',
-      lat: 30.0444,
-      lng: 31.2357,
-      opening_hours: '9AM - 5PM',
-      permissions: ['view', 'edit'],
-    },
-    {
-      _id: '2',
-      user_id: 'u2',
-      company_name: 'Rently Alex',
-      phone_number: '01087654321',
-      location: 'Alex',
-      ID_document: 'uploads/id_documents/agent2.jpg',
-      verification_status: 'approved',
-      lat: 31.2001,
-      lng: 29.9187,
-      opening_hours: '10AM - 6PM',
-      permissions: ['view'],
-    },
-    {
-      _id: '3',
-      user_id: 'u3',
-      company_name: 'Rently Mansoura',
-      phone_number: '01123456789',
-      location: 'Mansoura',
-      ID_document: 'uploads/id_documents/agent3.jpg',
-      verification_status: 'pending',
-      lat: 31.0364,
-      lng: 31.3807,
-      opening_hours: '8AM - 4PM',
-      permissions: ['view', 'delete'],
-    }
-  ];
+  private apiUrl = 'http://localhost:5000/api/admin';
+
+  constructor(private http: HttpClient) {}
+
+  private getAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token') || '';
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+  }
+
+  getAllAgents(): Observable<Agent[]> {
+    return this.http.get<Agent[]>(`${this.apiUrl}/agents`, {
+      headers: this.getAuthHeaders()
+    });
+  }
 
   getPendingAgents(): Observable<Agent[]> {
-    return of(this._agents.filter(agent => agent.verification_status === 'pending'));
+    return this.http.get<Agent[]>(`${this.apiUrl}/agents?status=pending`, {
+      headers: this.getAuthHeaders()
+    });
   }
 
   getApprovedAgents(): Observable<Agent[]> {
-    return of(this._agents.filter(agent => agent.verification_status === 'approved'));
+    return this.http.get<Agent[]>(`${this.apiUrl}/agents?status=approved`, {
+      headers: this.getAuthHeaders()
+    });
   }
 
-  approveAgent(id: string): Observable<Agent[]> {
-    const index = this._agents.findIndex(c => c._id === id);
-    if (index !== -1) {
-      this._agents[index].verification_status = 'approved';
-    }
-    return of(this._agents);
+  getRejectedAgents(): Observable<Agent[]> {
+    return this.http.get<Agent[]>(`${this.apiUrl}/agents?status=rejected`, {
+      headers: this.getAuthHeaders()
+    });
   }
 
-  rejectAgent(id: string): Observable<Agent[]> {
-    this._agents = this._agents.filter(c => c._id !== id);
-    return of(this._agents);
+  getBannedAgents(): Observable<Agent[]> {
+    return this.http.get<Agent[]>(`${this.apiUrl}/agents?status=banned`, {
+      headers: this.getAuthHeaders()
+    });
   }
 
-  constructor() { }
+  getSuspendedAgents(): Observable<Agent[]> {
+    return this.http.get<Agent[]>(`${this.apiUrl}/agents?status=suspended`, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+
+  approveAgent(id: string): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/approve/agent/${id}`, {}, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+  rejectAgent(id: string): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/reject/agent/${id}`, {}, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+  banAgent(id: string): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/ban/agent/${id}`, {}, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+  suspendAgent(id: string): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/suspend/agent/${id}`, {}, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+
+
+  getDocumentUrl(path: string): string {
+    const formattedPath = path.replace(/\\/g, '/');
+    return `http://localhost:5000/${formattedPath}`;
+  }
 }

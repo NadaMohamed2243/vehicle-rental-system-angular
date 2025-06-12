@@ -3,42 +3,44 @@ import { AgentService } from '../../../../core/services/agent.service';
 import { TabViewModule } from 'primeng/tabview';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
-import { Agent } from '../../../../core/interfaces/agent'; // Assuming you have an Agent interface defined
+import { Agent } from '../../../../core/interfaces/agent';
 import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
-
 
 @Component({
   selector: 'app-accept-agent',
   standalone: true,
-  imports: [TabViewModule, TableModule, ButtonModule, DialogModule ,CommonModule],
+  imports: [TabViewModule, TableModule, ButtonModule, DialogModule, CommonModule],
   templateUrl: './accept-agent.component.html',
   styleUrl: './accept-agent.component.css'
 })
 export class AcceptAgentComponent implements OnInit {
-  pendingAgents: any[] = [];
-  approvedAgents: any[] = [];
-  displayDocumentDialog: boolean = false;
+  pendingAgents: Agent[] = [];
+  approvedAgents: Agent[] = [];
+  rejectedAgents: Agent[] = [];
+  bannedAgents: Agent[] = [];
+  suspendedAgents: Agent[] = [];
+
+  selectedAgent: Agent | null = null;
   selectedDocumentUrl: string = '';
-  selectedAgent: any = null;
   displayAgentDialog: boolean = false;
+  displayDocumentDialog: boolean = false;
 
 
-
-  constructor(private _AgentService: AgentService) {}
+  constructor(public _AgentService: AgentService) {}
 
   ngOnInit(): void {
     this.loadAgents();
   }
 
   loadAgents(): void {
-    this._AgentService.getPendingAgents().subscribe(data => {
-      this.pendingAgents = data;
-    });
-
-    this._AgentService.getApprovedAgents().subscribe(data => {
-      this.approvedAgents = data;
-    });
+   this._AgentService.getAllAgents().subscribe((agents: Agent[]) => {
+    this.pendingAgents = agents.filter(a => a.verification_status === 'pending');
+    this.approvedAgents = agents.filter(a => a.verification_status === 'approved');
+    this.rejectedAgents = agents.filter(a => a.verification_status === 'rejected');
+    this.bannedAgents = agents.filter(a => a.verification_status === 'banned');
+    this.suspendedAgents = agents.filter(a => a.verification_status === 'suspended');
+  });
   }
 
   approveAgent(id: string): void {
@@ -53,18 +55,29 @@ export class AcceptAgentComponent implements OnInit {
     });
   }
 
-// Method to open the document in a dialog
-  openDocument(documentUrl: string): void {
-  this.selectedDocumentUrl = documentUrl;
+  banAgent(id: string): void {
+  this._AgentService.banAgent(id).subscribe(() => {
+    this.loadAgents(); 
+   });
+  }
+
+  suspendAgent(id: string): void {
+    this._AgentService.suspendAgent(id).subscribe(() => {
+      this.loadAgents();
+    }); 
+  }
+
+
+
+ openDocument(documentUrl: string): void {
+  this.selectedDocumentUrl = this._AgentService.getDocumentUrl(documentUrl);
   this.displayDocumentDialog = true;
-}
+  }
 
-// Method to open the Agent details dialog
-showAgentDetails(agent: any) {
-  console.log('Selected Agent:', agent);  //test log to check the agent data
-  this.selectedAgent = agent;
-  this.displayAgentDialog = true;
-}
+  showAgentDetails(agent: Agent): void {
+    this.selectedAgent = agent;
+    this.displayAgentDialog = true;
+  }
 
-
+  
 }
