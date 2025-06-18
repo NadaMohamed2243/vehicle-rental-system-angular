@@ -80,4 +80,44 @@ getUnderMaintenanceCars(): Observable<Cars[]> {
   );
 }
 
+
+// -----admin dashboard car list see all cars & Approve Car-----
+
+getALLCarsAdmin(): Observable<Cars[]> {
+  return this.http.get<Cars[]>('http://localhost:5000/api/cars', {
+    headers: this.getAuthHeaders()
+  }).pipe(
+    map(cars => {
+      this._cars = cars;
+      return cars;
+    })
+  );
+}
+
+  getAvailableCarsAdmin(): Observable<Cars[]> {
+  return this.getALLCarsAdmin().pipe(
+    map(cars => cars.filter(car => car.availabilityStatus === 'Available'))
+  );
+}
+
+getRentedCarsAdmin(): Observable<Cars[]> {
+  return this.getALLCarsAdmin().pipe(
+    map(cars => cars.filter(car => car.availabilityStatus === 'Rented'))
+  );
+}
+
+getUnderMaintenanceCarsAdmin(): Observable<Cars[]> {
+  return this.getALLCarsAdmin().pipe(
+    map(cars => cars.filter(car => car.availabilityStatus === 'Under Maintenance'))
+  );
+}
+
+
+deleteCarAdmin(id: string): Observable<any> {
+    return this.http.delete<any>(
+      `http://localhost:5000/api/cars/${id}`,
+      { headers: this.getAuthHeaders() }
+    );
+  }
+
 }

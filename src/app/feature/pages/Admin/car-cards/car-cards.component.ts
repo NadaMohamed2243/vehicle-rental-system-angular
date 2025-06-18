@@ -6,21 +6,30 @@ import { CardModule } from 'primeng/card';
 import { Router } from '@angular/router';
 import { AdmincarsService } from '../../../../core/services/admincars.service';
 import { Cars } from '../../../../core/interfaces/cars';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MessagesModule } from 'primeng/messages';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmationService, MessageService } from 'primeng/api';
+
+
 
 
 @Component({
-  selector: 'app-admin-car-card',
+  selector: 'app-car-cards',
   standalone: true,
-  imports: [CommonModule, FormsModule, TabViewModule, CardModule],
+  imports: [CommonModule, FormsModule, TabViewModule, CardModule ,ConfirmDialogModule,MessagesModule,ToastModule],
   templateUrl: './car-cards.component.html',
   styleUrl: './car-cards.component.css',
+  providers: [ConfirmationService, MessageService]
 })
 export class CarCardsComponent implements OnInit {
-  constructor(private _AdmincarService: AdmincarsService,private router: Router) {}
+  constructor(private _AdmincarService: AdmincarsService,private router: Router, private confirmationService: ConfirmationService, private messageService: MessageService) {}
   cars: Cars[] = [];
   availableCars: Cars[] = [];
-  occupiedCars: Cars[] = [];
+  rentedCars: Cars[] = [];
+  underMaintenanceCars: Cars[] = [];
   selectedCar: Cars | null = null;
+  pendingCars: Cars[] = [];
 
   
   ngOnInit(): void {
@@ -28,18 +37,23 @@ export class CarCardsComponent implements OnInit {
   }
 //load cars from the service
   loadCars() {
-     this._AdmincarService.getAllCars().subscribe((res: Cars[]) => {
-    this.cars = res;
-    
+      this._AdmincarService.getALLCarsAdmin().subscribe((res: Cars[]) => {
+      this.cars = res;
+      this.pendingCars = res.filter(car => car.approval_status === 'pending');
+
   });
 
-  this._AdmincarService.getAvailableCars().subscribe((res: Cars[]) => {
+  this._AdmincarService.getAvailableCarsAdmin().subscribe((res: Cars[]) => {
     this.availableCars = res;
   });
 
-  this._AdmincarService.getRentedCars().subscribe((res: Cars[]) => {
-    this.occupiedCars = res;
+  this._AdmincarService.getRentedCarsAdmin().subscribe((res: Cars[]) => {
+    this.rentedCars = res;
   });
+  this._AdmincarService.getUnderMaintenanceCarsAdmin().subscribe(cars => {
+  this.underMaintenanceCars = cars;
+});
+
   }
 
   // to open car card details
@@ -47,10 +61,27 @@ export class CarCardsComponent implements OnInit {
     this.selectedCar = car;
   }
 
-  editCar(car: Cars) {
-  this.router.navigateByUrl('dashboard/add-car', {
-    state: { car }
-  });
-}
+
+  // delete
+  confirmDeleteCar(carId: string) {
+    console.log('Delete Car ID:', carId); 
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this car?',
+      header: 'Delete Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this._AdmincarService.deleteCarAdmin(carId).subscribe({
+          next: () => {
+            this.messageService.add({ severity: 'success', summary: 'Deleted', detail: 'Car deleted successfully' });
+            this.loadCars(); // Reload the cars after deletion
+          },
+          error: () => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete car' });
+          }
+        });
+      }
+    });
+  }
+
 
 }

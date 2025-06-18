@@ -11,7 +11,6 @@ import { ResetPasswordComponent } from './core/pages/reset-password/reset-passwo
 import { PendingResetPasswordComponent } from './core/pages/pending-reset-password/pending-reset-password.component';
 
 import { DashboardComponent } from './feature/pages/Admin/dashboard/dashboard.component';
-import { AddCarComponent } from './feature/pages/Admin/add-car/add-car.component';
 import { AcceptUserComponent } from './feature/pages/Admin/accept-user/accept-user.component';
 import { CarCardsComponent } from './feature/pages/Admin/car-cards/car-cards.component';
 import { OverviewComponent } from './feature/pages/Admin/overview/overview.component';
@@ -52,11 +51,11 @@ export const routes: Routes = [
       data: { roles: ['admin'] },
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
-      { path: 'car-cards', component: CarCardsComponent },
-      { path: 'add-car', component: AddCarComponent },
+      { path: 'overview', component: OverviewComponent },
       { path: 'accept-user', component: AcceptUserComponent },
       { path: 'accept-agent', component: AcceptAgentComponent },
-      { path: 'overview', component: OverviewComponent },
+      { path: 'car-cards', component: CarCardsComponent },
+     
     ],
   },
 

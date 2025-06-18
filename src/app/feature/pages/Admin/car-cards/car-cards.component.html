@@ -1,7 +1,9 @@
-<!-- <div>
-  <p-toast position="top-center"></p-toast>
-<p-confirmDialog></p-confirmDialog>
-</div> -->
+<!-- to show confirm delete message -->
+<div>
+<p-toast position="top-right"></p-toast>
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+</div>
+
 <h1 class="text-center text-3xl font-bold">Cars List</h1>
 
 <div class="flex flex-col-reverse md:flex-row gap-4 ml-4 mr-4 pl-12 mt-2">
@@ -72,14 +74,14 @@
         </div>
       </p-tabPanel>
 
-      <p-tabPanel header="Occupied">
+      <p-tabPanel header="Rented">
         <div class="flex mt-4 gap-6">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
             <p-card
-              *ngFor="let car of occupiedCars"
+              *ngFor="let car of rentedCars"
               (click)="selectCar(car)"
               header="{{ car.licensePlate }}"
-              subheader="Occupied"
+              subheader="Rented"
               class="cursor-pointer hover:shadow-lg transition duration-300"
             >
             <hr class="my-2 border-gray-200" />
@@ -97,7 +99,72 @@
           </div>
         </div>
       </p-tabPanel>
+
+      <!-- under maintenance -->
+       <p-tabPanel header="Under Maintenance">
+        <div class="flex mt-4 gap-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+            <p-card
+              *ngFor="let car of underMaintenanceCars"
+              (click)="selectCar(car)"
+              header="{{ car.licensePlate }}"
+              subheader="Under Maintenance"
+              class="cursor-pointer hover:shadow-lg transition duration-300"
+            >
+              <hr class="my-2 border-gray-200" />
+              <div class="flex items-center gap-2">
+                <i class="pi pi-wrench text-yellow-500"></i>
+                <p>{{ car.brand }}</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <i class="pi pi-tag text-gray-400"></i>
+                <p>{{ car.type }}</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <i class="pi pi-cog text-gray-400"></i>
+                <p>{{ car.model }}</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <i class="pi pi-dollar text-gray-400"></i>
+                <p>{{ car.rentalRatePerDay }} / day</p>
+              </div>
+            </p-card>
+          </div>
+        </div>
+      </p-tabPanel>
+
+
+
+       <!--pending cars -->
+       <p-tabPanel header="Pending cars">
+        <div class="flex mt-4 gap-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+            <p-card
+              *ngFor="let car of pendingCars"
+              (click)="selectCar(car)"
+              header="{{ car.licensePlate }}"
+              subheader="Pending"
+              class="cursor-pointer hover:shadow-lg transition duration-300"
+            >
+              <hr class="my-2 border-gray-200" />
+              <div class="flex items-center gap-2"><i class="pi pi-car text-gray-400"></i> <p>{{ car.brand }}</p></div>
+              <div class="flex items-center gap-2"><i class="pi pi-tag text-gray-400"></i> <p>{{ car.type }}</p></div>
+              <div class="flex items-center gap-2"><i class="pi pi-cog text-gray-400"></i> <p>{{ car.model }}</p></div>
+              <div class="flex items-center gap-2"><i class="pi pi-dollar text-gray-400"></i> <p>{{ car.rentalRatePerDay }} / day</p></div>
+            </p-card>
+          </div>
+        </div>
+      </p-tabPanel>
+
+
+  
+
     </p-tabView>
+
+   
+
+
+
   </div>
 
   <!-- Car Details -->
@@ -119,7 +186,7 @@
 
 
     <!-- in case => occupied car -->
-   <div *ngIf="selectedCar.availabilityStatus !== 'Available'">
+   <div *ngIf="selectedCar.availabilityStatus == 'Rented'">
     <hr class="my-2 border-gray-200"/>
     <div class="flex items-center gap-2 mb-2">
       <i class="pi pi-compass text-gray-400"></i>
@@ -134,22 +201,18 @@
    <!-- edit / delete -->
 
     <div class="flex justify-end gap-3 mt-4">
-      <button
-        (click)="editCar(selectedCar)"
-        [disabled]="selectedCar.availabilityStatus !== 'Available'"
-        class="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        <i class="pi pi-pencil"></i>
-        Edit
-      </button>
   
       <button
-        [disabled]="selectedCar.availabilityStatus !== 'Available'"
+        (click)="confirmDeleteCar(selectedCar._id!)"
+        [disabled]="selectedCar.availabilityStatus == 'Rented'"
         class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <i class="pi pi-trash"></i>
         Delete
       </button>
+
+      
+
     </div>
   </div>
 
