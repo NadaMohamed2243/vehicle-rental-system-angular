@@ -36,7 +36,7 @@ export class CarCardsComponent implements OnInit {
     this.availableCars = res;
   });
 
-  this._AdmincarService.getOccupiedCars().subscribe((res: Cars[]) => {
+  this._AdmincarService.getRentedCars().subscribe((res: Cars[]) => {
     this.occupiedCars = res;
   });
   }

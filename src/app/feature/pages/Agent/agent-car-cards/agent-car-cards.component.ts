@@ -10,7 +10,6 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessagesModule } from 'primeng/messages';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
-// import { provideAnimations } from '@angular/platform-browser/animations';
 
 
 
@@ -27,7 +26,8 @@ export class AgentCarCardsComponent implements OnInit {
   constructor(private _AdmincarService: AdmincarsService,private router: Router, private confirmationService: ConfirmationService, private messageService: MessageService) {}
   cars: Cars[] = [];
   availableCars: Cars[] = [];
-  occupiedCars: Cars[] = [];
+  rentedCars: Cars[] = [];
+  underMaintenanceCars: Cars[] = [];
   selectedCar: Cars | null = null;
   approvedCars: Cars[] = [];
   rejectedCars: Cars[] = [];
@@ -48,9 +48,13 @@ export class AgentCarCardsComponent implements OnInit {
     this.availableCars = res;
   });
 
-  this._AdmincarService.getOccupiedCars().subscribe((res: Cars[]) => {
-    this.occupiedCars = res;
+  this._AdmincarService.getRentedCars().subscribe((res: Cars[]) => {
+    this.rentedCars = res;
   });
+  this._AdmincarService.getUnderMaintenanceCars().subscribe(cars => {
+  this.underMaintenanceCars = cars;
+});
+
   }
 
   // to open car card details
@@ -58,6 +62,7 @@ export class AgentCarCardsComponent implements OnInit {
     this.selectedCar = car;
   }
 
+  //to navigate to add car page to edit
   editCar(car: any) {
     this.router.navigate(['/agent-dashboard/agent-add-car', car._id]);
   }
