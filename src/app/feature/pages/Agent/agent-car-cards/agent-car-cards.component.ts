@@ -31,6 +31,7 @@ export class AgentCarCardsComponent implements OnInit {
   selectedCar: Cars | null = null;
   approvedCars: Cars[] = [];
   rejectedCars: Cars[] = [];
+  pendingCars: Cars[] = [];
 
   
   ngOnInit(): void {
@@ -40,8 +41,10 @@ export class AgentCarCardsComponent implements OnInit {
   loadCars() {
       this._AdmincarService.getAllCars().subscribe((res: Cars[]) => {
       this.cars = res;
-      this.approvedCars = res.filter(car => car.is_approved === true);
-      this.rejectedCars = res.filter(car => car.is_approved === false);
+      this.approvedCars = res.filter(car => car.approval_status === 'approved');
+      this.rejectedCars = res.filter(car => car.approval_status === 'rejected');
+      this.pendingCars = res.filter(car => car.approval_status === 'pending');
+
   });
 
   this._AdmincarService.getAvailableCars().subscribe((res: Cars[]) => {

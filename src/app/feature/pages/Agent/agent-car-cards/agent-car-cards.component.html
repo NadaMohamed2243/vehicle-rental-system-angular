@@ -135,7 +135,28 @@
 
 
 
-       <!-- approved or rejected -->
+       <!--pending or approved or rejected -->
+       <p-tabPanel header="Pending cars">
+        <div class="flex mt-4 gap-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+            <p-card
+              *ngFor="let car of pendingCars"
+              (click)="selectCar(car)"
+              header="{{ car.licensePlate }}"
+              subheader="Pending"
+              class="cursor-pointer hover:shadow-lg transition duration-300"
+            >
+              <hr class="my-2 border-gray-200" />
+              <div class="flex items-center gap-2"><i class="pi pi-car text-gray-400"></i> <p>{{ car.brand }}</p></div>
+              <div class="flex items-center gap-2"><i class="pi pi-tag text-gray-400"></i> <p>{{ car.type }}</p></div>
+              <div class="flex items-center gap-2"><i class="pi pi-cog text-gray-400"></i> <p>{{ car.model }}</p></div>
+              <div class="flex items-center gap-2"><i class="pi pi-dollar text-gray-400"></i> <p>{{ car.rentalRatePerDay }} / day</p></div>
+            </p-card>
+          </div>
+        </div>
+      </p-tabPanel>
+
+
     <p-tabPanel header="Approved">
   <div class="flex mt-4 gap-6">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">

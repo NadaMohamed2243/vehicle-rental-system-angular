@@ -30,6 +30,7 @@ export class CarCardsComponent implements OnInit {
   loadCars() {
      this._AdmincarService.getAllCars().subscribe((res: Cars[]) => {
     this.cars = res;
+    
   });
 
   this._AdmincarService.getAvailableCars().subscribe((res: Cars[]) => {
