@@ -202,16 +202,21 @@
                      (onSelect)="onAdditionalImagesSelected($event)" class="w-full"></p-fileUpload>
       </div>
 
-      <div *ngIf="additionalImagesPreviews.length" class="mt-4">
-        <h4 class="text-sm font-medium text-gray-700 mb-2">Additional Images Preview</h4>
-        <div class="grid grid-cols-3 gap-2">
-          <div *ngFor="let preview of additionalImagesPreviews" class="relative">
-            <img [src]="preview" class="w-full h-24 object-cover border border-gray-300 rounded" />
-            <button pButton icon="pi pi-times" (click)="removeAdditionalImage(preview)" 
-                   class="delete top-0 right-0 p-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"></button>
-          </div>
+     <div *ngIf="additionalImagesPreviews.length" class="mt-4">
+      <h4 class="text-sm font-medium text-gray-700 mb-2">Additional Images Preview</h4>
+      <div class="grid grid-cols-3 gap-2">
+        <div *ngFor="let preview of additionalImagesPreviews" class="relative">
+          <i 
+            class="pi pi-times absolute top-1 right-1 text-gray-600 cursor-pointer p-1 hover:text-red-500"
+            (click)="removeAdditionalImage(preview)">
+          </i>
+
+          <img [src]="preview" class="w-full h-24 object-cover border border-gray-300 rounded" />
         </div>
       </div>
+    </div>
+
+
 
 
       <!-- Upload Documents -->
