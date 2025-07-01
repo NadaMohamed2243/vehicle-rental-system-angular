@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, tap } from 'rxjs';
 
@@ -15,7 +16,10 @@ interface IPInfo {
   providedIn: 'root',
 })
 export class GeoLocationService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
   private locations = [
     { label: 'Cairo', value: 'cairo' },
@@ -54,32 +58,27 @@ export class GeoLocationService {
   public mapCityToLocation(city: string): string | undefined {
     if (!city) return undefined;
 
-    // Normalize the input more aggressively
     const normalizedInput = city
       .trim()
       .toLowerCase()
-      .replace(/[^a-z0-9\s]/g, '') // Remove special characters
-      .replace(/\s+/g, ' ') // Normalize spaces
-      .replace(/^(al|el)\s+/, ''); // Remove common Arabic prefixes
+      .replace(/[^a-z0-9\s]/g, '')
+      .replace(/\s+/g, ' ')
+      .replace(/^(al|el)\s+/, '');
 
-    // Special cases first
     if (
       normalizedInput.includes('mansoura') ||
       normalizedInput.includes('mansura') ||
       normalizedInput.includes('mansurah') ||
       normalizedInput.includes('dakahlia')
     ) {
-      // Dakahlia is the governorate
       return 'mansoura';
     }
 
-    // Try exact match
     const exactMatch = this.locations.find(
       (loc) => loc.label.toLowerCase() === normalizedInput
     );
     if (exactMatch) return exactMatch.value;
 
-    // Try partial match
     const partialMatch = this.locations.find((loc) => {
       const locName = loc.label.toLowerCase();
       return (
@@ -91,6 +90,14 @@ export class GeoLocationService {
   }
 
   getLocation(): Observable<IPInfo> {
+    if (!isPlatformBrowser(this.platformId)) {
+      return of({
+        city: 'mansoura',
+        latitude: 31.408507,
+        longitude: 31.81227,
+      } as IPInfo);
+    }
+
     const saved = localStorage.getItem('user_city');
     const savedLocation = localStorage.getItem('user_location');
 
@@ -110,7 +117,6 @@ export class GeoLocationService {
           res.city = mappedCity;
           localStorage.setItem('user_city', mappedCity);
         } else {
-          // Fallback to original city if no mapping found
           localStorage.setItem('user_city', res.city);
         }
         localStorage.setItem(
