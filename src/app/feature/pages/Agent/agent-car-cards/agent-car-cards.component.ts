@@ -15,20 +15,22 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 
 
 @Component({
-  selector: 'app-car-cards',
+  selector: 'app-agent-car-cards',
   standalone: true,
   imports: [CommonModule, FormsModule, TabViewModule, CardModule ,ConfirmDialogModule,MessagesModule,ToastModule],
-  templateUrl: './car-cards.component.html',
-  styleUrl: './car-cards.component.css',
+  templateUrl: './agent-car-cards.component.html',
+  styleUrl: './agent-car-cards.component.css',
   providers: [ConfirmationService, MessageService]
 })
-export class CarCardsComponent implements OnInit {
+export class AgentCarCardsComponent implements OnInit {
   constructor(private _AdmincarService: AdmincarsService,private router: Router, private confirmationService: ConfirmationService, private messageService: MessageService) {}
   cars: Cars[] = [];
   availableCars: Cars[] = [];
   rentedCars: Cars[] = [];
   underMaintenanceCars: Cars[] = [];
   selectedCar: Cars | null = null;
+  approvedCars: Cars[] = [];
+  rejectedCars: Cars[] = [];
   pendingCars: Cars[] = [];
 
   
@@ -37,20 +39,22 @@ export class CarCardsComponent implements OnInit {
   }
 //load cars from the service
   loadCars() {
-      this._AdmincarService.getALLCarsAdmin().subscribe((res: Cars[]) => {
+      this._AdmincarService.getAllCars().subscribe((res: Cars[]) => {
       this.cars = res;
+      this.approvedCars = res.filter(car => car.approval_status === 'approved');
+      this.rejectedCars = res.filter(car => car.approval_status === 'rejected');
       this.pendingCars = res.filter(car => car.approval_status === 'pending');
 
   });
 
-  this._AdmincarService.getAvailableCarsAdmin().subscribe((res: Cars[]) => {
+  this._AdmincarService.getAvailableCars().subscribe((res: Cars[]) => {
     this.availableCars = res;
   });
 
-  this._AdmincarService.getRentedCarsAdmin().subscribe((res: Cars[]) => {
+  this._AdmincarService.getRentedCars().subscribe((res: Cars[]) => {
     this.rentedCars = res;
   });
-  this._AdmincarService.getUnderMaintenanceCarsAdmin().subscribe(cars => {
+  this._AdmincarService.getUnderMaintenanceCars().subscribe(cars => {
   this.underMaintenanceCars = cars;
 });
 
@@ -59,6 +63,11 @@ export class CarCardsComponent implements OnInit {
   // to open car card details
   selectCar(car: Cars) {
     this.selectedCar = car;
+  }
+
+  //to navigate to add car page to edit
+  editCar(car: any) {
+    this.router.navigate(['/agent-dashboard/agent-add-car', car._id]);
   }
 
 
@@ -70,7 +79,7 @@ export class CarCardsComponent implements OnInit {
       header: 'Delete Confirmation',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this._AdmincarService.deleteCarAdmin(carId).subscribe({
+        this._AdmincarService.deleteCar(carId).subscribe({
           next: () => {
             this.messageService.add({ severity: 'success', summary: 'Deleted', detail: 'Car deleted successfully' });
             this.loadCars(); // Reload the cars after deletion

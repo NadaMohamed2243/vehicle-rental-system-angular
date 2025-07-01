@@ -26,7 +26,7 @@ export interface Cars {
   totalPricePerHour: number
   totalPricePerDay: number
   documents?: string[];
-  approval_status: string;
+  approval_status?: 'pending' | 'approved' | 'rejected';
   with_driver?: boolean;
   carPhotos: string[]
   agent: Agent

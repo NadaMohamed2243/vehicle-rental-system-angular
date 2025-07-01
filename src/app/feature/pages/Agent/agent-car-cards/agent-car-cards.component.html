@@ -135,7 +135,7 @@
 
 
 
-       <!--pending cars -->
+       <!--pending or approved or rejected -->
        <p-tabPanel header="Pending cars">
         <div class="flex mt-4 gap-6">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
@@ -157,7 +157,46 @@
       </p-tabPanel>
 
 
-  
+    <p-tabPanel header="Approved">
+  <div class="flex mt-4 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+      <p-card
+        *ngFor="let car of approvedCars"
+        (click)="selectCar(car)"
+        header="{{ car.licensePlate }}"
+        subheader="Approved"
+        class="cursor-pointer hover:shadow-lg transition duration-300"
+      >
+        <hr class="my-2 border-gray-200" />
+        <div class="flex items-center gap-2"><i class="pi pi-car text-gray-400"></i> <p>{{ car.brand }}</p></div>
+        <div class="flex items-center gap-2"><i class="pi pi-tag text-gray-400"></i> <p>{{ car.type }}</p></div>
+        <div class="flex items-center gap-2"><i class="pi pi-cog text-gray-400"></i> <p>{{ car.model }}</p></div>
+        <div class="flex items-center gap-2"><i class="pi pi-dollar text-gray-400"></i> <p>{{ car.rentalRatePerDay }} / day</p></div>
+      </p-card>
+    </div>
+  </div>
+</p-tabPanel>
+
+
+<p-tabPanel header="Rejected">
+  <div class="flex mt-4 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+      <p-card
+        *ngFor="let car of rejectedCars"
+        (click)="selectCar(car)"
+        header="{{ car.licensePlate }}"
+        subheader="Rejected"
+        class="cursor-pointer hover:shadow-lg transition duration-300"
+      >
+        <hr class="my-2 border-gray-200" />
+        <div class="flex items-center gap-2"><i class="pi pi-car text-gray-400"></i> <p>{{ car.brand }}</p></div>
+        <div class="flex items-center gap-2"><i class="pi pi-tag text-gray-400"></i> <p>{{ car.type }}</p></div>
+        <div class="flex items-center gap-2"><i class="pi pi-cog text-gray-400"></i> <p>{{ car.model }}</p></div>
+        <div class="flex items-center gap-2"><i class="pi pi-dollar text-gray-400"></i> <p>{{ car.rentalRatePerDay }} / day</p></div>
+      </p-card>
+    </div>
+  </div>
+</p-tabPanel>
 
     </p-tabView>
 
@@ -201,6 +240,14 @@
    <!-- edit / delete -->
 
     <div class="flex justify-end gap-3 mt-4">
+      <button
+        (click)="editCar(selectedCar)"
+        [disabled]="selectedCar.availabilityStatus == 'Rented'"
+        class="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <i class="pi pi-pencil"></i>
+        Edit
+      </button>
   
       <button
         (click)="confirmDeleteCar(selectedCar._id!)"

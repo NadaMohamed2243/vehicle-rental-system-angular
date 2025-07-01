@@ -13,12 +13,19 @@ import {
 // import  auraLightBlue  from '@primeng/themes/aura';
 // import auraLightBlue from '@primeng/themes/aura-light-blue';
 
+import { importProvidersFrom } from '@angular/core';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
+
+
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideAnimationsAsync(),
+    provideAnimations(), 
     providePrimeNG({
       theme: {
         preset: Aura,
@@ -31,5 +38,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
     provideHttpClient(),
-  ],
+    importProvidersFrom(ReactiveFormsModule),
+    ],
 };
