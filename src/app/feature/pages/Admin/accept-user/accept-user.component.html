@@ -1,70 +1,221 @@
-<h1 class="text-center text-3xl font-bold">Manage Clients</h1>
+<h1 class="text-center text-3xl font-bold">Customers</h1>
 
+<div class="px-5 ml-12 m-2 border border-gray-200 rounded-lg bg-white shadow-sm p-4 ">
+  <p-tabView>
 
-  <div class="px-5 ml-12 m-2 border border-gray-200 rounded-lg bg-white shadow-sm p-4 ">
-
-    <p-tabView >
-      <p-tabPanel header="Pending Clients">
-        <div class="overflow-x-auto">
+    <!-- Pending Customers -->
+    <p-tabPanel header="Pending Customers">
+      <div class="overflow-x-auto">
         <p-table [value]="pendingClients" stripedRows class="w-full min-w-[600px]">
-            <ng-template pTemplate="header">
+          <ng-template pTemplate="header">
             <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>City</th>
-                <th>Actions</th>
+              <th>Id</th>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>City</th>
+              <th>License</th>
+              <th>Actions</th>
             </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-client>
+          </ng-template>
+          <ng-template pTemplate="body" let-client>
             <tr>
-                <td>{{ client.id }}</td>
-                <td>{{ client.name }}</td>
-                <td>{{ client.email }}</td>
-                <td>{{ client.location.city }}</td>
-                <td>
-                  <p-button class="p-button-sm" icon="pi pi-check"  variant="outlined" severity="info" [rounded]="true" (click)="approveClient(client.id)"/>
-                  <p-button class="p-button-sm" icon="pi pi-times" variant="outlined" severity="danger" [rounded]="true" (click)="rejectClient(client.id)" />
-                </td>
+              <td>{{ client._id }}</td>
+              <td>{{ client.first_name }} {{ client.last_name }}</td>
+              <td>{{ client.phone_number }}</td>
+              <td>{{ client.location }}</td>
+              <td>
+                <img
+                  *ngIf="client.driver_license"
+                  [src]="_ClientService.getDriverLicenseImageUrl(client.driver_license)"
+                  alt="License"
+                  class="w-16 h-10 object-cover rounded cursor-pointer transition hover:brightness-110"
+                  (click)="openLicenseDialog(client.driver_license)"
+                />
+              </td>
+              <td>
+               <div class="flex gap-1">
+                <p-button icon="pi pi-check" severity="info"
+                  styleClass="p-button-sm text-[10px] px-1 py-0 rounded-sm" (click)="approveClient(client._id)" />
+
+                <p-button icon="pi pi-times"  severity="danger"
+                  styleClass="p-button-sm text-[10px] px-1 py-0 rounded-sm" (click)="rejectClient(client._id)" />
+
+                <p-button icon="pi pi-ban"  severity="success"
+                  styleClass="p-button-sm text-[10px] px-1 py-0 rounded-sm"
+                  (click)="banClient(client._id)" />
+
+                <p-button icon="pi pi-pause"  severity="help"
+                  styleClass="p-button-sm text-[10px] px-1 py-0 rounded-sm"
+                  (click)="suspendClient(client._id)" />
+              </div>
+              </td>
             </tr>
-            </ng-template>
+          </ng-template>
         </p-table>
-        </div>
-        </p-tabPanel>
+      </div>
+    </p-tabPanel>
 
-
-    
-    <!-- approved Clients -->
-      <p-tabPanel header="Approved Clients">
-        <div class="overflow-x-auto">
+    <!-- Approved Customers -->
+    <p-tabPanel header="Approved Customers">
+      <div class="overflow-x-auto">
         <p-table [value]="approvedClients" stripedRows class="w-full min-w-[600px]">
-            <ng-template pTemplate="header">
+          <ng-template pTemplate="header">
             <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>City</th>
+              <th>Id</th>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>City</th>
+              <th>License</th>
+              <th>Actions</th>
             </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-client>
+          </ng-template>
+          <ng-template pTemplate="body" let-client>
             <tr>
-                <td>{{ client.id }}</td>
-                <td>{{ client.name }}</td>
-                <td>{{ client.email }}</td>
-                <td>{{ client.location.city }}</td>
+              <td>{{ client._id }}</td>
+              <td>{{ client.first_name }} {{ client.last_name }}</td>
+              <td>{{ client.phone_number }}</td>
+              <td>{{ client.location }}</td>
+              <td>
+                <img
+                  *ngIf="client.driver_license"
+                  [src]="_ClientService.getDriverLicenseImageUrl(client.driver_license)"
+                  alt="License"
+                  class="w-16 h-10 object-cover rounded cursor-pointer transition hover:brightness-110"
+                  (click)="openLicenseDialog(client.driver_license)"
+                />
+              </td>
+              <td>
+                <div class="flex gap-1">
+                <p-button icon="pi pi-times"  severity="danger"
+                  styleClass="p-button-sm text-[10px] px-1 py-0 rounded-sm" (click)="rejectClient(client._id)" />
+
+                <p-button icon="pi pi-ban"  severity="success"
+                  styleClass="p-button-sm text-[10px] px-1 py-0 rounded-sm"
+                  (click)="banClient(client._id)" />
+
+                <p-button icon="pi pi-pause"  severity="help"
+                  styleClass="p-button-sm text-[10px] px-1 py-0 rounded-sm"
+                  (click)="suspendClient(client._id)" />
+              </div>
+              </td>
             </tr>
-            </ng-template>
+          </ng-template>
         </p-table>
-        </div>
-        </p-tabPanel>
+      </div>
+    </p-tabPanel>
 
-      
-    </p-tabView>
-  </div>
+    <!-- Rejected Customers -->
+    <p-tabPanel header="Rejected Customers">
+      <div class="overflow-x-auto">
+        <p-table [value]="rejectedClients" stripedRows class="w-full min-w-[600px]">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Id</th>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>City</th>
+              <th>License</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-client>
+            <tr>
+              <td>{{ client._id }}</td>
+              <td>{{ client.first_name }} {{ client.last_name }}</td>
+              <td>{{ client.phone_number }}</td>
+              <td>{{ client.location }}</td>
+              <td>
+                <img
+                  *ngIf="client.driver_license"
+                  [src]="_ClientService.getDriverLicenseImageUrl(client.driver_license)"
+                  alt="License"
+                  class="w-16 h-10 object-cover rounded cursor-pointer transition hover:brightness-110"
+                  (click)="openLicenseDialog(client.driver_license)"
+                />
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </p-tabPanel>
 
-  
-    
+    <!-- Banned Customers -->
+    <p-tabPanel header="Banned Customers">
+      <div class="overflow-x-auto">
+        <p-table [value]="bannedClients" stripedRows class="w-full min-w-[600px]">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Id</th>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>City</th>
+              <th>License</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-client>
+            <tr>
+              <td>{{ client._id }}</td>
+              <td>{{ client.first_name }} {{ client.last_name }}</td>
+              <td>{{ client.phone_number }}</td>
+              <td>{{ client.location }}</td>
+              <td>
+                <img
+                  *ngIf="client.driver_license"
+                  [src]="_ClientService.getDriverLicenseImageUrl(client.driver_license)"
+                  alt="License"
+                  class="w-16 h-10 object-cover rounded cursor-pointer transition hover:brightness-110"
+                  (click)="openLicenseDialog(client.driver_license)"
+                />
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </p-tabPanel>
 
-  
+    <!-- Suspended Customers -->
+    <p-tabPanel header="Suspended Customers">
+      <div class="overflow-x-auto">
+        <p-table [value]="suspendedClients" stripedRows class="w-full min-w-[600px]">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Id</th>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>City</th>
+              <th>License</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-client>
+            <tr>
+              <td>{{ client._id }}</td>
+              <td>{{ client.first_name }} {{ client.last_name }}</td>
+              <td>{{ client.phone_number }}</td>
+              <td>{{ client.location }}</td>
+              <td>
+                <img
+                  *ngIf="client.driver_license"
+                  [src]="_ClientService.getDriverLicenseImageUrl(client.driver_license)"
+                  alt="License"
+                  class="w-16 h-10 object-cover rounded cursor-pointer transition hover:brightness-110"
+                  (click)="openLicenseDialog(client.driver_license)"
+                />
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </p-tabPanel>
+
+  </p-tabView>
+</div>
 
 
+  <!-- to read license  -->
+  <p-dialog header="Driver License" [(visible)]="licenseDialogVisible" [modal]="true" [style]="{ width: '50vw' }" [closable]="true">
+    <img
+      *ngIf="selectedLicenseImage"
+      [src]="_ClientService.getDriverLicenseImageUrl(selectedLicenseImage)"
+      alt="License"
+      class="w-full h-auto rounded"
+    />
+  </p-dialog>

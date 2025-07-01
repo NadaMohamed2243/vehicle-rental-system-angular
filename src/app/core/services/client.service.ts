@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Client } from '../../core/interfaces/client';
-import { Observable, of } from 'rxjs';    //use it until we use httpClient ,when deelivering data from the server
-import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';  
+import { HttpClient , HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -10,86 +10,57 @@ export class ClientService {
 
   constructor(private http: HttpClient) {}
   private apiURL = 'http://localhost:5000/api/auth';
-  private baseUrl = 'http://localhost:5000/';
+  private baseUrl = 'http://localhost:5000/api/admin';
 
 
-  private _clients: Client [] = [
-    {
-    id: 123,
-    name: 'hagar',
-    email: 'hagar@gmail.com',
-    location: {
-      city: 'cairo'
-    },
-    status: 'pending'
-    },{
-    id: 456,
-    name: 'esraa',
-    email: 'esraa@gmail.com',
-    location: {
-      city: 'Alex'
-    },
-    status: 'approved'
-  },
-  {
-    id: 789,
-    name: 'dina',
-    email: 'dina@gmail.com',
-    location: {
-      city: 'cairo'
-    },
-    status: 'pending'
-    },{
-    id: 741,
-    name: 'nada',
-    email: 'nada@gmail.com',
-    location: {
-      city: 'Alex'
-    },
-    status: 'approved'
-  },{
-    id: 852,
-    name: 'nouran',
-    email: 'nouran@gmail.com',
-    location: {
-      city: 'Alex'
-    },
-    status: 'approved'
-  },{
-    id: 963,
-    name: 'lina',
-    email: 'lina@gmail.com',
-    location: {
-      city: 'Alex'
-    },
-    status: 'pending'
-  },
-]
 
-// this function will return the list of clients
- getPendingClients(): Observable<Client[]> {
-    return of(this._clients.filter(client => client.status === 'pending'));
+  // to get token add it to the headers
+  private getAuthHeaders(): HttpHeaders {
+      const token = localStorage.getItem('token') || '';
+      return new HttpHeaders({
+        Authorization: `Bearer ${token}`
+      });
   }
 
-  getApprovedClients(): Observable<Client[]> {
-    return of(this._clients.filter(client => client.status === 'approved'));
+
+  // Get all clients
+  getAllClients(): Observable<Client[]> {
+    return this.http.get<Client[]>(`${this.baseUrl}/clients`, {
+      headers: this.getAuthHeaders()
+    });
   }
 
-  // this function will approve the client and change its status to approved
-  approveClient(id: number): Observable<Client[]> {
-    const index = this._clients.findIndex(c => c.id === id);
-    if (index !== -1) {
-      this._clients[index].status = 'approved';
-    }
-    return of(this._clients);
+  // Approve client
+  approveClient(id: string): Observable<any> {
+    return this.http.patch(`${this.baseUrl}/approve/client/${id}`, {}, {
+      headers: this.getAuthHeaders()
+    });
   }
 
-  // this function will remove the client from the list
-  rejectClient(id: number): Observable<Client[]> {
-    this._clients = this._clients.filter(c => c.id !== id);
-    return of(this._clients);
+  // Reject client
+  rejectClient(id: string): Observable<any> {
+    return this.http.patch(`${this.baseUrl}/reject/client/${id}`, {}, {
+      headers: this.getAuthHeaders()
+    });
   }
 
+  // Ban client
+  banClient(id: string): Observable<any> {
+    return this.http.patch(`${this.baseUrl}/ban/client/${id}`, {}, {
+      headers: this.getAuthHeaders()
+    });
+  }
+  
+
+  // Suspend client
+  suspendClient(id: string): Observable<any> {
+    return this.http.patch(`${this.baseUrl}/suspend/client/${id}`, {}, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+
+  
   getClientProfile() {
   const token = localStorage.getItem('token');
   return this.http.get(`${this.apiURL}/client/profile`, {
@@ -98,11 +69,12 @@ export class ClientService {
     }
   });
   }
-  getDriverLicenseImageUrl(path: string): string {
 
-  const formattedPath = path.replace(/\\/g, '/'); // Ensure it's a valid URL path
-  return this.baseUrl + formattedPath;
+
+ getDriverLicenseImageUrl(path: string): string {
+    const formattedPath = path.replace(/\\/g, '/');  // Ensure it's a valid URL path
+    return `http://localhost:5000/${formattedPath}`;
+  }
 }
 
 
-}
