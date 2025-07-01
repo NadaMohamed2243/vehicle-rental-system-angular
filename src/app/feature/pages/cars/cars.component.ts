@@ -17,6 +17,7 @@ import { FilterSidebarComponent } from '../../components/ui/filter-sidebar/filte
 import { CommonModule } from '@angular/common';
 import { Cars } from '../../../core/interfaces/cars';
 import { CarService } from '../../../core/services/car.service';
+import { GeoLocationService } from '../../../core/services/geo-location.service';
 import { Subscription, Observable, switchMap } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
@@ -79,16 +80,13 @@ export class CarsComponent implements OnInit, OnDestroy {
   brand: string | null = null;
 
   // Map related properties
-  userLocation: Location | null = {
-    lat: 31.408507,
-    lng: 31.81227,
-    address: 'Your current location',
-  };
+  userLocation: Location | null = null;
   selectedDeliveryLocation: Location | null = null;
 
   // Services
   private _carService = inject(CarService);
   private _filterService = inject(FilterStateService);
+  private _geoLocationService = inject(GeoLocationService);
   private _router = inject(Router);
   private _route = inject(ActivatedRoute);
   private subscriptions = new Subscription();
@@ -114,6 +112,7 @@ export class CarsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadInitialData();
     this.setupFilterSubscription();
+    this.getUserLocation();
   }
 
   ngOnDestroy(): void {
@@ -156,6 +155,30 @@ export class CarsComponent implements OnInit, OnDestroy {
         if (this.cars.length) {
           this.filteredCars = this._carService.filterCars(this.cars, filters);
         }
+      })
+    );
+  }
+
+  private getUserLocation(): void {
+    this.subscriptions.add(
+      this._geoLocationService.getLocation().subscribe({
+        next: (location) => {
+          this.userLocation = {
+            lat: location.latitude,
+            lng: location.longitude,
+            address: location.city,
+          };
+          console.log('User location loaded:', this.userLocation);
+        },
+        error: (err) => {
+          console.error('Error getting user location:', err);
+          // Fallback to default location (Mansoura)
+          this.userLocation = {
+            lat: 31.408507,
+            lng: 31.81227,
+            address: 'Default location',
+          };
+        },
       })
     );
   }

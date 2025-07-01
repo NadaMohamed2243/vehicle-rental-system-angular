@@ -20,6 +20,6 @@ export class CardComponent {
   }
   getTargetRoute(): string {
     const source = this.fromWho();
-    return source === 'home' ? '/payment' : '/login';
+    return source === 'home' ? '/cars' : '/cars' ;
   }
 }

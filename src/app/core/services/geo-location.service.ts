@@ -7,6 +7,8 @@ interface IPInfo {
   region: string;
   country: string;
   ip: string;
+  latitude: number;
+  longitude: number;
 }
 
 @Injectable({
@@ -90,8 +92,15 @@ export class GeoLocationService {
 
   getLocation(): Observable<IPInfo> {
     const saved = localStorage.getItem('user_city');
-    if (saved) {
-      return of({ city: saved } as IPInfo);
+    const savedLocation = localStorage.getItem('user_location');
+
+    if (saved && savedLocation) {
+      const parsedLocation = JSON.parse(savedLocation);
+      return of({
+        city: saved,
+        latitude: parsedLocation.lat,
+        longitude: parsedLocation.lng,
+      } as IPInfo);
     }
 
     return this.http.get<IPInfo>('https://ipapi.co/json/').pipe(
@@ -104,6 +113,10 @@ export class GeoLocationService {
           // Fallback to original city if no mapping found
           localStorage.setItem('user_city', res.city);
         }
+        localStorage.setItem(
+          'user_location',
+          JSON.stringify({ lat: res.latitude, lng: res.longitude })
+        );
       })
     );
   }

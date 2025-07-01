@@ -41,9 +41,7 @@ export interface Location {
   `,
   styleUrls: ['./map.component.css'],
 })
-export class MapComponent
-  implements OnInit, AfterViewInit, OnDestroy, OnChanges
-{
+export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input() carLocation!: Location | null;
   @Input() userLocation?: Location | null;
   @Input() enableDeliverySelection: boolean = true;
@@ -62,10 +60,6 @@ export class MapComponent
   selectedDeliveryLocation: Location | null = null;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
-
-  ngOnInit() {
-    // Do nothing here
-  }
 
   ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {
