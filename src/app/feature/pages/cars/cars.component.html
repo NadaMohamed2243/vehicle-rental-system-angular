@@ -88,10 +88,12 @@
                                             <p-datepicker [iconDisplay]="'input'" [showIcon]="true"
                                                 inputId="icondisplay" [showTime]="true" [(ngModel)]="dropoffDate" />
                                         </div>
+                                        @if (selectedCar?.with_driver) {
                                         <div class="mt-6 mb-3 flex justify-between items-center">
                                             <span class="text-xs font-bold">WITH DRIVER</span>
                                             <p-toggleswitch [(ngModel)]="withDriver" />
                                         </div>
+                                        }
                                     </div>
                                     <p-divider layout="vertical" />
                                     <div class="flex flex-col gap-2 w-50">
