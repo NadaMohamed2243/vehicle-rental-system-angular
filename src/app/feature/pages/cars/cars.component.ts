@@ -24,6 +24,13 @@ import {
   MapComponent,
   Location,
 } from '../../../shared/components/ui/map/map.component';
+import { ToastModule } from 'primeng/toast';
+import {
+  BookingService,
+  BookingRequest,
+} from '../../../core/services/booking.service';
+import { MessageService } from 'primeng/api';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-cars',
@@ -45,15 +52,17 @@ import {
     ToggleSwitchModule,
     FilterSidebarComponent,
     MapComponent,
+    ToastModule,
   ],
   templateUrl: './cars.component.html',
   styleUrls: ['./cars.component.css'],
+  providers: [MessageService],
 })
 export class CarsComponent implements OnInit, OnDestroy {
   // UI State
   visible: boolean = false;
   visible2: boolean = false;
-  checked: boolean = false;
+  withDriver: boolean = false;
   isFavorite = false;
   isLoading = true;
   errorMessage: string | null = null;
@@ -83,12 +92,18 @@ export class CarsComponent implements OnInit, OnDestroy {
   userLocation: Location | null = null;
   selectedDeliveryLocation: Location | null = null;
 
+  // Booking state
+  isBooking = false;
+
   // Services
   private _carService = inject(CarService);
   private _filterService = inject(FilterStateService);
   private _geoLocationService = inject(GeoLocationService);
   private _router = inject(Router);
   private _route = inject(ActivatedRoute);
+  private _bookingService = inject(BookingService);
+  private _messageService = inject(MessageService);
+  private _authService = inject(AuthService);
   private subscriptions = new Subscription();
 
   // Computed properties
@@ -103,10 +118,7 @@ export class CarsComponent implements OnInit, OnDestroy {
   }
 
   get totalPrice() {
-    if (this.selectedCar && this.rentalDuration) {
-      return this.selectedCar.totalPricePerHour * this.rentalDuration;
-    }
-    return 0;
+    return this.calculateTotalCost();
   }
 
   ngOnInit(): void {
@@ -127,7 +139,6 @@ export class CarsComponent implements OnInit, OnDestroy {
             this.filtration = params['filtration'] || null;
             this.type = params['type'] || null;
             this.brand = params['brand'] || null;
-
             return this.loadCars();
           })
         )
@@ -225,5 +236,112 @@ export class CarsComponent implements OnInit, OnDestroy {
   onDeliveryLocationSelected(location: Location) {
     this.selectedDeliveryLocation = location;
     console.log('Delivery location selected:', location);
+  }
+
+  private formatDateForAPI(date: Date): string {
+    return date.toISOString();
+  }
+
+  private calculateTotalCost(): number {
+    if (!this.selectedCar || !this.rentalDuration) return 0;
+
+    let baseCost = this.selectedCar.totalPricePerHour * this.rentalDuration;
+
+    if (this.withDriver) {
+      const driverCostPerHour = 25;
+      baseCost += driverCostPerHour * this.rentalDuration;
+    }
+
+    if (this.selectedInsurance !== 'No insurance') {
+      baseCost += 52;
+    }
+
+    baseCost += 13.06;
+
+    return baseCost;
+  }
+
+  bookVehicle(): void {
+    if (!this.selectedCar || !this.pickupDate || !this.dropoffDate) {
+      this._messageService.add({
+        severity: 'warn',
+        summary: 'Missing Information',
+        detail: 'Please select pickup and drop-off dates',
+      });
+      return;
+    }
+
+    const token = this._authService.getToken();
+
+    if (!token) {
+      this._messageService.add({
+        severity: 'error',
+        summary: 'Authentication Required',
+        detail: 'Please log in to book a vehicle',
+      });
+      return;
+    }
+
+    this.isBooking = true;
+
+    const bookingData: BookingRequest = {
+      carId: this.selectedCar._id,
+      startDate: this.formatDateForAPI(this.pickupDate),
+      endDate: this.formatDateForAPI(this.dropoffDate),
+      totalCost: this.calculateTotalCost(),
+      pickupLocation:
+        this.selectedCarLocation?.address || this.selectedCar.agent.location,
+      dropoffLocation:
+        this.selectedDeliveryLocation?.address ||
+        this.selectedCarLocation?.address ||
+        this.selectedCar.agent.location,
+    };
+    // if (this.withDriver && this.selectedCar.driver_rate_per_hour) {
+    //   bookingData.totalCost +=
+    //     this.selectedCar.driver_rate_per_hour * this.rentalDuration;
+    // }
+    this.subscriptions.add(
+      this._bookingService.bookAndPay(bookingData).subscribe({
+        next: (response) => {
+          this.isBooking = false;
+
+          if (response.booking && response.iframeUrl) {
+            this._messageService.add({
+              severity: 'success',
+              summary: 'Booking Created Successfully',
+              detail: `Booking ID: ${response.booking._id}. Redirecting to payment...`,
+            });
+
+            setTimeout(() => {
+              window.location.href = response.iframeUrl;
+            }, 2000);
+
+            this.visible = false;
+          } else {
+            this._messageService.add({
+              severity: 'error',
+              summary: 'Booking Failed',
+              detail: 'Invalid response from server',
+            });
+          }
+        },
+        error: (error) => {
+          this.isBooking = false;
+          console.error('Booking error:', error);
+
+          let errorMessage = 'Failed to book the vehicle. Please try again.';
+
+          if (error.error?.message) {
+            errorMessage = error.error.message;
+          }
+
+          this._messageService.add({
+            severity: 'error',
+            summary: 'Booking Error',
+            detail: errorMessage,
+          });
+        },
+      })
+    );
   }
 }

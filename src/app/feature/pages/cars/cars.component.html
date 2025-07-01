@@ -1,4 +1,5 @@
 <app-layout>
+    <p-toast></p-toast>
     <div class="flex">
         <!-- <app-filter></app-filter> -->
         <app-filter-sidebar></app-filter-sidebar>
@@ -89,15 +90,31 @@
                                         </div>
                                         <div class="mt-6 mb-3 flex justify-between items-center">
                                             <span class="text-xs font-bold">WITH DRIVER</span>
-                                            <p-toggleswitch [(ngModel)]="checked" />
+                                            <p-toggleswitch [(ngModel)]="withDriver" />
                                         </div>
                                     </div>
                                     <p-divider layout="vertical" />
                                     <div class="flex flex-col gap-2 w-50">
                                         <div class="flex justify-between items-center">
-                                            <p class="text-xs font-bold">INSURANCE</p>
-                                            <p class="text-sm font-semibold">$52.00</p>
+                                            <p class="text-xs font-bold">CAR RENTAL</p>
+                                            <p class="text-sm font-semibold">EG {{(selectedCar?.totalPricePerHour ?? 0)
+                                                * (rentalDuration ?? 0) | number:'1.2-2'}}</p>
                                         </div>
+
+                                        @if (withDriver) {
+                                        <div class="flex justify-between items-center">
+                                            <p class="text-xs font-bold">DRIVER FEE</p>
+                                            <p class="text-sm font-semibold">EG {{25 * rentalDuration | number:'1.2-2'}}
+                                            </p>
+                                        </div>
+                                        }
+
+                                        <!-- <div class="flex justify-between items-center">
+                                            <p class="text-xs font-bold">INSURANCE</p>
+                                            <p class="text-sm font-semibold">{{selectedInsurance !== 'No insurance' ?
+                                                '$52.00' : '$0.00'}}</p>
+                                        </div>
+
                                         <div class="grid grid-cols-1 gap-y-3">
                                             @for (in of insurance; track $index) {
                                             <div class="flex items-center">
@@ -106,18 +123,18 @@
                                                 <label [for]="in" class="ml-2"> {{ in }} </label>
                                             </div>
                                             }
-                                        </div>
+                                        </div> -->
+
                                         <div class="flex justify-between items-center my-4">
                                             <p class="text-xs font-bold">SALES TAXES</p>
                                             <p class="text-sm font-semibold">$13.06</p>
                                         </div>
+
                                         <div class="flex justify-between items-center">
                                             <p class="text-lg font-bold">Total Price</p>
-                                            <p class="text-lg font-semibold">EG {{totalPrice | number:'1.2-2'}}
-                                            </p>
+                                            <p class="text-lg font-semibold">EG {{totalPrice | number:'1.2-2'}}</p>
                                         </div>
                                     </div>
-
                                 </div>
                                 <div class="w-full h-[80px] bg-light-blue flex justify-between items-center rounded-lg">
                                     <div class="ps-5">
@@ -130,8 +147,15 @@
                                         <p class="text-sm text-white font-semibold">10 minutes</p>
                                     </div>
                                     <div class="h-full">
-                                        <button class="bg-[#3e9efb] h-full w-[80px] rounded-lg cursor-pointer"><i
-                                                class="pi pi-angle-right" style="color: white"></i>
+                                        <button
+                                            class="bg-[#3e9efb] h-full w-[80px] rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                            [disabled]="isBooking || !pickupDate || !dropoffDate"
+                                            (click)="bookVehicle()">
+                                            @if (isBooking) {
+                                            <i class="pi pi-spinner pi-spin" style="color: white"></i>
+                                            } @else {
+                                            <i class="pi pi-angle-right" style="color: white"></i>
+                                            }
                                         </button>
                                     </div>
                                 </div>
@@ -163,7 +187,6 @@
                                         <p class="text-sm">{{selectedCar?.fuel_type}}</p>
                                     </div>
                                 </div>
-
                             </p-tabpanel>
                         </p-tabpanels>
                     </p-tabs>
@@ -171,4 +194,5 @@
             </ng-template>
         </p-drawer>
     </div>
+
 </app-layout>
