@@ -10,10 +10,8 @@ import {
   withEventReplay,
 } from '@angular/platform-browser';
 
-// import  auraLightBlue  from '@primeng/themes/aura';
-// import auraLightBlue from '@primeng/themes/aura-light-blue';
-
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -24,12 +22,11 @@ export const appConfig: ApplicationConfig = {
         preset: Aura,
         options: {
           darkModeSelector: false,
-          // darkModeSelector: false || 'none'
         },
       },
     }),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([authInterceptor])),
   ],
 };
