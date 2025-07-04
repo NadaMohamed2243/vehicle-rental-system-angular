@@ -28,7 +28,7 @@ export class OrdersService {
 
   // for agent dashboard
   getAllOrdersAgent(): Observable<Orders[]> {
-    return this._HttpClient.get<Orders[]>('http://localhost:5000/api/agent/cars/booking', 
+    return this._HttpClient.get<Orders[]>('http://localhost:5000/api/agent/cars/bookings', 
       {headers: this.getAuthHeaders()}
     );
   }

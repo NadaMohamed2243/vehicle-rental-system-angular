@@ -20,6 +20,7 @@ import { BookingComponent } from './feature/pages/Admin/booking/booking.componen
 import { AgentDashboardComponent } from './feature/pages/Agent/agent-dashboard/agent-dashboard.component';
 import { AgentCarCardsComponent } from './feature/pages/Agent/agent-car-cards/agent-car-cards.component';
 import { AgentAddCarComponent } from './feature/pages/Agent/agent-add-car/agent-add-car.component';
+import { AgentBookingComponent } from './feature/pages/Agent/agent-booking/agent-booking.component';
 
 import { MainRegisterComponent } from './core/pages/main-register/main-register.component';
 import { RoleGuard } from './role.guard';
@@ -67,6 +68,7 @@ export const routes: Routes = [
     component: AgentDashboardComponent,
     children: [
       // { path: '', redirectTo: 'agent-overview', pathMatch: 'full' },
+      { path: 'agent-booking', component: AgentBookingComponent },
       { path: 'agent-car-cards', component:  AgentCarCardsComponent },
       { path: 'agent-add-car', component: AgentAddCarComponent },
       { path: 'agent-add-car/:id',component: AgentAddCarComponent }
