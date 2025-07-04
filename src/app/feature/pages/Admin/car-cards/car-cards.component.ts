@@ -30,6 +30,8 @@ export class CarCardsComponent implements OnInit {
   underMaintenanceCars: Cars[] = [];
   selectedCar: Cars | null = null;
   pendingCars: Cars[] = [];
+  approvedCars: Cars[] = [];
+  rejectedCars: Cars[] = []; 
 
   
   ngOnInit(): void {
@@ -37,11 +39,11 @@ export class CarCardsComponent implements OnInit {
   }
 //load cars from the service
   loadCars() {
-      this._AdmincarService.getALLCarsAdmin().subscribe((res: Cars[]) => {
-      this.cars = res;
-      this.pendingCars = res.filter(car => car.approval_status === 'pending');
+      // this._AdmincarService.getALLCarsAdmin().subscribe((res: Cars[]) => {
+      // this.cars = res;
+      // this.pendingCars = res.filter(car => car.approval_status === 'pending');
 
-  });
+  // });
 
   this._AdmincarService.getAvailableCarsAdmin().subscribe((res: Cars[]) => {
     this.availableCars = res;
@@ -52,7 +54,18 @@ export class CarCardsComponent implements OnInit {
   });
   this._AdmincarService.getUnderMaintenanceCarsAdmin().subscribe(cars => {
   this.underMaintenanceCars = cars;
-});
+  });
+
+  this._AdmincarService.getPendingCarsAdmin().subscribe((res: Cars[]) => {
+      this.pendingCars = res;
+    });
+
+  this._AdmincarService.getapprovedCarsAdmin().subscribe((res: Cars[]) => {
+      this.approvedCars = res;
+    });
+  this._AdmincarService.getRejectedCarsAdmin().subscribe((res: Cars[]) => {
+      this.rejectedCars = res;
+    }); 
 
   }
 
@@ -82,6 +95,37 @@ export class CarCardsComponent implements OnInit {
       }
     });
   }
+
+
+
+  // Approve car
+  approveCar(id: string) {
+  this._AdmincarService.approveCarAdmin(id).subscribe({
+    next: () => {
+      this.messageService.add({ severity: 'success', summary: 'Approved', detail: 'Car approved successfully' });
+      this.loadCars();
+      this.selectedCar = null;
+    },
+    error: () => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to approve car' });
+    }
+  });
+}
+
+// Reject car
+rejectCar(id: string) {
+  this._AdmincarService.rejectCarAdmin(id).subscribe({
+    next: () => {
+      this.messageService.add({ severity: 'warn', summary: 'Rejected', detail: 'Car rejected successfully' });
+      this.loadCars();
+      this.selectedCar = null;
+    },
+    error: () => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to reject car' });
+    }
+  });
+}
+
 
 
 }

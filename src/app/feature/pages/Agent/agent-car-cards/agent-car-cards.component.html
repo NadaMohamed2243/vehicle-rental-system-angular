@@ -76,7 +76,7 @@
 
       <p-tabPanel header="Rented">
         <div class="flex mt-4 gap-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4 flex-1">
             <p-card
               *ngFor="let car of rentedCars"
               (click)="selectCar(car)"
@@ -103,13 +103,13 @@
       <!-- under maintenance -->
        <p-tabPanel header="Under Maintenance">
         <div class="flex mt-4 gap-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4 flex-1">
             <p-card
               *ngFor="let car of underMaintenanceCars"
               (click)="selectCar(car)"
               header="{{ car.licensePlate }}"
               subheader="Under Maintenance"
-              class="cursor-pointer hover:shadow-lg transition duration-300"
+              class="cursor-pointer hover:shadow-lg transition duration-300 flex-1"
             >
               <hr class="my-2 border-gray-200" />
               <div class="flex items-center gap-2">
@@ -138,7 +138,7 @@
        <!--pending or approved or rejected -->
        <p-tabPanel header="Pending cars">
         <div class="flex mt-4 gap-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4 flex-1">
             <p-card
               *ngFor="let car of pendingCars"
               (click)="selectCar(car)"
@@ -159,7 +159,7 @@
 
     <p-tabPanel header="Approved">
   <div class="flex mt-4 gap-6">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4 flex-1">
       <p-card
         *ngFor="let car of approvedCars"
         (click)="selectCar(car)"
@@ -180,7 +180,7 @@
 
 <p-tabPanel header="Rejected">
   <div class="flex mt-4 gap-6">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4 flex-1">
       <p-card
         *ngFor="let car of rejectedCars"
         (click)="selectCar(car)"
@@ -216,12 +216,39 @@
       <button (click)="selectedCar = null" class="cursor-pointer text-gray-500 hover:text-red-500"><i class="pi pi-times"></i></button>
     </div>
     <img [src]="selectedCar.carPhotos[0]" alt="Car Image" class="w-full mb-4 rounded-md">
+      <!-- Availability Status Label -->
+<div class="flex gap-2 mb-3">
+  <span
+    *ngIf="selectedCar.availabilityStatus"
+    class="text-xs font-semibold px-2 py-1 rounded-full"
+    [ngClass]="{
+      'bg-green-100 text-green-800': selectedCar.availabilityStatus === 'Available',
+      'bg-yellow-100 text-yellow-800': selectedCar.availabilityStatus === 'Under Maintenance',
+      'bg-red-100 text-red-800': selectedCar.availabilityStatus === 'Rented'
+    }"
+  >
+    {{ selectedCar.availabilityStatus }}
+  </span>
+
+  <span
+    *ngIf="selectedCar.approval_status"
+    class="text-xs font-semibold px-2 py-1 rounded-full"
+    [ngClass]="{
+      'bg-gray-200 text-gray-800': selectedCar.approval_status === 'pending',
+      'bg-green-200 text-green-900': selectedCar.approval_status === 'approved',
+      'bg-red-200 text-red-900': selectedCar.approval_status === 'rejected'
+    }"
+  >
+    {{ selectedCar.approval_status }}
+  </span>
+</div>
+    <p> {{ selectedCar.conditionNotes }}</p>
     <p><strong>Year:</strong> {{ selectedCar.year }}</p>
     <p><strong>Plate:</strong> {{ selectedCar.licensePlate }}</p>
     <p><strong>Type:</strong> {{ selectedCar.type }}</p>
     <p><strong>Fuel Type:</strong> {{ selectedCar.fuel_type}}</p>
     <p><strong>Seats:</strong> {{ selectedCar.seats }}</p>
-    <p><strong>rental Rate:</strong> EGP {{ selectedCar.rentalRatePerDay }} / day</p>
+    <p><strong>rental Rate:</strong> EGP {{ selectedCar.totalPricePerDay }} / day</p>
 
 
     <!-- in case => occupied car -->
