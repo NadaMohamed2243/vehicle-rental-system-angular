@@ -15,11 +15,12 @@ import { AcceptUserComponent } from './feature/pages/Admin/accept-user/accept-us
 import { CarCardsComponent } from './feature/pages/Admin/car-cards/car-cards.component';
 import { OverviewComponent } from './feature/pages/Admin/overview/overview.component';
 import { AcceptAgentComponent } from './feature/pages/Admin/accept-agent/accept-agent.component';
-
+import { BookingComponent } from './feature/pages/Admin/booking/booking.component';
 
 import { AgentDashboardComponent } from './feature/pages/Agent/agent-dashboard/agent-dashboard.component';
 import { AgentCarCardsComponent } from './feature/pages/Agent/agent-car-cards/agent-car-cards.component';
 import { AgentAddCarComponent } from './feature/pages/Agent/agent-add-car/agent-add-car.component';
+
 import { MainRegisterComponent } from './core/pages/main-register/main-register.component';
 import { RoleGuard } from './role.guard';
 import { AuthGuard } from './auth.guard';
@@ -52,6 +53,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', component: OverviewComponent },
+      { path: 'booking', component: BookingComponent },
       { path: 'accept-user', component: AcceptUserComponent },
       { path: 'accept-agent', component: AcceptAgentComponent },
       { path: 'car-cards', component: CarCardsComponent },

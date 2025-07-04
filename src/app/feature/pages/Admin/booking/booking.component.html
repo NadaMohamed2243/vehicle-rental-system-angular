@@ -1,0 +1,178 @@
+<h1 class="text-center text-3xl font-bold mb-4">Orders List</h1>
+
+<div class="px-5 ml-12 m-2 border border-gray-200 rounded-lg bg-white shadow-sm p-4">
+  <p-tabView>
+
+    <!-- All Orders -->
+    <p-tabPanel header="All Bookings">
+      <div class="overflow-x-auto">
+        <p-table [value]="allOrders" stripedRows class="w-full min-w-[800px]">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Client</th>
+              <th>Phone</th>
+              <th>Car</th>
+              <th>Image</th>
+              <th>Start</th>
+              <th>End</th>
+              <th>Cost</th>
+              <th>Status</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-order>
+            <tr>
+              <td>{{ order.billingName }}</td>
+              <td>{{ order.billingPhone }}</td>
+              <td>{{ order.carId.brand }} {{ order.carId.model }} ({{ order.carId.licensePlate }})</td>
+              <td>
+                <img
+                  [src]="order.carId?.mainPhoto || order.carId?.carPhotos?.[0]"
+                  alt="Car Image"
+                  class="w-20 h-12 object-cover rounded"
+                />
+              </td>
+
+              <td>{{ order.startDate | date: 'yyyy-MM-dd' }}</td>
+              <td>{{ order.endDate | date: 'yyyy-MM-dd' }}</td>
+              <td>EGP {{ order.totalCost }}</td>
+              <td>
+                <span
+                  class="px-2 py-1 rounded-full text-xs"
+                  [ngClass]="{
+                    'bg-yellow-100 text-yellow-800': order.status === 'pending',
+                    'bg-green-100 text-green-800': order.status === 'paid',
+                    'bg-red-100 text-red-800': order.status === 'cancelled'
+                  }"
+                >
+                  {{ order.status }}
+                </span>
+              </td>
+
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </p-tabPanel>
+
+    <!-- Pending Orders -->
+    <p-tabPanel header="Pending Bookings">
+      <div class="overflow-x-auto">
+        <p-table [value]="pendingOrders" stripedRows class="w-full min-w-[800px]">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Client</th>
+              <th>Phone</th>
+              <th>Car</th>
+              <th>Image</th>
+              <th>Start</th>
+              <th>End</th>
+              <th>Cost</th>
+              <th>Status</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-order>
+            <tr>
+              <td>{{ order.billingName }}</td>
+              <td>{{ order.billingPhone }}</td>
+              <td>{{ order.carId.brand }} {{ order.carId.model }} ({{ order.carId.licensePlate }})</td>
+              <td>
+                <img
+                  [src]="order.carId?.mainPhoto || order.carId?.carPhotos?.[0]"
+                  alt="Car Image"
+                  class="w-20 h-12 object-cover rounded"
+                />
+              </td>
+              <td>{{ order.startDate | date: 'yyyy-MM-dd' }}</td>
+              <td>{{ order.endDate | date: 'yyyy-MM-dd' }}</td>
+              <td>EGP {{ order.totalCost }}</td>
+              <td>
+                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs">{{ order.status }}</span>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </p-tabPanel>
+
+    <!-- Approved Orders -->
+    <p-tabPanel header="Approved Bookings">
+      <div class="overflow-x-auto">
+        <p-table [value]="approvedOrders" stripedRows class="w-full min-w-[800px]">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Client</th>
+              <th>Phone</th>
+              <th>Car</th>
+              <th>Image</th>
+              <th>Start</th>
+              <th>End</th>
+              <th>Cost</th>
+              <th>Status</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-order>
+            <tr>
+              <td>{{ order.billingName }}</td>
+              <td>{{ order.billingPhone }}</td>
+              <td>{{ order.carId.brand }} {{ order.carId.model }} ({{ order.carId.licensePlate }})</td>
+              <td>
+                <img
+                  [src]="order.carId?.mainPhoto || order.carId?.carPhotos?.[0]"
+                  alt="Car Image"
+                  class="w-20 h-12 object-cover rounded"
+                />
+              </td>
+              <td>{{ order.startDate | date: 'yyyy-MM-dd' }}</td>
+              <td>{{ order.endDate | date: 'yyyy-MM-dd' }}</td>
+              <td>EGP {{ order.totalCost }}</td>
+              <td>
+                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">{{ order.status }}</span>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </p-tabPanel>
+
+    <!-- Cancelled Orders -->
+    <p-tabPanel header="Cancelled Bookings">
+      <div class="overflow-x-auto">
+        <p-table [value]="cancelledOrders" stripedRows class="w-full min-w-[800px]">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Client</th>
+              <th>Email</th>
+              <th>Car</th>
+              <th>Image</th>
+              <th>Start</th>
+              <th>End</th>
+              <th>Cost</th>
+              <th>Status</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-order>
+            <tr>
+              <td>{{ order.billingName }}</td>
+              <td>{{ order.clientEmail }}</td>
+              <td>{{ order.carId.brand }} {{ order.carId.model }} ({{ order.carId.licensePlate }})</td>
+              <td>
+                <img
+                  [src]="order.carId?.mainPhoto || order.carId?.carPhotos?.[0]"
+                  alt="Car Image"
+                  class="w-20 h-12 object-cover rounded"
+                />
+              </td>
+              <td>{{ order.startDate | date: 'yyyy-MM-dd' }}</td>
+              <td>{{ order.endDate | date: 'yyyy-MM-dd' }}</td>
+              <td>EGP {{ order.totalCost }}</td>
+              <td>
+                <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs">{{ order.status }}</span>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </p-tabPanel>
+
+  </p-tabView>
+</div>
