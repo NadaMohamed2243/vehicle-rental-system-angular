@@ -32,5 +32,27 @@ export class OrdersService {
       {headers: this.getAuthHeaders()}
     );
   }
+
+
+  // cancelled order by admin 
+  cancelOrder(orderId: string): Observable<any> {
+  return this._HttpClient.put(
+    `http://localhost:5000/api/bookings/${orderId}/cancel`,
+    {},
+    { headers: this.getAuthHeaders() }
+  );
+}
+
+
+// delete order by admin
+deleteOrder(orderId: string): Observable<any> {
+  return this._HttpClient.delete(
+    `http://localhost:5000/api/bookings/${orderId}`,
+    { headers: this.getAuthHeaders() }
+  );
+}
+
+
+
 }
 
