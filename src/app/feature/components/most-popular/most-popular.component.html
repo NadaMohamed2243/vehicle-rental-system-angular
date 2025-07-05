@@ -17,11 +17,17 @@
     </a>
   </div>
 
+  @if(isLoading) {
+  <div class="flex flex-col items-center justify-center py-10">
+    <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+    <p class="mt-4 text-dark-blue text-lg font-medium">Loading most popular cars...</p>
+  </div>
+  } @else {
   @if(cars.length != 0){
   <app-card-carousel [carDetails]="cars" fromWho="home"></app-card-carousel>
   }
   @else{
   <h1 class="text-dark-blue text-center my-5">no Cars Now</h1>
   }
-
+  }
 </div>
