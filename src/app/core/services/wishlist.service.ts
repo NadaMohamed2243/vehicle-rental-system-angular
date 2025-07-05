@@ -13,4 +13,12 @@ export class WishlistService {
   getWishlist(): Observable<Cars[]> {
     return this.http.get<Cars[]>(this.apiUrl);
   }
+
+  addToWishlist(carId: string): Observable<string> {
+    return this.http.post<string>(`${this.apiUrl}/${carId}`, {});
+  }
+
+  removeFromWishlist(carId: string): Observable<string> {
+    return this.http.delete<string>(`${this.apiUrl}/${carId}`);
+  }
 }
