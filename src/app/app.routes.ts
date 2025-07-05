@@ -15,11 +15,14 @@ import { AcceptUserComponent } from './feature/pages/Admin/accept-user/accept-us
 import { CarCardsComponent } from './feature/pages/Admin/car-cards/car-cards.component';
 import { OverviewComponent } from './feature/pages/Admin/overview/overview.component';
 import { AcceptAgentComponent } from './feature/pages/Admin/accept-agent/accept-agent.component';
-
+import { BookingComponent } from './feature/pages/Admin/booking/booking.component';
 
 import { AgentDashboardComponent } from './feature/pages/Agent/agent-dashboard/agent-dashboard.component';
+import { AgentOverviewComponent } from './feature/pages/Agent/agent-overview/agent-overview.component';
 import { AgentCarCardsComponent } from './feature/pages/Agent/agent-car-cards/agent-car-cards.component';
 import { AgentAddCarComponent } from './feature/pages/Agent/agent-add-car/agent-add-car.component';
+import { AgentBookingComponent } from './feature/pages/Agent/agent-booking/agent-booking.component';
+
 import { MainRegisterComponent } from './core/pages/main-register/main-register.component';
 import { RoleGuard } from './role.guard';
 import { AuthGuard } from './auth.guard';
@@ -52,6 +55,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', component: OverviewComponent },
+      { path: 'booking', component: BookingComponent },
       { path: 'accept-user', component: AcceptUserComponent },
       { path: 'accept-agent', component: AcceptAgentComponent },
       { path: 'car-cards', component: CarCardsComponent },
@@ -64,12 +68,14 @@ export const routes: Routes = [
     path: 'agent-dashboard',
     component: AgentDashboardComponent,
     children: [
-      // { path: '', redirectTo: 'agent-overview', pathMatch: 'full' },
+      { path: '', redirectTo: 'agent-overview', pathMatch: 'full' },
+      { path: 'agent-overview', component: AgentOverviewComponent },
+      { path: 'agent-booking', component: AgentBookingComponent },
       { path: 'agent-car-cards', component:  AgentCarCardsComponent },
       { path: 'agent-add-car', component: AgentAddCarComponent },
       { path: 'agent-add-car/:id',component: AgentAddCarComponent }
 
-      // { path: 'agent-overview', component: OverviewComponent },
+     
     ],
   },
   {path:'unauthorized',component:UnauthorizedComponent},

@@ -48,7 +48,7 @@
         <div class="flex mt-4 gap-6">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4 flex-1">
             <p-card
-              *ngFor="let car of pendingCars"
+              *ngFor="let car of paginatedPendingCars"
               (click)="selectCar(car)"
               header="{{ car.licensePlate }}"
               subheader="Pending"
@@ -62,6 +62,13 @@
             </p-card>
           </div>
         </div>
+         <p-paginator
+            [rows]="pendingRowsPerPage"
+            [totalRecords]="pendingCars.length"
+            [first]="(pendingPage - 1) * pendingRowsPerPage"
+            (onPageChange)="pendingPage = ($event.page ?? 0) + 1"
+            styleClass="mt-4"
+          />
       </p-tabPanel>
 
        <!--approved cars -->
@@ -69,7 +76,7 @@
         <div class="flex mt-4 gap-6">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4 flex-1">
             <p-card
-              *ngFor="let car of approvedCars"
+              *ngFor="let car of paginatedApprovedCars"
               (click)="selectCar(car)"
               header="{{ car.licensePlate }}"
               subheader="Approved"
@@ -83,6 +90,13 @@
             </p-card>
           </div>
         </div>
+        <p-paginator
+          [rows]="approvedRowsPerPage"
+          [totalRecords]="approvedCars.length"
+          [first]="(approvedPage - 1) * approvedRowsPerPage"
+          (onPageChange)="approvedPage = ($event.page ?? 0) + 1"
+          styleClass="mt-4"
+        />
       </p-tabPanel>
 
       <!--rejected cars -->

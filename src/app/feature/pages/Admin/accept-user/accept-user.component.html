@@ -6,7 +6,14 @@
     <!-- Pending Customers -->
     <p-tabPanel header="Pending Customers">
       <div class="overflow-x-auto">
-        <p-table [value]="pendingClients" stripedRows class="w-full min-w-[600px]">
+           <p-table 
+          [value]="pendingClients"
+          stripedRows
+          class="w-full min-w-[800px] "
+          [paginator]="true"
+          [rows]="5"
+        
+        >
           <ng-template pTemplate="header">
             <tr>
               <th>Id</th>
@@ -58,7 +65,14 @@
     <!-- Approved Customers -->
     <p-tabPanel header="Approved Customers">
       <div class="overflow-x-auto">
-        <p-table [value]="approvedClients" stripedRows class="w-full min-w-[600px]">
+          <p-table 
+          [value]="approvedClients"
+          stripedRows
+          class="w-full min-w-[800px] "
+          [paginator]="true"
+          [rows]="5"
+        
+        >
           <ng-template pTemplate="header">
             <tr>
               <th>Id</th>
@@ -107,7 +121,14 @@
     <!-- Rejected Customers -->
     <p-tabPanel header="Rejected Customers">
       <div class="overflow-x-auto">
-        <p-table [value]="rejectedClients" stripedRows class="w-full min-w-[600px]">
+          <p-table 
+          [value]="rejectedClients"
+          stripedRows
+          class="w-full min-w-[800px] "
+          [paginator]="true"
+          [rows]="5"
+        
+        >
           <ng-template pTemplate="header">
             <tr>
               <th>Id</th>
@@ -141,7 +162,14 @@
     <!-- Banned Customers -->
     <p-tabPanel header="Banned Customers">
       <div class="overflow-x-auto">
-        <p-table [value]="bannedClients" stripedRows class="w-full min-w-[600px]">
+           <p-table 
+          [value]="bannedClients"
+          stripedRows
+          class="w-full min-w-[800px] "
+          [paginator]="true"
+          [rows]="5"
+        
+        >
           <ng-template pTemplate="header">
             <tr>
               <th>Id</th>
@@ -175,7 +203,14 @@
     <!-- Suspended Customers -->
     <p-tabPanel header="Suspended Customers">
       <div class="overflow-x-auto">
-        <p-table [value]="suspendedClients" stripedRows class="w-full min-w-[600px]">
+          <p-table 
+          [value]="suspendedClients"
+          stripedRows
+          class="w-full min-w-[800px] "
+          [paginator]="true"
+          [rows]="5"
+        
+        >
           <ng-template pTemplate="header">
             <tr>
               <th>Id</th>
