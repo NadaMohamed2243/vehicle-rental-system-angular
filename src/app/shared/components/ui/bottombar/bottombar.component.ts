@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { bottombarLinks } from '../../../constants/navLinks';
+import { links } from '../../../constants/navLinks';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
@@ -9,5 +9,5 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './bottombar.component.css',
 })
 export class BottombarComponent {
-  links = bottombarLinks;
+  links = links;
 }

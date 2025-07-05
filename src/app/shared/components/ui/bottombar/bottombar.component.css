@@ -1,0 +1,18 @@
+.nav-link.active {
+  background-color: #007efc;
+  transition: all 0.3s ease;
+}
+
+.nav-link.active i {
+  color: white !important;
+  transform: scale(1.1);
+}
+
+.nav-link:hover {
+  background-color: rgba(0, 126, 252, 0.1);
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover i {
+  color: #007efc !important;
+}

@@ -1,3 +1,21 @@
+.nav-link.active {
+  background-color: #007efc;
+  transition: all 0.3s ease;
+}
+
+.nav-link.active i {
+  color: white !important;
+  transform: scale(1.1);
+}
+
+.nav-link:hover {
+  background-color: rgba(0, 126, 252, 0.1);
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover i {
+  color: #007efc !important;
+}
 .leftsidebar {
   @apply sticky left-0 top-0 z-20 flex h-screen w-fit flex-col justify-between overflow-auto border-r-[1px] border-[#2D2D2D] pb-5 pt-28 max-md:hidden;
 }
