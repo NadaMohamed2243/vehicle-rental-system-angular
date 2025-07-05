@@ -1,0 +1,10 @@
+<app-layout>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 p-4 m-5">
+        @for (car of wishlist; track car._id) {
+        <app-card [carDetails]="car" fromWho="wishlist"></app-card>
+        }
+        @if (wishlist.length === 0) {
+        <p class="col-span-full text-center text-gray-500">No cars in wishlist</p>
+        }
+    </div>
+</app-layout>
