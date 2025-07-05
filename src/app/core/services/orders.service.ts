@@ -33,6 +33,14 @@ export class OrdersService {
     );
   }
 
+  //cancelled orders by agent
+  CancelOrdersAgent(orderId: string): Observable<any> {
+     return this._HttpClient.put(
+    `http://localhost:5000/api/bookings/${orderId}/cancel`,
+    {},
+    { headers: this.getAuthHeaders() }
+    );
+  }
 
   // cancelled order by admin 
   cancelOrder(orderId: string): Observable<any> {

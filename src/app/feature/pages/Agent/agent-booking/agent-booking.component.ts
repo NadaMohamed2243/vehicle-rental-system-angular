@@ -4,10 +4,12 @@ import { TabViewModule } from 'primeng/tabview';
 import { TableModule } from 'primeng/table';
 import { Orders } from '../../../../core/interfaces/orders';
 import { OrdersService } from '../../../../core/services/orders.service';
+import { ButtonModule } from 'primeng/button';
+
 
 @Component({
   selector: 'app-agent-booking',
-  imports: [TabViewModule, TableModule, CommonModule],
+  imports: [TabViewModule, TableModule, CommonModule , ButtonModule],
   templateUrl: './agent-booking.component.html',
   styleUrl: './agent-booking.component.css'
 })
@@ -33,7 +35,11 @@ export class AgentBookingComponent implements OnInit {
     });
   }
 
-
+ cancelOrder(orderId: string) {
+  this._OrdersService.CancelOrdersAgent(orderId).subscribe(() => {
+    this.loadOrders();
+  });
+}
 
 
 }
