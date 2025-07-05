@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { LayoutComponent } from '../../../core/pages/layout/layout.component';
 import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import { ClientService } from '../../../core/services/client.service';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-client-profile',
-  imports: [LayoutComponent],
+  imports: [CommonModule, LayoutComponent],
   templateUrl: './client-profile.component.html',
   styleUrl: './client-profile.component.css'
 })
@@ -15,7 +16,6 @@ export class ClientProfileComponent {
   tabs = [
     { label: 'Info', value: 'info' },
     { label: 'Documents', value: 'documents' },
-    { label: 'Current Order', value: 'orders' }
   ] as const;
 
   activeTab: (typeof this.tabs[number])['value'] = 'info';

@@ -9,10 +9,11 @@ import { LayoutComponent } from "../../../core/pages/layout/layout.component";
 import { FooterComponent } from "../../../core/layout/footer/footer.component";
 
 import { ActivatedRoute, Router } from '@angular/router';
+import { HomebannerComponent } from '../../../shared/components/ui/homebanner/homebanner.component';
 
 @Component({
   selector: 'app-home',
-  imports: [MostPopularComponent, NearbyCarsComponent, CarBrandsComponent, PromoCardsComponent, LayoutComponent, FooterComponent],
+  imports: [MostPopularComponent, NearbyCarsComponent, CarBrandsComponent, PromoCardsComponent, LayoutComponent, FooterComponent,HomebannerComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
