@@ -1,4 +1,4 @@
-<nav class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 z-20" (click)="closeDropdown()">
+<nav class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 z-20 sticky top-0" (click)="closeDropdown()">
   <div class="max-w-screen-xl mx-auto px-4 py-4 flex items-center justify-between">
     <!-- Logo -->
     <a href="#" class="flex items-center space-x-3">
@@ -7,28 +7,31 @@
     </a>
 
     <!-- Desktop Menu -->
-    <ul class="hidden md:flex space-x-6 items-center font-medium">
-      <li><a href="/home">Home</a></li>
+    <div class="hidden md:flex flex-1 items-center justify-center">
+      <ul class="flex space-x-6 items-center font-medium">
+        <!-- Dropdown -->
+        <li class="relative" (click)="$event.stopPropagation()">
+          <button (click)="toggleDropdown()" class="flex items-center gap-1 cursor-pointer">
+            Home
+            <svg class="w-3 h-3" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+          </button>
+          <ul *ngIf="dropdownOpen" class="absolute mt-2 bg-white dark:bg-gray-700 text-sm rounded-md shadow-lg w-44 z-20">
+            <li><a (click)="navigateToSection('guide')" class="dropdown-item block px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer">Guide</a></li>
+            <li><a (click)="navigateToSection('why-us')" class="dropdown-item block px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer">Why Us</a></li>
+            <li><a (click)="navigateToSection('car-types')" class="dropdown-item block px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer">Car Types</a></li>
+            <li><a (click)="navigateToSection('featured-cars')" class="dropdown-item block px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer">Featured Cars</a></li>
+          </ul>
+        </li>
+        <li><a routerLink="/about">About us</a></li>
+        <li><a routerLink="/contact">Contact</a></li>
+      </ul>
+    </div>
+<!-- Sign Up Button -->
+<div class="hidden md:block">
+  <a href="/register" class="px-4 py-2 bg-blue-600 text-white rounded-md">Sign up / Log in</a>
+</div>
 
-      <!-- Dropdown -->
-      <li class="relative" (click)="$event.stopPropagation()">
-        <button (click)="toggleDropdown()" class="flex items-center gap-1 cursor-pointer">
-          Popular Brands
-          <svg class="w-3 h-3" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-        </button>
 
-        <ul *ngIf="dropdownOpen" class="absolute mt-2 bg-white dark:bg-gray-700 text-sm rounded-md shadow-lg w-44 z-20">
-          <li><a href="#" class="block px-4 py-2">Dashboard</a></li>
-          <li><a href="#" class="block px-4 py-2">Earnings</a></li>
-          <li><a href="#" class="block px-4 py-2">Sign out</a></li>
-        </ul>
-      </li>
-
-      <li><a href="#">Guide</a></li>
-      <li><a href="#">Why Us</a></li>
-      <li><a href="#">Featured Cars</a></li>
-      <li><a href="/register" class="px-4 py-2 bg-blue-600 text-white rounded-md">Sign up / Log in</a></li>
-    </ul>
 
     <!-- Mobile Menu Button -->
     <div class="md:hidden">
@@ -42,10 +45,8 @@
   <div *ngIf="mobileMenuOpen" class="md:hidden px-4 pb-4">
     <ul class="space-y-2">
       <li><a href="#">Home</a></li>
-      <li><a href="#">Popular Brands</a></li>
-      <li><a href="#">Guide</a></li>
-      <li><a href="#">Why Us</a></li>
-      <li><a href="#">Featured Cars</a></li>
+      <li><a href="#">About us</a></li>
+      <li><a href="#">Contact</a></li>
       <li><a href="/register" class="block bg-blue-600 text-white px-4 py-2 rounded">Sign up / Log in</a></li>
     </ul>
   </div>

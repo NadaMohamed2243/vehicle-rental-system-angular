@@ -43,6 +43,7 @@ export const routes: Routes = [
   { path: 'profile', component: ClientProfileComponent },
 
 
+
   // Admin routes
   {
     path: 'dashboard',
@@ -55,7 +56,7 @@ export const routes: Routes = [
       { path: 'accept-user', component: AcceptUserComponent },
       { path: 'accept-agent', component: AcceptAgentComponent },
       { path: 'car-cards', component: CarCardsComponent },
-     
+
     ],
   },
 
