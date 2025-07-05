@@ -12,11 +12,12 @@
             <p class="col-span-full text-center text-gray-500">No cars available</p>
             }
         </div>
-
     </div>
+
     <p-drawer header="Bottom Drawer" [(visible)]="visible2" position="bottom" styleClass="!h-full">
         <app-filter></app-filter>
     </p-drawer>
+
     <div class="card flex justify-center">
         <p-drawer [(visible)]="visible" position="right" styleClass="!w-full md:!w-80 lg:!w-[30rem]">
             <ng-template #header>
@@ -43,7 +44,7 @@
                     <p-tabs value="0">
                         <p-tablist>
                             <p-tab value="0">Rent details</p-tab>
-                            <p-tab value="1">Vechicle info</p-tab>
+                            <p-tab value="1">Vehicle info</p-tab>
                             <p-tab value="2">Booking History</p-tab>
                         </p-tablist>
                         <p-tabpanels>
@@ -61,14 +62,25 @@
                                 <div class="card flex py-5">
                                     <div class="flex flex-col gap-5">
                                         <div class="flex flex-col gap-2">
-                                            <p class="text-xs font-bold">PICK-UP DATA & TIME</p>
-                                            <p-datepicker [iconDisplay]="'input'" [showIcon]="true"
-                                                inputId="icondisplay" [showTime]="true" [(ngModel)]="pickupDate" />
+                                            <p class="text-xs font-bold">PICK-UP DATE & TIME</p>
+                                            <p-datepicker [iconDisplay]="'input'" [showIcon]="true" inputId="pickupDate"
+                                                [showTime]="true" [(ngModel)]="pickupDate" [minDate]="minDate"
+                                                (ngModelChange)="onPickupDateChange()" [showButtonBar]="true"
+                                                placeholder="Select pickup date & time" />
+                                            @if (pickupDate && pickupDate < minDate) { <small
+                                                class="text-red-500 text-xs">Pickup date cannot be in the past</small>
+                                                }
                                         </div>
                                         <div class="flex flex-col gap-2">
-                                            <p class="text-xs font-bold">DROP-OFF DATA & TIME</p>
+                                            <p class="text-xs font-bold">DROP-OFF DATE & TIME</p>
                                             <p-datepicker [iconDisplay]="'input'" [showIcon]="true"
-                                                inputId="icondisplay" [showTime]="true" [(ngModel)]="dropoffDate" />
+                                                inputId="dropoffDate" [showTime]="true" [(ngModel)]="dropoffDate"
+                                                [minDate]="minDropoffDate" (ngModelChange)="onDropoffDateChange()"
+                                                [showButtonBar]="true" placeholder="Select drop-off date & time" />
+                                            @if (dropoffDate && pickupDate && dropoffDate <= pickupDate) { <small
+                                                class="text-red-500 text-xs">Drop-off date must be after pickup
+                                                date</small>
+                                                }
                                         </div>
                                         @if (selectedCar?.with_driver) {
                                         <div class="mt-6 mb-3 flex justify-between items-center">
@@ -93,22 +105,6 @@
                                         </div>
                                         }
 
-                                        <!-- <div class="flex justify-between items-center">
-                                            <p class="text-xs font-bold">INSURANCE</p>
-                                            <p class="text-sm font-semibold">{{selectedInsurance !== 'No insurance' ?
-                                                '$52.00' : '$0.00'}}</p>
-                                        </div>
-
-                                        <div class="grid grid-cols-1 gap-y-3">
-                                            @for (in of insurance; track $index) {
-                                            <div class="flex items-center">
-                                                <p-radiobutton name="group" [value]="in"
-                                                    [(ngModel)]="selectedInsurance" />
-                                                <label [for]="in" class="ml-2"> {{ in }} </label>
-                                            </div>
-                                            }
-                                        </div> -->
-
                                         <div class="flex justify-between items-center my-4">
                                             <p class="text-xs font-bold">SALES TAXES</p>
                                             <p class="text-sm font-semibold">$13.06</p>
@@ -122,7 +118,7 @@
                                 </div>
                                 <div class="w-full h-[80px] bg-light-blue flex justify-between items-center rounded-lg">
                                     <div class="ps-5">
-                                        <p class="text-xs text-white font-semibold">BOOK VECHICLE</p>
+                                        <p class="text-xs text-white font-semibold">BOOK VEHICLE</p>
                                         <p class="text-sm text-white font-semibold">{{selectedCar?.brand}}
                                             {{selectedCar?.model}}</p>
                                     </div>
@@ -133,7 +129,7 @@
                                     <div class="h-full">
                                         <button
                                             class="bg-[#3e9efb] h-full w-[80px] rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                                            [disabled]="isBooking || !pickupDate || !dropoffDate"
+                                            [disabled]="isBooking || !pickupDate || !dropoffDate || !isValidDateRange()"
                                             (click)="bookVehicle()">
                                             @if (isBooking) {
                                             <i class="pi pi-spinner pi-spin" style="color: white"></i>
@@ -237,5 +233,4 @@
             </ng-template>
         </p-drawer>
     </div>
-
 </app-layout>

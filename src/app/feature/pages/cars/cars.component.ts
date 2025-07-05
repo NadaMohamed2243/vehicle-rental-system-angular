@@ -31,7 +31,6 @@ import {
 } from '../../../core/services/booking.service';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../../core/services/auth.service';
-import { WishlistService } from '../../../core/services/wishlist.service';
 
 @Component({
   selector: 'app-cars',
@@ -84,6 +83,10 @@ export class CarsComponent implements OnInit, OnDestroy {
   ];
   selectedInsurance: string = this.insurance[0];
 
+  // Date validation properties
+  minDate: Date = new Date();
+  minDropoffDate: Date = new Date();
+
   // Query Params
   filtration: string | null = null;
   type: string | null = null;
@@ -109,7 +112,6 @@ export class CarsComponent implements OnInit, OnDestroy {
   private _bookingService = inject(BookingService);
   private _messageService = inject(MessageService);
   private _authService = inject(AuthService);
-  private _wishlistService = inject(WishlistService);
   private subscriptions = new Subscription();
 
   // Computed properties
@@ -131,6 +133,7 @@ export class CarsComponent implements OnInit, OnDestroy {
     this.loadInitialData();
     this.setupFilterSubscription();
     this.getUserLocation();
+    this.minDate = new Date();
   }
 
   ngOnDestroy(): void {
@@ -226,7 +229,6 @@ export class CarsComponent implements OnInit, OnDestroy {
         lng: car.agent.lng,
         address: car.agent.location,
       };
-      // Load booking history for this car
       this.loadCarBookingHistory(car._id);
     } else {
       this.selectedCarLocation = null;
@@ -258,7 +260,7 @@ export class CarsComponent implements OnInit, OnDestroy {
   isFutureBooking(dateString: string): boolean {
     const bookingDate = new Date(dateString);
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Reset time to compare only dates
+    today.setHours(0, 0, 0, 0);
     return bookingDate > today;
   }
 
@@ -309,13 +311,86 @@ export class CarsComponent implements OnInit, OnDestroy {
     return baseCost;
   }
 
-  bookVehicle(): void {
-    if (!this.selectedCar || !this.pickupDate || !this.dropoffDate) {
+  onPickupDateChange(): void {
+    if (this.pickupDate) {
+      this.minDropoffDate = new Date(
+        this.pickupDate.getTime() + 60 * 60 * 1000
+      );
+
+      if (this.dropoffDate && this.dropoffDate <= this.pickupDate) {
+        this.dropoffDate = null;
+      }
+    }
+  }
+
+  onDropoffDateChange(): void {
+    if (
+      this.dropoffDate &&
+      this.pickupDate &&
+      this.dropoffDate <= this.pickupDate
+    ) {
+      this._messageService.add({
+        severity: 'warn',
+        summary: 'Invalid Date',
+        detail: 'Drop-off date must be after pickup date',
+      });
+      this.dropoffDate = null;
+    }
+  }
+
+  private validateDates(): boolean {
+    const now = new Date();
+
+    if (!this.pickupDate || !this.dropoffDate) {
       this._messageService.add({
         severity: 'warn',
         summary: 'Missing Information',
-        detail: 'Please select pickup and drop-off dates',
+        detail: 'Please select both pickup and drop-off dates',
       });
+      return false;
+    }
+
+    if (this.pickupDate < now) {
+      this._messageService.add({
+        severity: 'warn',
+        summary: 'Invalid Date',
+        detail: 'Pickup date cannot be in the past',
+      });
+      return false;
+    }
+
+    if (this.dropoffDate <= this.pickupDate) {
+      this._messageService.add({
+        severity: 'warn',
+        summary: 'Invalid Date',
+        detail: 'Drop-off date must be after pickup date',
+      });
+      return false;
+    }
+
+    return true;
+  }
+
+  isValidDateRange(): boolean {
+    if (!this.pickupDate || !this.dropoffDate) {
+      return false;
+    }
+
+    const now = new Date();
+    return this.pickupDate >= now && this.dropoffDate > this.pickupDate;
+  }
+
+  bookVehicle(): void {
+    if (!this.selectedCar) {
+      this._messageService.add({
+        severity: 'warn',
+        summary: 'Missing Information',
+        detail: 'Please select a car',
+      });
+      return;
+    }
+
+    if (!this.validateDates()) {
       return;
     }
 
@@ -334,8 +409,8 @@ export class CarsComponent implements OnInit, OnDestroy {
 
     const bookingData: BookingRequest = {
       carId: this.selectedCar._id,
-      startDate: this.formatDateForAPI(this.pickupDate),
-      endDate: this.formatDateForAPI(this.dropoffDate),
+      startDate: this.formatDateForAPI(this.pickupDate!),
+      endDate: this.formatDateForAPI(this.dropoffDate!),
       totalCost: this.calculateTotalCost(),
       pickupLocation:
         this.selectedCarLocation?.address || this.selectedCar.agent.location,
@@ -344,10 +419,7 @@ export class CarsComponent implements OnInit, OnDestroy {
         this.selectedCarLocation?.address ||
         this.selectedCar.agent.location,
     };
-    // if (this.withDriver && this.selectedCar.driver_rate_per_hour) {
-    //   bookingData.totalCost +=
-    //     this.selectedCar.driver_rate_per_hour * this.rentalDuration;
-    // }
+
     this.subscriptions.add(
       this._bookingService.bookAndPay(bookingData).subscribe({
         next: (response) => {
@@ -363,8 +435,6 @@ export class CarsComponent implements OnInit, OnDestroy {
             setTimeout(() => {
               window.location.href = response.iframeUrl;
             }, 2000);
-
-            this.visible = false;
           } else {
             this._messageService.add({
               severity: 'error',
@@ -376,13 +446,10 @@ export class CarsComponent implements OnInit, OnDestroy {
         error: (error) => {
           this.isBooking = false;
           console.error('Booking error:', error);
-
           let errorMessage = 'Failed to book the vehicle. Please try again.';
-
           if (error.error?.message) {
             errorMessage = error.error.message;
           }
-
           this._messageService.add({
             severity: 'error',
             summary: 'Booking Error',
