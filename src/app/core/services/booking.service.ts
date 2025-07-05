@@ -27,6 +27,7 @@ export interface Booking {
   _id: string;
   createdAt: string;
   updatedAt: string;
+  with_Driver: boolean;
   __v: number;
 }
 
