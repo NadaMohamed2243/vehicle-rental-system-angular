@@ -31,6 +31,7 @@ import {
 } from '../../../core/services/booking.service';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../../core/services/auth.service';
+import { WishlistService } from '../../../core/services/wishlist.service';
 
 @Component({
   selector: 'app-cars',
@@ -95,6 +96,10 @@ export class CarsComponent implements OnInit, OnDestroy {
   // Booking state
   isBooking = false;
 
+  // Car booking history
+  carBookingHistory: any[] = [];
+  isLoadingBookingHistory = false;
+
   // Services
   private _carService = inject(CarService);
   private _filterService = inject(FilterStateService);
@@ -104,6 +109,7 @@ export class CarsComponent implements OnInit, OnDestroy {
   private _bookingService = inject(BookingService);
   private _messageService = inject(MessageService);
   private _authService = inject(AuthService);
+  private _wishlistService = inject(WishlistService);
   private subscriptions = new Subscription();
 
   // Computed properties
@@ -220,9 +226,51 @@ export class CarsComponent implements OnInit, OnDestroy {
         lng: car.agent.lng,
         address: car.agent.location,
       };
+      // Load booking history for this car
+      this.loadCarBookingHistory(car._id);
     } else {
       this.selectedCarLocation = null;
+      this.carBookingHistory = [];
     }
+  }
+
+  loadCarBookingHistory(carId: string): void {
+    this.isLoadingBookingHistory = true;
+    this.carBookingHistory = [];
+
+    this.subscriptions.add(
+      this._bookingService.getCarBookingHistory(carId).subscribe({
+        next: (bookings) => {
+          this.carBookingHistory = bookings.sort(
+            (a, b) =>
+              new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
+          );
+          this.isLoadingBookingHistory = false;
+        },
+        error: (error) => {
+          console.error('Error loading car booking history:', error);
+          this.isLoadingBookingHistory = false;
+        },
+      })
+    );
+  }
+
+  isFutureBooking(dateString: string): boolean {
+    const bookingDate = new Date(dateString);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to compare only dates
+    return bookingDate > today;
+  }
+
+  formatBookingDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   }
 
   onDrawerHide(): void {

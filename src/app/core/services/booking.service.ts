@@ -49,4 +49,10 @@ export class BookingService {
       bookingData
     );
   }
+
+  getCarBookingHistory(carId: string): Observable<Booking[]> {
+    return this.http.get<Booking[]>(
+      `http://localhost:5000/api/client/cars/bookings/${carId}`
+    );
+  }
 }
