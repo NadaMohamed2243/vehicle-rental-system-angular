@@ -1,60 +1,3 @@
-// import { Component, inject, OnInit } from '@angular/core';
-// import { CardComponent } from '../../../shared/components/ui/card/card.component';
-// import { MostPopularComponent } from '../../components/most-popular/most-popular.component';
-// import { NearbyCarsComponent } from '../../components/nearby-cars/nearby-cars.component';
-// import { CarTypesComponent } from '../../components/car-types/car-types.component';
-// import { CarBrandsComponent } from '../../components/car-brands/car-brands.component';
-// import { PromoCardsComponent } from '../../components/promo-cards/promo-cards.component';
-// import { LayoutComponent } from '../../../core/pages/layout/layout.component';
-// import { FooterComponent } from '../../../core/layout/footer/footer.component';
-// import { ActivatedRoute, Router } from '@angular/router';
-// import { CarService } from '../../../core/services/car.service';
-// import { Cars } from '../../../core/interfaces/cars';
-
-// @Component({
-//   selector: 'app-home',
-//   imports: [
-//     MostPopularComponent,
-//     NearbyCarsComponent,
-//     CarBrandsComponent,
-//     PromoCardsComponent,
-//     LayoutComponent,
-//     FooterComponent,
-//   ],
-//   templateUrl: './home.component.html',
-//   styleUrl: './home.component.css',
-// })
-// export class HomeComponent {
-//   _carService = inject(CarService);
-//   selectedCar: Cars | null = null;
-//   visible = false;
-
-//   constructor(private route: ActivatedRoute, private router: Router) {}
-
-//   ngOnInit(): void {
-//     // Subscribe to selectedCar changes
-//     this._carService.getSelectedCar().subscribe((car) => {
-//       if (car) {
-//         this.selectedCar = car;
-//         this.visible = true; // Show the slider
-//         console.log('Selected car changed:', car);
-//       }
-//     });
-
-//     this.route.queryParams.subscribe((params) => {
-//       const token = params['token'];
-//       if (token) {
-//         localStorage.setItem('token', token);
-//         // Optionally remove token from URL
-//         this.router.navigate([], { queryParams: {} });
-//       }
-//     });
-
-
-//   }
-// }
-
-
 import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { LayoutComponent } from '../../../core/pages/layout/layout.component';
 import { MostPopularComponent } from '../../components/most-popular/most-popular.component';
@@ -78,9 +21,15 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { CommonModule } from '@angular/common';
 import { GeoLocationService } from '../../../core/services/geo-location.service';
 import { Subscription, Observable } from 'rxjs';
-import { MapComponent, Location } from '../../../shared/components/ui/map/map.component';
+import {
+  MapComponent,
+  Location,
+} from '../../../shared/components/ui/map/map.component';
 import { ToastModule } from 'primeng/toast';
-import { BookingService, BookingRequest } from '../../../core/services/booking.service';
+import {
+  BookingService,
+  BookingRequest,
+} from '../../../core/services/booking.service';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../../core/services/auth.service';
 
@@ -105,7 +54,7 @@ import { AuthService } from '../../../core/services/auth.service';
     ButtonModule,
     ToggleSwitchModule,
     MapComponent,
-    ToastModule
+    ToastModule,
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
@@ -284,7 +233,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     //     detail: 'Your session has expired. Please log in again.',
     //   });
     //   this._authService.logout();
-    //   this._router.navigate(['/auth/login']);
+    //   this._router.navigate(['/login']);
     //   return;
     // }
 
@@ -341,7 +290,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             });
 
             // this._authService.logout();
-            this._router.navigate(['/auth/login']);
+            this._router.navigate(['/login']);
           } else {
             // Handle other errors
             let errorMessage = 'Failed to book the vehicle. Please try again.';
