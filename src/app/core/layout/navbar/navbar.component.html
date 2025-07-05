@@ -1,7 +1,7 @@
 <nav class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 z-20 sticky top-0" (click)="closeDropdown()">
   <div class="max-w-screen-xl mx-auto px-4 py-4 flex items-center justify-between">
     <!-- Logo -->
-    <a href="#" class="flex items-center space-x-3">
+    <a  class="flex items-center space-x-3">
       <img src="/images/logo2.png" class="h-10 w-10" alt="RentLy Logo" />
       <span class="text-3xl font-bold text-blue-600 dark:text-white">RentLy</span>
     </a>
@@ -42,12 +42,24 @@
   </div>
 
   <!-- Mobile Menu -->
-  <div *ngIf="mobileMenuOpen" class="md:hidden px-4 pb-4">
-    <ul class="space-y-2">
-      <li><a href="#">Home</a></li>
-      <li><a href="#">About us</a></li>
-      <li><a href="#">Contact</a></li>
-      <li><a href="/register" class="block bg-blue-600 text-white px-4 py-2 rounded">Sign up / Log in</a></li>
-    </ul>
-  </div>
+<div *ngIf="mobileMenuOpen" class="md:hidden bg-white dark:bg-gray-900 shadow-lg px-6 py-4 space-y-4 rounded-b-lg">
+  <ul class="space-y-3 text-lg font-medium text-gray-800 dark:text-gray-100">
+
+    <li>
+      <a [routerLink]="['/']" class="block transition hover:text-blue-600">Home</a>
+    </li>
+    <li>
+      <a [routerLink]="['/about']" class="block transition hover:text-blue-600">About Us</a>
+    </li>
+    <li>
+      <a [routerLink]="['/contact']" class="block transition hover:text-blue-600">Contact</a>
+    </li>
+    <li>
+      <a [routerLink]="['/register']" class="block text-center bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+        Sign up / Log in
+      </a>
+    </li>
+  </ul>
+</div>
+
 </nav>
