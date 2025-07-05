@@ -26,12 +26,18 @@ import { UnauthorizedComponent } from './core/pages/unauthorized/unauthorized.co
 import { CompleteProfileComponent } from './core/pages/complete-profile/complete-profile.component';
 import { ClientProfileComponent } from './feature/pages/client-profile/client-profile.component';
 import { ClientWishlistComponent } from './feature/pages/client-wishlist/client-wishlist.component';
+import { ClientHistoryComponent } from './feature/pages/client-history/client-history.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'landing', pathMatch: 'full' },
   { path: 'landing', component: LandingComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] }, //must logged in
   { path: 'cars', component: CarsComponent, canActivate: [AuthGuard] },
+  {
+    path: 'history',
+    component: ClientHistoryComponent,
+    canActivate: [AuthGuard],
+  },
   {
     path: 'wishlist',
     component: ClientWishlistComponent,
