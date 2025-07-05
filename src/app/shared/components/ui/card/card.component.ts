@@ -1,18 +1,17 @@
 import { Component, input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Cars } from '../../../../core/interfaces/cars';
-import { StarRatingComponent } from "../star-rating/star-rating.component";
-
+import { StarRatingComponent } from '../star-rating/star-rating.component';
 
 @Component({
   selector: 'app-card',
   imports: [RouterLink, StarRatingComponent],
   templateUrl: './card.component.html',
-  styleUrl: './card.component.css'
+  styleUrl: './card.component.css',
 })
 export class CardComponent {
-  carDetails = input<Cars>()
-  fromWho = input<'landing' | 'home' | 'car'>()
+  carDetails = input<Cars>();
+  fromWho = input<'landing' | 'home' | 'car' | 'wishlist'>();
   isFavorite = false;
 
   toggleFavorite() {
@@ -20,6 +19,6 @@ export class CardComponent {
   }
   getTargetRoute(): string {
     const source = this.fromWho();
-    return source === 'home' ? '/cars' : '/cars' ;
+    return source === 'home' ? '/cars' : '/cars';
   }
 }
