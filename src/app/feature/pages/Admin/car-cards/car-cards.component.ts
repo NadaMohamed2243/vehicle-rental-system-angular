@@ -10,14 +10,14 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessagesModule } from 'primeng/messages';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
-
+import { PaginatorModule } from 'primeng/paginator'; // Import PaginatorModule if you want to use pagination
 
 
 
 @Component({
   selector: 'app-car-cards',
   standalone: true,
-  imports: [CommonModule, FormsModule, TabViewModule, CardModule ,ConfirmDialogModule,MessagesModule,ToastModule],
+  imports: [CommonModule, FormsModule, TabViewModule, CardModule ,ConfirmDialogModule,MessagesModule,ToastModule,PaginatorModule],
   templateUrl: './car-cards.component.html',
   styleUrl: './car-cards.component.css',
   providers: [ConfirmationService, MessageService]
@@ -32,6 +32,10 @@ export class CarCardsComponent implements OnInit {
   pendingCars: Cars[] = [];
   approvedCars: Cars[] = [];
   rejectedCars: Cars[] = []; 
+  pendingPage: number = 1;
+  pendingRowsPerPage: number = 8;
+  approvedPage = 1;
+  approvedRowsPerPage = 8;
 
   
   ngOnInit(): void {
@@ -124,6 +128,17 @@ rejectCar(id: string) {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to reject car' });
     }
   });
+}
+
+
+get paginatedPendingCars() {
+  const start = (this.pendingPage - 1) * this.pendingRowsPerPage;
+  return this.pendingCars.slice(start, start + this.pendingRowsPerPage);
+}
+
+get paginatedApprovedCars() {
+  const start = (this.approvedPage - 1) * this.approvedRowsPerPage;
+  return this.approvedCars.slice(start, start + this.approvedRowsPerPage);
 }
 
 
