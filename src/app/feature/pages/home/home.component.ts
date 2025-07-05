@@ -32,6 +32,7 @@ import {
 } from '../../../core/services/booking.service';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../../core/services/auth.service';
+import { HomebannerComponent } from '../../../shared/components/ui/homebanner/homebanner.component';
 
 @Component({
   selector: 'app-home',
@@ -55,6 +56,7 @@ import { AuthService } from '../../../core/services/auth.service';
     ToggleSwitchModule,
     MapComponent,
     ToastModule,
+    HomebannerComponent
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
