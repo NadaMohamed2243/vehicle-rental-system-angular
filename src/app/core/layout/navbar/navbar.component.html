@@ -22,8 +22,9 @@
             <li><a (click)="navigateToSection('featured-cars')" class="dropdown-item block px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer">Featured Cars</a></li>
           </ul>
         </li>
-        <li><a routerLink="/about">About us</a></li>
-        <li><a routerLink="/contact">Contact</a></li>
+        <li><a routerLink="/about-us">About us</a></li>
+        <li><a routerLink="/contact-us">Contact</a></li>
+        <li><a routerLink="/terms-and-conditions">Terms and Conditions</a></li>
       </ul>
     </div>
 <!-- Sign Up Button -->
@@ -49,10 +50,13 @@
       <a [routerLink]="['/']" class="block transition hover:text-blue-600">Home</a>
     </li>
     <li>
-      <a [routerLink]="['/about']" class="block transition hover:text-blue-600">About Us</a>
+      <a [routerLink]="['/about-us']" class="block transition hover:text-blue-600">About Us</a>
     </li>
     <li>
-      <a [routerLink]="['/contact']" class="block transition hover:text-blue-600">Contact</a>
+      <a [routerLink]="['/contact-us']" class="block transition hover:text-blue-600">Contact</a>
+    </li>
+    <li>
+      <a [routerLink]="['/terms-and-conditions']" class="block transition hover:text-blue-600">Terms and Conditions</a>
     </li>
     <li>
       <a [routerLink]="['/register']" class="block text-center bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
