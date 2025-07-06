@@ -32,6 +32,9 @@ export class LoginComponent {
           }else if(res.user.role=="client"){
             this._router.navigate(['/home']);
           }
+          // else if(res.user.role=="agent"){
+          //   this._router.navigate([''])
+          // }
         },
         error: (err) => console.error('Login error:', err)
     });
