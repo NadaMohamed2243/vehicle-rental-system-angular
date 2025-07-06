@@ -1,17 +1,10 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { NavbarComponent } from '../../../core/layout/navbar/navbar.component';
-import { HeroComponent } from '../../../shared/components/ui/hero/hero.component';
-import { BrandIconsComponent } from './components/brand-icons/brand-icons.component';
-import { HowItWorksComponent } from './components/how-it-works/how-it-works.component';
-import { WhyChooseMeshwarkComponent } from './components/why-choose-rently/why-choose-rently.component';
-import { FeaturedCarsComponent } from '../../components/featured-cars/featured-cars.component';
-import { CarTypesComponent } from '../../components/car-types/car-types.component';
-import { PromoCardsComponent } from '../../components/promo-cards/promo-cards.component';
-import { FooterComponent } from '../../../core/layout/footer/footer.component';
-
-import { CarSliderComponent } from '../../components/ui/car-slider/car-slider.component';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { LayoutComponent } from '../../../core/pages/layout/layout.component';
+import { FilterComponent } from '../../components/ui/filter/filter.component';
+import { CardComponent } from '../../../shared/components/ui/card/card.component';
 import { DrawerModule } from 'primeng/drawer';
 import { AvatarModule } from 'primeng/avatar';
+import { CarSliderComponent } from '../../components/ui/car-slider/car-slider.component';
 import { TabsModule } from 'primeng/tabs';
 import { DividerModule } from 'primeng/divider';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -19,39 +12,38 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { FilterStateService } from '../../../core/services/filter-state.service';
+import { FilterSidebarComponent } from '../../components/ui/filter-sidebar/filter-sidebar.component';
 import { CommonModule } from '@angular/common';
-import { CarService } from '../../../core/services/car.service';
 import { Cars } from '../../../core/interfaces/cars';
+import { CarService } from '../../../core/services/car.service';
 import { GeoLocationService } from '../../../core/services/geo-location.service';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable, switchMap } from 'rxjs';
+import { Router, ActivatedRoute } from '@angular/router';
 import {
   MapComponent,
   Location,
 } from '../../../shared/components/ui/map/map.component';
+import { ToastModule } from 'primeng/toast';
 import {
   BookingService,
   BookingRequest,
 } from '../../../core/services/booking.service';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../../core/services/auth.service';
-import { ToastModule } from 'primeng/toast';
-import { ActivatedRoute, Router } from '@angular/router';
+import { NavbarComponent } from "../../../core/layout/navbar/navbar.component";
 
 @Component({
-  selector: 'app-landing',
+  selector: 'app-cars',
+  standalone: true,
   imports: [
-    NavbarComponent,
-    HeroComponent,
-    BrandIconsComponent,
-    HowItWorksComponent,
-    WhyChooseMeshwarkComponent,
-    FeaturedCarsComponent,
-    CarTypesComponent,
-    PromoCardsComponent,
-    FooterComponent,
-    CarSliderComponent,
+    CommonModule,
+    LayoutComponent,
+    FilterComponent,
+    CardComponent,
     DrawerModule,
     AvatarModule,
+    CarSliderComponent,
     TabsModule,
     DividerModule,
     DatePickerModule,
@@ -59,29 +51,34 @@ import { ActivatedRoute, Router } from '@angular/router';
     FormsModule,
     ButtonModule,
     ToggleSwitchModule,
+    FilterSidebarComponent,
     MapComponent,
     ToastModule,
-    CommonModule,
-  ],
-  templateUrl: './landing.component.html',
-  styleUrl: './landing.component.css',
+    NavbarComponent
+],
+  templateUrl: './search.component.html',
+  styleUrls: ['./search.component.css'],
   providers: [MessageService],
 })
-export class LandingComponent implements OnInit, OnDestroy {
+export class SearchComponent implements OnInit, OnDestroy {
   // UI State
   visible: boolean = false;
+  visible2: boolean = false;
   withDriver: boolean = false;
   isFavorite = false;
   isLoading = true;
   errorMessage: string | null = null;
 
   // Car Data
+  cars: Cars[] = [];
+  filteredCars: Cars[] = [];
   selectedCar: Cars | null = null;
   selectedCarLocation: Location | null = null;
 
   // Rental Details
   pickupDate: Date | null = null;
   dropoffDate: Date | null = null;
+  location: string | null = null;
   insurance: string[] = [
     'No insurance',
     'Vehicle protection',
@@ -92,6 +89,11 @@ export class LandingComponent implements OnInit, OnDestroy {
   // Date validation properties
   minDate: Date = new Date();
   minDropoffDate: Date = new Date();
+
+  // Query Params
+  filtration: string | null = null;
+  type: string | null = null;
+  brand: string | null = null;
 
   // Map related properties
   userLocation: Location | null = null;
@@ -106,6 +108,7 @@ export class LandingComponent implements OnInit, OnDestroy {
 
   // Services
   private _carService = inject(CarService);
+  private _filterService = inject(FilterStateService);
   private _geoLocationService = inject(GeoLocationService);
   private _router = inject(Router);
   private _route = inject(ActivatedRoute);
@@ -130,45 +133,56 @@ export class LandingComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.minDate = new Date();
-
-    // Subscribe to selectedCar changes
-    this.subscriptions.add(
-      this._carService.getSelectedCar().subscribe((car) => {
-        if (car) {
-          this.selectedCar = car;
-          this.visible = true;
-          if (car) {
-            this.selectedCarLocation = {
-              lat: car.agent.lat,
-              lng: car.agent.lng,
-              address: car.agent.location,
-            };
-            this.loadCarBookingHistory(car._id);
-          } else {
-            this.selectedCarLocation = null;
-            this.carBookingHistory = [];
-          }
-        }
-      })
-    );
-
-    this.subscriptions.add(
-      this._route.queryParams.subscribe((params) => {
-        const token = params['token'];
-        if (token) {
-          localStorage.setItem('token', token);
-          // Optionally remove token from URL
-          this._router.navigate([], { queryParams: {} });
-        }
-      })
-    );
-
+    this.loadInitialData();
+    this.setupFilterSubscription();
     this.getUserLocation();
+    this.minDate = new Date();
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+
+  private loadInitialData(): void {
+    this.subscriptions.add(
+      this._route.queryParams
+        .pipe(
+          switchMap((params) => {
+            this.filtration = params['filtration'] || null;
+            this.type = params['type'] || null;
+            this.brand = params['brand'] || null;
+            this.location = params['location'] || null;
+            this.pickupDate = params['pickupDate'] ? new Date(params['pickupDate']) : null;
+            this.dropoffDate = params['returnDate'] ? new Date(params['returnDate']) : null;
+            return this.loadCars();
+          })
+        )
+        .subscribe({
+          next: (cars) => {
+            this.cars = cars;
+            this.filteredCars = [...this.cars];
+            this.isLoading = false;
+            this.errorMessage = null;
+          },
+          error: (err) => {
+            console.error('Error loading cars:', err);
+            this.isLoading = false;
+            this.errorMessage = 'Failed to load cars. Please try again later.';
+            this.cars = [];
+            this.filteredCars = [];
+          },
+        })
+    );
+  }
+
+  private setupFilterSubscription(): void {
+    this.subscriptions.add(
+      this._filterService.currentFilters$.subscribe((filters) => {
+        if (this.cars.length) {
+          this.filteredCars = this._carService.filterCars(this.cars, filters);
+        }
+      })
+    );
   }
 
   private getUserLocation(): void {
@@ -193,6 +207,39 @@ export class LandingComponent implements OnInit, OnDestroy {
         },
       })
     );
+  }
+
+  loadCars(): Observable<Cars[]> {
+    this.isLoading = true;
+    this.errorMessage = null;
+
+    if (this.type) {
+      return this._carService.getCarsByType(this.type);
+    } else if (this.brand) {
+      return this._carService.getCarsByBrand(this.brand);
+    } else if (this.filtration === 'most-popular') {
+      return this._carService.getMostPopularCars();
+    } else if (this.filtration === 'NearBy') {
+      return this._carService.getNearByCars();
+    } else {
+      return this._carService.getCars();
+    }
+  }
+
+  showCarDetails(car: Cars | null): void {
+    this.selectedCar = car;
+    this.visible = true;
+    if (car) {
+      this.selectedCarLocation = {
+        lat: car.agent.lat,
+        lng: car.agent.lng,
+        address: car.agent.location,
+      };
+      this.loadCarBookingHistory(car._id);
+    } else {
+      this.selectedCarLocation = null;
+      this.carBookingHistory = [];
+    }
   }
 
   loadCarBookingHistory(carId: string): void {
@@ -232,6 +279,10 @@ export class LandingComponent implements OnInit, OnDestroy {
       hour: '2-digit',
       minute: '2-digit',
     });
+  }
+
+  onDrawerHide(): void {
+    this.visible2 = false;
   }
 
   toggleFavorite(): void {
@@ -357,7 +408,6 @@ export class LandingComponent implements OnInit, OnDestroy {
         summary: 'Authentication Required',
         detail: 'Please log in to book a vehicle',
       });
-      this._router.navigate(['/login']);
       return;
     }
 
@@ -391,8 +441,6 @@ export class LandingComponent implements OnInit, OnDestroy {
             setTimeout(() => {
               window.location.href = response.iframeUrl;
             }, 2000);
-
-            this.visible = false;
           } else {
             this._messageService.add({
               severity: 'error',
@@ -404,26 +452,15 @@ export class LandingComponent implements OnInit, OnDestroy {
         error: (error) => {
           this.isBooking = false;
           console.error('Booking error:', error);
-
-          if (error.status === 400 && error.error?.error === 'Invalid Token') {
-            this._messageService.add({
-              severity: 'error',
-              summary: 'Session Expired',
-              detail: 'Your session has expired. Please log in again.',
-            });
-            this._router.navigate(['/login']);
-          } else {
-            let errorMessage = 'Failed to book the vehicle. Please try again.';
-            if (error.error?.message) {
-              errorMessage = error.error.message;
-            }
-
-            this._messageService.add({
-              severity: 'error',
-              summary: 'Booking Error',
-              detail: errorMessage,
-            });
+          let errorMessage = 'Failed to book the vehicle. Please try again.';
+          if (error.error?.message) {
+            errorMessage = error.error.message;
           }
+          this._messageService.add({
+            severity: 'error',
+            summary: 'Booking Error',
+            detail: errorMessage,
+          });
         },
       })
     );
