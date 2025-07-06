@@ -29,30 +29,40 @@ import { AuthGuard } from './auth.guard';
 import { UnauthorizedComponent } from './core/pages/unauthorized/unauthorized.component';
 import { CompleteProfileComponent } from './core/pages/complete-profile/complete-profile.component';
 import { ClientProfileComponent } from './feature/pages/client-profile/client-profile.component';
+import { ClientWishlistComponent } from './feature/pages/client-wishlist/client-wishlist.component';
+import { ClientHistoryComponent } from './feature/pages/client-history/client-history.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'landing', pathMatch: 'full' },
   { path: 'landing', component: LandingComponent },
-  { path: 'home', component: HomeComponent ,canActivate: [AuthGuard]}, //must logged in
-  { path: 'cars', component: CarsComponent ,canActivate: [AuthGuard]},
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] }, //must logged in
+  { path: 'cars', component: CarsComponent, canActivate: [AuthGuard] },
+  {
+    path: 'history',
+    component: ClientHistoryComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'wishlist',
+    component: ClientWishlistComponent,
+    canActivate: [AuthGuard],
+  },
   { path: 'login', component: LoginComponent },
   { path: 'clientRegister', component: RegisterComponent },
   { path: 'agentRegister', component: AgentRegisterComponent },
   { path: 'forgetPassword', component: ForgetPasswordComponent },
   { path: 'pendingResetPassword', component: PendingResetPasswordComponent },
   { path: 'reset-password/:token', component: ResetPasswordComponent },
-  {path:'register',component:MainRegisterComponent},
+  { path: 'register', component: MainRegisterComponent },
   { path: 'complete-profile', component: CompleteProfileComponent },
   { path: 'profile', component: ClientProfileComponent },
-
-
 
   // Admin routes
   {
     path: 'dashboard',
     component: DashboardComponent,
-      canActivate: [RoleGuard], //must login and is admin
-      data: { roles: ['admin'] },
+    canActivate: [RoleGuard], //must login and is admin
+    data: { roles: ['admin'] },
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', component: OverviewComponent },
@@ -60,7 +70,6 @@ export const routes: Routes = [
       { path: 'accept-user', component: AcceptUserComponent },
       { path: 'accept-agent', component: AcceptAgentComponent },
       { path: 'car-cards', component: CarCardsComponent },
-
     ],
   },
 
@@ -72,13 +81,13 @@ export const routes: Routes = [
       { path: '', redirectTo: 'agent-overview', pathMatch: 'full' },
       { path: 'agent-overview', component: AgentOverviewComponent },
       { path: 'agent-booking', component: AgentBookingComponent },
-      { path: 'agent-car-cards', component:  AgentCarCardsComponent },
+      { path: 'agent-car-cards', component: AgentCarCardsComponent },
+      // { path: '', redirectTo: 'agent-overview', pathMatch: 'full' },
+      { path: 'agent-car-cards', component: AgentCarCardsComponent },
       { path: 'agent-add-car', component: AgentAddCarComponent },
-      { path: 'agent-add-car/:id',component: AgentAddCarComponent }
-
-     
+      { path: 'agent-add-car/:id', component: AgentAddCarComponent },
     ],
   },
-  {path:'unauthorized',component:UnauthorizedComponent},
+  { path: 'unauthorized', component: UnauthorizedComponent },
   { path: '**', component: NotFoundComponent },
 ];

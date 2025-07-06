@@ -27,6 +27,7 @@ export interface Booking {
   _id: string;
   createdAt: string;
   updatedAt: string;
+  with_Driver: boolean;
   __v: number;
 }
 
@@ -46,6 +47,12 @@ export class BookingService {
     return this.http.post<BookingResponse>(
       `${this.apiUrl}/book-and-pay`,
       bookingData
+    );
+  }
+
+  getCarBookingHistory(carId: string): Observable<Booking[]> {
+    return this.http.get<Booking[]>(
+      `http://localhost:5000/api/client/cars/bookings/${carId}`
     );
   }
 }

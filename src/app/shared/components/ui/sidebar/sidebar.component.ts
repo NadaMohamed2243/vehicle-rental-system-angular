@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { sidebarLinks } from '../../../constants/navLinks';
+import { links } from '../../../constants/navLinks';
 
 @Component({
   selector: 'app-sidebar',
@@ -9,5 +9,5 @@ import { sidebarLinks } from '../../../constants/navLinks';
   styleUrl: './sidebar.component.css',
 })
 export class SidebarComponent {
-  links = sidebarLinks;
+  links = links;
 }

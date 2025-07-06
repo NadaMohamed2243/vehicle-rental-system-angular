@@ -3,7 +3,7 @@ interface NavLink {
   route: string;
 }
 
-export const sidebarLinks: NavLink[] = [
+export const links: NavLink[] = [
   {
     img: 'home',
     route: '/home',
@@ -18,7 +18,7 @@ export const sidebarLinks: NavLink[] = [
   },
   {
     img: 'heart',
-    route: '/heart',
+    route: '/wishlist',
   },
   {
     img: 'history',
@@ -28,30 +28,4 @@ export const sidebarLinks: NavLink[] = [
     img: 'user',
     route: '/profile',
   },
-];
-export const bottombarLinks: NavLink[] = [
-  {
-    img: 'home',
-    route: '/home',
-  },
-  {
-    img: 'car',
-    route: '/cars',
-  },
-  {
-    img: 'calendar',
-    route: '/calendar',
-  },
-  {
-    img: 'heart',
-    route: '/heart',
-  },
-  {
-    img: 'history',
-    route: '/history',
-  },
-  {
-    img: 'user',
-    route: '/profile',
-  }
 ];
