@@ -15,5 +15,21 @@
   --dark-4: #2d2d2d;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+  overflow-x: hidden;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.nav-link:hover:not(.active) {
+  background-color: rgba(0, 126, 252, 0.1) !important;
+  transition: all 0.3s ease !important;
+}
+
+.nav-link:hover:not(.active) i {
+  color: #007efc !important;
+}
