@@ -55,4 +55,11 @@ export class BookingService {
       `http://localhost:5000/api/client/cars/bookings/${carId}`
     );
   }
+
+  refundBooking(bookingId: string): Observable<any> {
+    return this.http.post<any>(
+      `http://localhost:5000/api/payments/refund/${bookingId}`,
+      {}
+    );
+  }
 }
