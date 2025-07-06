@@ -3,6 +3,7 @@ import { LayoutComponent } from '../../../core/pages/layout/layout.component';
 import { HistoryService } from '../../../core/services/history.service';
 import { Booking } from '../../../core/services/history.service';
 import { CommonModule } from '@angular/common';
+import { BookingService } from '../../../core/services/booking.service';
 
 @Component({
   selector: 'app-client-history',
@@ -15,7 +16,10 @@ export class ClientHistoryComponent implements OnInit {
   bookingHistory: Booking[] = [];
   isLoading = true;
 
-  constructor(private historyService: HistoryService) {}
+  constructor(
+    private historyService: HistoryService,
+    private bookingService: BookingService
+  ) {}
 
   ngOnInit(): void {
     this.loadHistory();
@@ -59,5 +63,25 @@ export class ClientHistoryComponent implements OnInit {
       default:
         return 'bg-gray-100 text-gray-800';
     }
+  }
+
+  canRefund(booking: Booking): boolean {
+    const now = new Date();
+    const startDate = new Date(booking.startDate);
+    const eligibleStatuses = ['paid', 'confirmed'];
+    return (
+      eligibleStatuses.includes(booking.status.toLowerCase()) && startDate > now
+    );
+  }
+
+  refundBooking(bookingId: string): void {
+    this.bookingService.refundBooking(bookingId).subscribe({
+      next: (response) => {
+        this.loadHistory();
+      },
+      error: (error) => {
+        console.error('Error processing refund:', error);
+      },
+    });
   }
 }
