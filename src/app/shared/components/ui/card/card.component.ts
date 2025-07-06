@@ -4,16 +4,17 @@ import { Cars } from '../../../../core/interfaces/cars';
 import { StarRatingComponent } from '../star-rating/star-rating.component';
 import { WishlistService } from '../../../../core/services/wishlist.service';
 import { Observable, map, Subscription } from 'rxjs';
+import { CarService } from '../../../../core/services/car.service';
 
 @Component({
   selector: 'app-card',
   imports: [StarRatingComponent],
   templateUrl: './card.component.html',
-  styleUrl: './card.component.css',,
+  styleUrl: './card.component.css',
 })
 export class CardComponent implements OnInit, OnDestroy {
-  carDetails = input<Cars>();;
-  fromWho = input<'landing' | 'home' | 'car' | 'wishlist'>();;
+  carDetails = input<Cars>();
+  fromWho = input<'landing' | 'home' | 'car' | 'wishlist'>();
   isFavorite = false;
   private _carService = inject(CarService);
   private _wishlistService = inject(WishlistService);
