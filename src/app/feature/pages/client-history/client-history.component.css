@@ -1,0 +1,49 @@
+.booking-card {
+  transition: all 0.3s ease;
+}
+
+.booking-card:hover {
+  transform: translateY(-2px);
+}
+
+.status-badge {
+  text-transform: capitalize;
+}
+
+@media (max-width: 1024px) {
+  .grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .booking-card {
+    margin: 0 1rem;
+  }
+
+  .grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .booking-card {
+    margin: 0 0.5rem;
+  }
+}
+
+.car-image {
+  aspect-ratio: 4/3;
+  object-fit: cover;
+}
+
+.gradient-header {
+  background: linear-gradient(135deg, #007efc 0%, #0056b3 100%);
+}
+
+/* Ensure text doesn't overflow in compact cards */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

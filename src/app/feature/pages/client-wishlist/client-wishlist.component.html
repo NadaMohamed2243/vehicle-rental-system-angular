@@ -1,0 +1,52 @@
+<app-layout>
+    <div class="p-4 m-5">
+        <h2 class="text-2xl font-bold mb-4">My Wishlist</h2>
+        <p class="text-gray-600 mb-6">Your favorite cars are saved here.</p>
+
+        @if (isLoading) {
+        <div class="flex justify-center items-center py-16">
+            <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-[#007efc]"></div>
+        </div>
+        }
+
+        @if (errorMessage) {
+        <div class="text-center py-16">
+            <div class="mx-auto h-24 w-24 text-gray-400 mb-4">
+                <i class="pi pi-exclamation-triangle text-6xl"></i>
+            </div>
+            <h3 class="text-xl font-medium text-gray-900 mb-2">Error</h3>
+            <p class="text-gray-500 mb-6">{{ errorMessage }}</p>
+            @if (errorMessage.includes('log in')) {
+            <a href="/login"
+                class="inline-flex items-center px-6 py-3 bg-[#007efc] text-white font-medium rounded-lg hover:bg-[#0056b3] transition-colors">
+                <i class="pi pi-sign-in mr-2"></i>
+                Log In
+            </a>
+            }
+        </div>
+        }
+
+        @if (!isLoading && !errorMessage && wishlist.length === 0) {
+        <div class="text-center py-16">
+            <div class="mx-auto h-24 w-24 text-gray-400 mb-4">
+                <i class="pi pi-heart text-6xl"></i>
+            </div>
+            <h3 class="text-xl font-medium text-gray-900 mb-2">Your wishlist is empty</h3>
+            <p class="text-gray-500 mb-6">Start browsing and add cars you like to your wishlist.</p>
+            <a href="/cars"
+                class="inline-flex items-center px-6 py-3 bg-[#007efc] text-white font-medium rounded-lg hover:bg-[#0056b3] transition-colors">
+                <i class="pi pi-car mr-2"></i>
+                Browse Cars
+            </a>
+        </div>
+        }
+
+        @if (!isLoading && !errorMessage && wishlist.length > 0) {
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            @for (car of wishlist; track car._id) {
+            <app-card [carDetails]="car" fromWho="wishlist"></app-card>
+            }
+        </div>
+        }
+    </div>
+</app-layout>
