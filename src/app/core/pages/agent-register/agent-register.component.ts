@@ -250,7 +250,14 @@ export class AgentRegisterComponent implements OnInit {
       this._authService.registerAgent(this.agentRegisterForm.value, this.selectedFile).subscribe({
         next: (res) => {
           localStorage.setItem('token', res.token);
-          this._router.navigate(['/home']);
+           if(res.user.role=="admin"){
+            this._router.navigate(['/dashboard']);
+          }else if(res.user.role=="client"){
+            this._router.navigate(['/home']);
+          }
+          else if(res.user.role=="agent"){
+            this._router.navigate(['/agent-dashboard'])
+          }
         },
         error: (err) => {
           this.error= err.error.error

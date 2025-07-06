@@ -186,7 +186,14 @@ export class RegisterComponent implements OnInit{
       console.log('Register success:', response);
       localStorage.setItem('token', response.token);
       // Navigate to another page
-      this._router.navigate(['/home']);
+       if(response.user.role=="admin"){
+            this._router.navigate(['/dashboard']);
+          }else if(response.user.role=="client"){
+            this._router.navigate(['/home']);
+          }
+          else if(response.user.role=="agent"){
+            this._router.navigate(['/agent-dashboard'])
+          }
     },
     error: err => {
       this.error= err.error.error
