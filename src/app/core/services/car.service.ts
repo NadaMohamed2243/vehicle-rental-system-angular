@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Cars } from '../../core/interfaces/cars';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable, map, switchMap } from 'rxjs';
 import { GeoLocationService } from './geo-location.service';
 
 @Injectable({
@@ -12,6 +12,16 @@ export class CarService {
   private _popularCars: Cars[] = [];
   private _nearbyCars: Cars[] = [];
   userCity: string = '';
+
+  private _selectedCar = new BehaviorSubject<Cars | null>(null);
+
+  setSelectedCar(car: Cars) {
+    this._selectedCar.next(car);
+  }
+
+  getSelectedCar() {
+    return this._selectedCar.asObservable();
+  }
 
   constructor(
     private http: HttpClient,

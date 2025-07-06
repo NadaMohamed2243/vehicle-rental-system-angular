@@ -3,6 +3,13 @@
     <div class="flex">
         <!-- <app-filter></app-filter> -->
         <app-filter-sidebar></app-filter-sidebar>
+
+        @if (isLoading) {
+        <div class="flex flex-col items-center justify-center w-full py-10">
+            <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            <p class="mt-4 text-dark-blue text-lg font-medium">Loading cars...</p>
+        </div>
+        } @else {
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 p-4 m-5">
             <p-button (click)="visible2 = true" icon="pi pi-bars" class="md:hidden" />
             @for (car of filteredCars; track car._id) {
@@ -12,6 +19,7 @@
             <p class="col-span-full text-center text-gray-500">No cars available</p>
             }
         </div>
+        }
 
     </div>
     <p-drawer header="Bottom Drawer" [(visible)]="visible2" position="bottom" styleClass="!h-full">

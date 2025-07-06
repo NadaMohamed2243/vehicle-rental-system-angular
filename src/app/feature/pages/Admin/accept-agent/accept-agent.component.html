@@ -5,7 +5,14 @@
     <!-- Pending Agents -->
     <p-tabPanel header="Pending Agents">
       <div class="overflow-x-auto">
-        <p-table [value]="pendingAgents" stripedRows class="w-full min-w-[600px]">
+           <p-table 
+          [value]="pendingAgents"
+          stripedRows
+          class="w-full min-w-[800px] "
+          [paginator]="true"
+          [rows]="5"
+        
+        >
           <ng-template pTemplate="header">
             <tr>
               <th>ID</th>
@@ -56,7 +63,14 @@
     <!-- Approved Agents -->
     <p-tabPanel header="Approved Agents">
       <div class="overflow-x-auto">
-        <p-table [value]="approvedAgents" stripedRows class="w-full min-w-[600px]">
+           <p-table 
+          [value]="approvedAgents"
+          stripedRows
+          class="w-full min-w-[800px] "
+          [paginator]="true"
+          [rows]="5"
+        
+        >
           <ng-template pTemplate="header">
             <tr>
               <th>ID</th>
@@ -103,7 +117,14 @@
     <!-- Rejected Agents -->
     <p-tabPanel header="Rejected Agents">
       <div class="overflow-x-auto">
-        <p-table [value]="rejectedAgents" stripedRows class="w-full min-w-[600px]">
+           <p-table 
+          [value]="rejectedAgents"
+          stripedRows
+          class="w-full min-w-[800px] "
+          [paginator]="true"
+          [rows]="5"
+        
+        >
           <ng-template pTemplate="header">
             <tr>
               <th>ID</th>
@@ -136,7 +157,14 @@
     <!-- Banned Agents -->
     <p-tabPanel header="Banned Agents">
       <div class="overflow-x-auto">
-        <p-table [value]="bannedAgents" stripedRows class="w-full min-w-[600px]">
+           <p-table 
+          [value]="bannedAgents"
+          stripedRows
+          class="w-full min-w-[800px] "
+          [paginator]="true"
+          [rows]="5"
+        
+        >
           <ng-template pTemplate="header">
             <tr>
               <th>ID</th>
@@ -169,7 +197,14 @@
     <!-- Suspended Agents -->
     <p-tabPanel header="Suspended Agents">
       <div class="overflow-x-auto">
-        <p-table [value]="suspendedAgents" stripedRows class="w-full min-w-[600px]">
+          <p-table 
+          [value]="suspendedAgents"
+          stripedRows
+          class="w-full min-w-[800px] "
+          [paginator]="true"
+          [rows]="5"
+        
+        >
           <ng-template pTemplate="header">
             <tr>
               <th>ID</th>
