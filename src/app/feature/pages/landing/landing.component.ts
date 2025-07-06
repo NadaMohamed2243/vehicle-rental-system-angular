@@ -3,7 +3,7 @@ import { NavbarComponent } from '../../../core/layout/navbar/navbar.component';
 import { HeroComponent } from '../../../shared/components/ui/hero/hero.component';
 import { BrandIconsComponent } from './components/brand-icons/brand-icons.component';
 import { HowItWorksComponent } from './components/how-it-works/how-it-works.component';
-import { WhyChooseRentlyComponent } from './components/why-choose-rently/why-choose-rently.component';
+import { WhyChooseMeshwarkComponent } from './components/why-choose-rently/why-choose-rently.component';
 import { FeaturedCarsComponent } from '../../components/featured-cars/featured-cars.component';
 import { CarTypesComponent } from '../../components/car-types/car-types.component';
 import { PromoCardsComponent } from '../../components/promo-cards/promo-cards.component';
@@ -44,7 +44,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     HeroComponent,
     BrandIconsComponent,
     HowItWorksComponent,
-    WhyChooseRentlyComponent,
+    WhyChooseMeshwarkComponent,
     FeaturedCarsComponent,
     CarTypesComponent,
     PromoCardsComponent,

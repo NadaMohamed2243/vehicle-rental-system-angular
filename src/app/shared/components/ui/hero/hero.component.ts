@@ -1,17 +1,93 @@
 import { Component, ElementRef, OnInit, ViewChild, OnDestroy, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
-
+import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import * as THREE from 'three';
 
 @Component({
   selector: 'app-hero',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule ,ReactiveFormsModule],
   templateUrl: './hero.component.html',
-  styleUrls: ['./hero.component.css']
+  styleUrls: ['./hero.component.css'],
+
 })
 export class HeroComponent implements OnInit, OnDestroy {
+
+
+  searchForm: FormGroup;
+
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private router: Router,
+    private fb: FormBuilder
+  ) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+    this.searchForm = this.fb.group({
+      location: ['', Validators.required],
+      pickupDate: ['', Validators.required],
+      returnDate: ['', Validators.required]
+    });
+  }
+
+  onSubmit() {
+    if (this.searchForm.valid) {
+      this.goToSearchPage();
+    }
+  }
+
+  goToSearchPage() {
+    const location = this.searchForm.value.location;
+    const pickupDate = this.searchForm.value.pickupDate;
+    const returnDate = this.searchForm.value.returnDate;
+
+    this.router.navigate(['/search'], {
+      queryParams: {
+        location,
+        pickupDate,
+        returnDate,
+      },
+    });
+  }
+
+    locations = [
+        { label: 'Cairo', value: 'cairo' },
+        { label: 'Giza', value: 'giza' },
+        { label: 'Alexandria', value: 'alexandria' },
+        { label: 'Port Said', value: 'port_said' },
+        { label: 'Suez', value: 'suez' },
+        { label: 'Mansoura', value: 'mansoura' },
+        { label: 'Tanta', value: 'tanta' },
+        { label: 'Zagazig', value: 'zagazig' },
+        { label: 'Ismailia', value: 'ismailia' },
+        { label: 'Fayoum', value: 'fayoum' },
+        { label: 'Beni Suef', value: 'beni_suef' },
+        { label: 'Minya', value: 'minya' },
+        { label: 'Asyut', value: 'asyut' },
+        { label: 'Sohag', value: 'sohag' },
+        { label: 'Qena', value: 'qena' },
+        { label: 'Luxor', value: 'luxor' },
+        { label: 'Aswan', value: 'aswan' },
+        { label: 'Hurghada', value: 'hurghada' },
+        { label: 'Sharm El Sheikh', value: 'sharm_el_sheikh' },
+        { label: 'Damanhur', value: 'damanhur' },
+        { label: 'Damietta', value: 'damietta' },
+        { label: 'El Arish', value: 'el_arish' },
+        { label: 'Banha', value: 'banha' },
+        { label: 'Kafr El Sheikh', value: 'kafr_el_sheikh' },
+        { label: 'Mahalla', value: 'mahalla' },
+        { label: 'Qalyub', value: 'qalyub' },
+        { label: '6th of October', value: 'sixth_october' },
+        { label: 'New Cairo', value: 'new_cairo' },
+        { label: 'Obour', value: 'obour' },
+        { label: '10th of Ramadan', value: 'tenth_ramadan' },
+        { label: 'Badr', value: 'badr' },
+      ];
+
+
+
   @ViewChild('carContainer') carContainer!: ElementRef;
 
   private scene!: THREE.Scene;
@@ -52,9 +128,7 @@ export class HeroComponent implements OnInit, OnDestroy {
   currentCarIndex = 0;
   private currentRotationSpeed = 0.005;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
-    this.isBrowser = isPlatformBrowser(this.platformId);
-  }
+
 
   async ngOnInit(): Promise<void> {
     if (this.isBrowser) {

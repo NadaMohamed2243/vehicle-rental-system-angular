@@ -6,6 +6,6 @@ import { Component } from '@angular/core';
   templateUrl: './why-choose-rently.component.html',
   styleUrl: './why-choose-rently.component.css'
 })
-export class WhyChooseRentlyComponent {
+export class WhyChooseMeshwarkComponent {
 
 }

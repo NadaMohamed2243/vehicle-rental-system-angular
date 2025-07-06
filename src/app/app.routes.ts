@@ -31,6 +31,7 @@ import { CompleteProfileComponent } from './core/pages/complete-profile/complete
 import { ClientProfileComponent } from './feature/pages/client-profile/client-profile.component';
 import { ClientWishlistComponent } from './feature/pages/client-wishlist/client-wishlist.component';
 import { ClientHistoryComponent } from './feature/pages/client-history/client-history.component';
+import { SearchComponent } from './feature/pages/search/search.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'landing', pathMatch: 'full' },
@@ -56,6 +57,7 @@ export const routes: Routes = [
   { path: 'register', component: MainRegisterComponent },
   { path: 'complete-profile', component: CompleteProfileComponent },
   { path: 'profile', component: ClientProfileComponent },
+  { path: 'search', component: SearchComponent },
 
   // Admin routes
   {

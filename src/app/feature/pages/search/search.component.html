@@ -1,0 +1,246 @@
+<app-layout>
+    <p-toast></p-toast>
+    <app-navbar></app-navbar>
+    <div class="flex">
+        <!-- <app-filter></app-filter> -->
+        <app-filter-sidebar></app-filter-sidebar>
+
+        @if (isLoading) {
+        <div class="flex flex-col items-center justify-center w-full py-10">
+            <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            <p class="mt-4 text-dark-blue text-lg font-medium">Loading cars...</p>
+        </div>
+        } @else {
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 p-4 m-5">
+            <p-button (click)="visible2 = true" icon="pi pi-bars" class="md:hidden" />
+            @for (car of filteredCars; track car._id) {
+            <app-card [carDetails]="car" fromWho="car" (click)="showCarDetails(car)"></app-card>
+            }
+            @if (filteredCars.length === 0) {
+            <p class="col-span-full text-center text-gray-500">No cars available</p>
+            }
+        </div>
+        }
+
+    </div>
+
+    <p-drawer header="Bottom Drawer" [(visible)]="visible2" position="bottom" styleClass="!h-full">
+        <app-filter></app-filter>
+    </p-drawer>
+
+    <div class="card flex justify-center">
+        <p-drawer [(visible)]="visible" position="right" styleClass="!w-full md:!w-80 lg:!w-[30rem]">
+            <ng-template #header>
+                <div class="flex items-center gap-2">
+                    <p-avatar
+                        image="https://plus.unsplash.com/premium_photo-1682089468743-5a31e96f8dd3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        shape="circle" />
+                    <span class="font-bold">{{selectedCar?.agent?.company_name}}</span>
+                </div>
+            </ng-template>
+            <ng-template #content>
+                <div>
+                    <app-car-slider [carImages]="selectedCar?.carPhotos"></app-car-slider>
+                </div>
+                <div class="flex justify-between pt-5">
+                    <p class="font-semibold text-[#8c8c8c] text-sm">{{selectedCar?.brand}}</p>
+                </div>
+                <div class="flex justify-between pb-3">
+                    <p class="font-bold text-lg">{{selectedCar?.brand}} {{selectedCar?.model}} {{selectedCar?.year}}</p>
+                    <p class="font-semibold">EG {{selectedCar?.totalPricePerHour}} <span
+                            class="text-sm text-[#8c8c8c]">/hour</span></p>
+                </div>
+                <div class="card">
+                    <p-tabs value="0">
+                        <p-tablist>
+                            <p-tab value="0">Rent details</p-tab>
+                            <p-tab value="1">Vehicle info</p-tab>
+                            <p-tab value="2">Booking History</p-tab>
+                        </p-tablist>
+                        <p-tabpanels>
+                            <p-tabpanel value="0">
+                                @if (selectedCar?.agent?.location) {
+                                <app-map [carLocation]="selectedCarLocation" [userLocation]="userLocation || undefined"
+                                    [enableDeliverySelection]="true"
+                                    (deliveryLocationSelected)="onDeliveryLocationSelected($event)">
+                                </app-map>
+                                } @else {
+                                <div class="w-full h-[250px] bg-gray-100 rounded-lg flex items-center justify-center">
+                                    <p class="text-gray-500">Location not available</p>
+                                </div>
+                                }
+                                <div class="card flex py-5">
+                                    <div class="flex flex-col gap-5">
+                                        <div class="flex flex-col gap-2">
+                                            <p class="text-xs font-bold">PICK-UP DATE & TIME</p>
+                                            <p-datepicker [iconDisplay]="'input'" [showIcon]="true" inputId="pickupDate"
+                                                [showTime]="true" [(ngModel)]="pickupDate" [minDate]="minDate"
+                                                (ngModelChange)="onPickupDateChange()" [showButtonBar]="true"
+                                                placeholder="Select pickup date & time" />
+                                            @if (pickupDate && pickupDate < minDate) { <small
+                                                class="text-red-500 text-xs">Pickup date cannot be in the past</small>
+                                                }
+                                        </div>
+                                        <div class="flex flex-col gap-2">
+                                            <p class="text-xs font-bold">DROP-OFF DATE & TIME</p>
+                                            <p-datepicker [iconDisplay]="'input'" [showIcon]="true"
+                                                inputId="dropoffDate" [showTime]="true" [(ngModel)]="dropoffDate"
+                                                [minDate]="minDropoffDate" (ngModelChange)="onDropoffDateChange()"
+                                                [showButtonBar]="true" placeholder="Select drop-off date & time" />
+                                            @if (dropoffDate && pickupDate && dropoffDate <= pickupDate) { <small
+                                                class="text-red-500 text-xs">Drop-off date must be after pickup
+                                                date</small>
+                                                }
+                                        </div>
+                                        @if (selectedCar?.with_driver) {
+                                        <div class="mt-6 mb-3 flex justify-between items-center">
+                                            <span class="text-xs font-bold">WITH DRIVER</span>
+                                            <p-toggleswitch [(ngModel)]="withDriver" />
+                                        </div>
+                                        }
+                                    </div>
+                                    <p-divider layout="vertical" />
+                                    <div class="flex flex-col gap-2 w-50">
+                                        <div class="flex justify-between items-center">
+                                            <p class="text-xs font-bold">CAR RENTAL</p>
+                                            <p class="text-sm font-semibold">EG {{(selectedCar?.totalPricePerHour || 0)
+                                                * rentalDuration | number:'1.2-2'}}</p>
+                                        </div>
+
+                                        @if (withDriver) {
+                                        <div class="flex justify-between items-center">
+                                            <p class="text-xs font-bold">DRIVER FEE</p>
+                                            <p class="text-sm font-semibold">EG {{25 * rentalDuration | number:'1.2-2'}}
+                                            </p>
+                                        </div>
+                                        }
+
+                                        <div class="flex justify-between items-center my-4">
+                                            <p class="text-xs font-bold">SALES TAXES</p>
+                                            <p class="text-sm font-semibold">$13.06</p>
+                                        </div>
+
+                                        <div class="flex justify-between items-center">
+                                            <p class="text-lg font-bold">Total Price</p>
+                                            <p class="text-lg font-semibold">EG {{totalPrice | number:'1.2-2'}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w-full h-[80px] bg-light-blue flex justify-between items-center rounded-lg">
+                                    <div class="ps-5">
+                                        <p class="text-xs text-white font-semibold">BOOK VEHICLE</p>
+                                        <p class="text-sm text-white font-semibold">{{selectedCar?.brand}}
+                                            {{selectedCar?.model}}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-white font-semibold">FREE BOOKING</p>
+                                        <p class="text-sm text-white font-semibold">10 minutes</p>
+                                    </div>
+                                    <div class="h-full">
+                                        <button
+                                            class="bg-[#3e9efb] h-full w-[80px] rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                            [disabled]="isBooking || !pickupDate || !dropoffDate || !isValidDateRange()"
+                                            (click)="bookVehicle()">
+                                            @if (isBooking) {
+                                            <i class="pi pi-spinner pi-spin" style="color: white"></i>
+                                            } @else {
+                                            <i class="pi pi-angle-right" style="color: white"></i>
+                                            }
+                                        </button>
+                                    </div>
+                                </div>
+                            </p-tabpanel>
+                            <p-tabpanel value="1">
+                                <div class="flex flex-col gap-3">
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-sm font-bold">Brand</p>
+                                        <p class="text-sm">{{selectedCar?.brand}}</p>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-sm font-bold">Model</p>
+                                        <p class="text-sm">{{selectedCar?.model}}</p>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-sm font-bold">Year</p>
+                                        <p class="text-sm">{{selectedCar?.year}}</p>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-sm font-bold">Body Style</p>
+                                        <p class="text-sm">{{selectedCar?.type}}</p>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-sm font-bold">Transmission</p>
+                                        <p class="text-sm">{{selectedCar?.transmission}}</p>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-sm font-bold">Fuel Type</p>
+                                        <p class="text-sm">{{selectedCar?.fuel_type}}</p>
+                                    </div>
+                                </div>
+                            </p-tabpanel>
+                            <p-tabpanel value="2">
+                                <div class="flex flex-col gap-3">
+                                    @if (isLoadingBookingHistory) {
+                                    <div class="flex justify-center items-center py-8">
+                                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#007efc]">
+                                        </div>
+                                    </div>
+                                    }
+
+                                    @if (!isLoadingBookingHistory && carBookingHistory.length === 0) {
+                                    <div class="text-center py-8">
+                                        <i class="pi pi-calendar text-gray-400 text-4xl mb-2"></i>
+                                        <p class="text-gray-500">No booking history available for this car</p>
+                                    </div>
+                                    }
+
+                                    @if (!isLoadingBookingHistory && carBookingHistory.length > 0) {
+                                    <div class="space-y-3 max-h-[300px] overflow-y-auto">
+                                        @for (booking of carBookingHistory; track booking._id) {
+                                        <div class="border rounded-lg p-3"
+                                            [class.border-blue-200]="isFutureBooking(booking.startDate)"
+                                            [class.bg-blue-50]="isFutureBooking(booking.startDate)"
+                                            [class.border-gray-200]="!isFutureBooking(booking.startDate)"
+                                            [class.bg-gray-50]="!isFutureBooking(booking.startDate)">
+                                            <div class="flex justify-between items-start mb-2">
+                                                <span class="text-xs font-semibold"
+                                                    [class.text-blue-700]="isFutureBooking(booking.startDate)"
+                                                    [class.text-gray-700]="!isFutureBooking(booking.startDate)">
+                                                    Booking #{{ booking._id.slice(-6) }}
+                                                </span>
+                                                <span class="text-xs px-2 py-1 rounded-full font-medium"
+                                                    [class.bg-blue-100]="isFutureBooking(booking.startDate)"
+                                                    [class.text-blue-800]="isFutureBooking(booking.startDate)"
+                                                    [class.bg-gray-100]="!isFutureBooking(booking.startDate)"
+                                                    [class.text-gray-800]="!isFutureBooking(booking.startDate)">
+                                                    {{ isFutureBooking(booking.startDate) ? 'Upcoming' : 'Past' }}
+                                                </span>
+                                            </div>
+
+                                            <div class="space-y-1 text-xs">
+                                                <div class="flex items-center gap-2">
+                                                    <i class="pi pi-calendar text-green-500"></i>
+                                                    <span class="text-gray-600">Start:</span>
+                                                    <span class="font-medium">{{ formatBookingDate(booking.startDate)
+                                                        }}</span>
+                                                </div>
+                                                <div class="flex items-center gap-2">
+                                                    <i class="pi pi-calendar text-red-500"></i>
+                                                    <span class="text-gray-600">End:</span>
+                                                    <span class="font-medium">{{ formatBookingDate(booking.endDate)
+                                                        }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        }
+                                    </div>
+                                    }
+                                </div>
+                            </p-tabpanel>
+                        </p-tabpanels>
+                    </p-tabs>
+                </div>
+            </ng-template>
+        </p-drawer>
+    </div>
+</app-layout>
