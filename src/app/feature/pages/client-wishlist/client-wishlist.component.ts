@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LayoutComponent } from '../../../core/pages/layout/layout.component';
 import { WishlistService } from '../../../core/services/wishlist.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -18,8 +18,10 @@ export class ClientWishlistComponent implements OnInit {
   isLoading = true;
   errorMessage: string | null = null;
 
-  private _wishlistService = inject(WishlistService);
-  private _authService = inject(AuthService);
+  constructor(
+    private _wishlistService: WishlistService,
+    private _authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     if (this._authService.isAuthenticated()) {
