@@ -112,7 +112,6 @@ export class CarsComponent implements OnInit, OnDestroy {
   selectedDeliveryLocation: Location | null = null;
   private pendingCarIdFromRedirect: string | null = null;
 
-
   // Booking state
   isBooking = false;
 
@@ -203,7 +202,6 @@ export class CarsComponent implements OnInit, OnDestroy {
     });
   }
 
-
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
@@ -237,70 +235,70 @@ export class CarsComponent implements OnInit, OnDestroy {
   //   );
   // }
 
-private loadInitialData(): void {
-  this.subscriptions.add(
-    this._route.queryParams
-      .pipe(
-        switchMap((params) => {
-          this.filtration = params['filtration'] || null;
-          this.type = params['type'] || null;
-          this.brand = params['brand'] || null;
+  private loadInitialData(): void {
+    this.subscriptions.add(
+      this._route.queryParams
+        .pipe(
+          switchMap((params) => {
+            this.filtration = params['filtration'] || null;
+            this.type = params['type'] || null;
+            this.brand = params['brand'] || null;
 
-          // 🟨 Restore booking data from query params if present
-          const pickupDateParam = params['pickupDate'];
-          const dropoffDateParam = params['dropoffDate'];
-          const locationParam = params['location'];
-          const carIdParam = params['carId'];
+            // 🟨 Restore booking data from query params if present
+            const pickupDateParam = params['pickupDate'];
+            const dropoffDateParam = params['dropoffDate'];
+            const locationParam = params['location'];
+            const carIdParam = params['carId'];
 
-          if (pickupDateParam) {
-            this.pickupDate = new Date(pickupDateParam);
-          }
-
-          if (dropoffDateParam) {
-            this.dropoffDate = new Date(dropoffDateParam);
-          }
-
-          if (locationParam) {
-            this.selectedCarLocation = {
-              lat: 0, // Optional: default, update later if needed
-              lng: 0,
-              address: locationParam,
-            };
-          }
-
-          this.pendingCarIdFromRedirect = carIdParam; // 👇 Save it for later matching after loading cars
-
-          return this.loadCars();
-        })
-      )
-      .subscribe({
-        next: (cars) => {
-          this.cars = cars;
-          this.filteredCars = [...this.cars];
-          this.isLoading = false;
-          this.errorMessage = null;
-
-          //  If a carId was in query params, open the car details
-          if (this.pendingCarIdFromRedirect) {
-            const car = this.cars.find(c => c._id === this.pendingCarIdFromRedirect);
-            if (car) {
-              this.showCarDetails(car);
+            if (pickupDateParam) {
+              this.pickupDate = new Date(pickupDateParam);
             }
-            this.pendingCarIdFromRedirect = null; // clear
-          }
-        },
-        error: (err) => {
-          console.error('Error loading cars:', err);
-          this.isLoading = false;
-          this.errorMessage = 'Failed to load cars. Please try again later.';
-          this.cars = [];
-          this.filteredCars = [];
-        },
-      })
-  );
-}
 
+            if (dropoffDateParam) {
+              this.dropoffDate = new Date(dropoffDateParam);
+            }
 
+            if (locationParam) {
+              this.selectedCarLocation = {
+                lat: 0, // Optional: default, update later if needed
+                lng: 0,
+                address: locationParam,
+              };
+            }
+
+            this.pendingCarIdFromRedirect = carIdParam; // 👇 Save it for later matching after loading cars
+
+            return this.loadCars();
+          })
+        )
+        .subscribe({
+          next: (cars) => {
+            this.cars = cars;
+            this.filteredCars = [...this.cars];
+            this.isLoading = false;
+            this.errorMessage = null;
+
+            //  If a carId was in query params, open the car details
+            if (this.pendingCarIdFromRedirect) {
+              const car = this.cars.find(
+                (c) => c._id === this.pendingCarIdFromRedirect
+              );
+              if (car) {
+                this.showCarDetails(car);
+              }
+              this.pendingCarIdFromRedirect = null; // clear
+            }
+          },
+          error: (err) => {
+            console.error('Error loading cars:', err);
+            this.isLoading = false;
+            this.errorMessage = 'Failed to load cars. Please try again later.';
+            this.cars = [];
+            this.filteredCars = [];
+          },
+        })
+    );
+  }
 
   private setupFilterSubscription(): void {
     this.subscriptions.add(
@@ -559,7 +557,6 @@ private loadInitialData(): void {
           this.isBooking = false;
 
           if (response.booking && response.iframeUrl) {
-            // Store payment URL for later use
             this.pendingPaymentUrl = response.iframeUrl;
 
             this._messageService.add({
@@ -568,18 +565,14 @@ private loadInitialData(): void {
               detail: `Booking ID: ${response.booking._id}. Please sign the agreement to proceed to payment.`,
             });
 
-            // Generate agreement after successful booking
             this._agreementService
               .generateAgreement(response.booking._id)
               .subscribe({
                 next: (res) => {
                   this.agreement = res.agreement;
                   this.showAgreementModal = true;
-                  console.log('Agreement generated:', res.agreement);
                 },
                 error: (err) => {
-                  console.error('Agreement generation failed:', err);
-                  // If agreement generation fails, still proceed to payment
                   this._messageService.add({
                     severity: 'warn',
                     summary: 'Agreement Generation Failed',
@@ -614,37 +607,23 @@ private loadInitialData(): void {
   }
 
   onSignatureChange(signature: string) {
-    console.log('=== onSignatureChange called ===');
-    console.log('Signature received:', !!signature);
-    console.log('Signature length:', signature?.length || 0);
-
     if (signature && signature.length > 100) {
       console.log('Signature preview:', signature.substring(0, 50) + '...');
       this.signatureData = signature;
-      console.log('✅ Valid signature data saved');
     } else {
-      console.log('❌ Invalid or empty signature data');
       this.signatureData = '';
     }
   }
 
   onSignatureStart() {
-    console.log('🎨 === Signature drawing started ===');
+    console.log('drawing started');
   }
 
   onSignatureEnd() {
-    console.log('✅ === Signature drawing ended ===');
-    console.log(
-      'Current signature data length:',
-      this.signatureData?.length || 0
-    );
+    console.log('drawing ended');
   }
 
   submitSignature() {
-    console.log('=== Submit signature called ===');
-    console.log('Agreement:', !!this.agreement);
-    console.log('Signature data length:', this.signatureData?.length || 0);
-
     if (!this.agreement || !this.signatureData) {
       this._messageService.add({
         severity: 'warn',
@@ -654,7 +633,6 @@ private loadInitialData(): void {
       return;
     }
 
-    // Validate signature is not empty (check for blank canvas)
     if (this.isSignatureEmpty(this.signatureData)) {
       console.log('❌ Signature is empty');
       this._messageService.add({
@@ -672,7 +650,6 @@ private loadInitialData(): void {
       .signAgreement(this.agreement.id, this.signatureData)
       .subscribe({
         next: (res) => {
-          console.log('✅ Signature submitted successfully');
           this.agreement = res.agreement;
           this.isSubmittingSignature = false;
           this._messageService.add({
@@ -682,11 +659,9 @@ private loadInitialData(): void {
               'Your digital signature has been embedded in the agreement.',
           });
 
-          // Refresh the agreement to get the signed document URL
           this.refreshAgreement();
         },
         error: (err) => {
-          console.error('❌ Signing agreement failed:', err);
           this.isSubmittingSignature = false;
           this._messageService.add({
             severity: 'error',
@@ -699,9 +674,7 @@ private loadInitialData(): void {
       });
   }
 
-  // Helper method to check if signature is actually empty
   private isSignatureEmpty(signatureData: string): boolean {
-    // Check for standard empty canvas base64
     const emptyCanvasData = [
       'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==',
       'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=',
@@ -711,7 +684,6 @@ private loadInitialData(): void {
       return true;
     }
 
-    // Additional check: if signature is very small in file size, it's likely empty
     const base64Data = signatureData.split(',')[1];
     if (base64Data && base64Data.length < 100) {
       return true;
@@ -720,7 +692,6 @@ private loadInitialData(): void {
     return false;
   }
 
-  // Method to refresh agreement data after signing
   private refreshAgreement() {
     if (!this.agreement) return;
 
@@ -744,7 +715,6 @@ private loadInitialData(): void {
       return;
     }
 
-    // Use signed document URL if available, otherwise fallback to original
     const documentUrl =
       this.agreement.signedDocumentUrl || this.agreement.documentUrl;
 
@@ -757,7 +727,6 @@ private loadInitialData(): void {
       return;
     }
 
-    // Open the document in a new window/tab
     window.open(
       documentUrl,
       '_blank',
@@ -777,7 +746,6 @@ private loadInitialData(): void {
         const a = document.createElement('a');
         a.href = url;
 
-        // Use a more descriptive filename
         const fileName =
           this.agreement.status === 'signed'
             ? `signed_agreement_${this.agreement.id}_${
@@ -801,7 +769,6 @@ private loadInitialData(): void {
         });
       },
       error: (err) => {
-        console.error('Download failed:', err);
         this.isDownloading = false;
         this._messageService.add({
           severity: 'error',
@@ -824,26 +791,21 @@ private loadInitialData(): void {
 
     this.isProcessingPayment = true;
 
-    // Show confirmation message
     this._messageService.add({
       severity: 'info',
       summary: 'Redirecting to Payment',
       detail: 'You will be redirected to complete your payment...',
     });
 
-    // Close the agreement modal
     this.showAgreementModal = false;
 
-    // Redirect to payment after a short delay
     setTimeout(() => {
       window.location.href = this.pendingPaymentUrl;
     }, 1500);
   }
 
   closeAgreementModal() {
-    // Only allow closing if agreement is signed or user confirms
     if (this.agreement && this.agreement.status === 'signed') {
-      // If signed, ask if they want to proceed to payment
       if (
         confirm('Agreement is signed. Do you want to proceed to payment now?')
       ) {
@@ -853,7 +815,6 @@ private loadInitialData(): void {
         this.agreement = null;
       }
     } else {
-      // If not signed, ask if they want to proceed without signing
       this._messageService.add({
         severity: 'info',
         summary: 'Agreement Not Signed',
