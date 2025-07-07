@@ -53,12 +53,12 @@ export class HeroComponent implements OnInit, OnDestroy {
   }
 
     locations = [
-        { label: 'Cairo', value: 'cairo' },
+        { label: 'Cairo', value: 'Cairo' },
         { label: 'Giza', value: 'giza' },
         { label: 'Alexandria', value: 'alexandria' },
         { label: 'Port Said', value: 'port_said' },
         { label: 'Suez', value: 'suez' },
-        { label: 'Mansoura', value: 'mansoura' },
+        { label: 'Mansoura', value: 'Mansoura' },
         { label: 'Tanta', value: 'tanta' },
         { label: 'Zagazig', value: 'zagazig' },
         { label: 'Ismailia', value: 'ismailia' },

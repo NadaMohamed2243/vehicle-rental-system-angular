@@ -148,9 +148,7 @@ export class SearchComponent implements OnInit, OnDestroy {
       this._route.queryParams
         .pipe(
           switchMap((params) => {
-            this.filtration = params['filtration'] || null;
-            this.type = params['type'] || null;
-            this.brand = params['brand'] || null;
+
             this.location = params['location'] || null;
             this.pickupDate = params['pickupDate'] ? new Date(params['pickupDate']) : null;
             this.dropoffDate = params['returnDate'] ? new Date(params['returnDate']) : null;
@@ -209,22 +207,28 @@ export class SearchComponent implements OnInit, OnDestroy {
     );
   }
 
-  loadCars(): Observable<Cars[]> {
-    this.isLoading = true;
-    this.errorMessage = null;
+loadCars(): Observable<Cars[]> {
+  this.isLoading = true;
+  this.errorMessage = null;
 
-    if (this.type) {
-      return this._carService.getCarsByType(this.type);
-    } else if (this.brand) {
-      return this._carService.getCarsByBrand(this.brand);
-    } else if (this.filtration === 'most-popular') {
-      return this._carService.getMostPopularCars();
-    } else if (this.filtration === 'NearBy') {
-      return this._carService.getNearByCars();
-    } else {
-      return this._carService.getCars();
-    }
+  if (this.location && this.pickupDate && this.dropoffDate) {
+    return this._carService.getAvailableCars(this.location, this.pickupDate, this.dropoffDate);
   }
+
+  // Existing filters
+  if (this.type) {
+    return this._carService.getCarsByType(this.type);
+  } else if (this.brand) {
+    return this._carService.getCarsByBrand(this.brand);
+  } else if (this.filtration === 'most-popular') {
+    return this._carService.getMostPopularCars();
+  } else if (this.filtration === 'NearBy') {
+    return this._carService.getNearByCars();
+  } else {
+    return this._carService.getCars();
+  }
+}
+
 
   showCarDetails(car: Cars | null): void {
     this.selectedCar = car;
@@ -387,82 +391,69 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   bookVehicle(): void {
-    if (!this.selectedCar) {
-      this._messageService.add({
-        severity: 'warn',
-        summary: 'Missing Information',
-        detail: 'Please select a car',
-      });
-      return;
-    }
 
-    if (!this.validateDates()) {
-      return;
-    }
+     localStorage.setItem('pendingBooking', JSON.stringify({
+      redirect: 'cars',
+      carId: this.selectedCar ? this.selectedCar._id : '',
+      pickupDate: this.pickupDate?.toISOString(),
+      dropoffDate: this.dropoffDate?.toISOString(),
+      location: this.selectedCarLocation?.address || ''
+    }));
 
-    const token = this._authService.getToken();
+      this._router.navigate(['/register']);
 
-    if (!token) {
-      this._messageService.add({
-        severity: 'error',
-        summary: 'Authentication Required',
-        detail: 'Please log in to book a vehicle',
-      });
-      return;
-    }
+    // this.isBooking = true;
 
-    this.isBooking = true;
+    // const bookingData: BookingRequest = {
+    //   carId: this.selectedCar._id,
+    //   startDate: this.formatDateForAPI(this.pickupDate!),
+    //   endDate: this.formatDateForAPI(this.dropoffDate!),
+    //   totalCost: this.calculateTotalCost(),
+    //   pickupLocation:
+    //     this.selectedCarLocation?.address || this.selectedCar.agent.location,
+    //   dropoffLocation:
+    //     this.selectedDeliveryLocation?.address ||
+    //     this.selectedCarLocation?.address ||
+    //     this.selectedCar.agent.location,
+    // };
 
-    const bookingData: BookingRequest = {
-      carId: this.selectedCar._id,
-      startDate: this.formatDateForAPI(this.pickupDate!),
-      endDate: this.formatDateForAPI(this.dropoffDate!),
-      totalCost: this.calculateTotalCost(),
-      pickupLocation:
-        this.selectedCarLocation?.address || this.selectedCar.agent.location,
-      dropoffLocation:
-        this.selectedDeliveryLocation?.address ||
-        this.selectedCarLocation?.address ||
-        this.selectedCar.agent.location,
-    };
+    // this.subscriptions.add(
+    //   this._bookingService.bookAndPay(bookingData).subscribe({
+    //     next: (response) => {
+    //       this.isBooking = false;
 
-    this.subscriptions.add(
-      this._bookingService.bookAndPay(bookingData).subscribe({
-        next: (response) => {
-          this.isBooking = false;
+    //       if (response.booking && response.iframeUrl) {
+    //         this._messageService.add({
+    //           severity: 'success',
+    //           summary: 'Booking Created Successfully',
+    //           detail: `Booking ID: ${response.booking._id}. Redirecting to payment...`,
+    //         });
 
-          if (response.booking && response.iframeUrl) {
-            this._messageService.add({
-              severity: 'success',
-              summary: 'Booking Created Successfully',
-              detail: `Booking ID: ${response.booking._id}. Redirecting to payment...`,
-            });
-
-            setTimeout(() => {
-              window.location.href = response.iframeUrl;
-            }, 2000);
-          } else {
-            this._messageService.add({
-              severity: 'error',
-              summary: 'Booking Failed',
-              detail: 'Invalid response from server',
-            });
-          }
-        },
-        error: (error) => {
-          this.isBooking = false;
-          console.error('Booking error:', error);
-          let errorMessage = 'Failed to book the vehicle. Please try again.';
-          if (error.error?.message) {
-            errorMessage = error.error.message;
-          }
-          this._messageService.add({
-            severity: 'error',
-            summary: 'Booking Error',
-            detail: errorMessage,
-          });
-        },
-      })
-    );
+    //         setTimeout(() => {
+    //           window.location.href = response.iframeUrl;
+    //         }, 2000);
+    //       } else {
+    //         this._messageService.add({
+    //           severity: 'error',
+    //           summary: 'Booking Failed',
+    //           detail: 'Invalid response from server',
+    //         });
+    //       }
+    //     },
+    //     error: (error) => {
+    //       this.isBooking = false;
+    //       console.error('Booking error:', error);
+    //       let errorMessage = 'Failed to book the vehicle. Please try again.';
+    //       if (error.error?.message) {
+    //         errorMessage = error.error.message;
+    //       }
+    //       this._messageService.add({
+    //         severity: 'error',
+    //         summary: 'Booking Error',
+    //         detail: errorMessage,
+    //       });
+    //     },
+    //   })
+    // );
   }
 }
