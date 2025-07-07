@@ -206,4 +206,19 @@ export class CarService {
       return true;
     });
   }
+
+  getAvailableCars(
+  location: string,
+  pickupDate: Date,
+  returnDate: Date
+): Observable<Cars[]> {
+  const params = {
+    pickupLocation: location,
+    pickupDate: pickupDate.toISOString(),
+    returnDate: returnDate.toISOString(),
+  };
+
+  return this.http.get<Cars[]>('http://localhost:5000/api/search', { params });
+}
+
 }

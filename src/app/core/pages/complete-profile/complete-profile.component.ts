@@ -112,7 +112,47 @@ export class CompleteProfileComponent implements OnInit {
     }
   }
 
-  onSubmit(): void {
+//   onSubmit(): void {
+//     if (this.CompleteProfileForm.valid && this.selectedFile) {
+//       const formData = new FormData();
+//       formData.append('phone_number', this.CompleteProfileForm.get('phone_number')?.value);
+//       formData.append('location', this.CompleteProfileForm.get('location')?.value);
+//       formData.append('driver_license', this.selectedFile);
+//       formData.append('lat', this.CompleteProfileForm.get('lat')?.value);
+//       formData.append('lng', this.CompleteProfileForm.get('lng')?.value);
+
+//       const token = localStorage.getItem('token'); // 👈 Get the token here
+//       console.log("Token in frontend: ", token)
+//       if (!token) {
+//         this.error = 'User token not found. Please sign in again.';
+//         this._notification.open(this.error, 'Close', {
+//           duration: 5000,
+//           panelClass: ['snackbar-error']
+//         });
+//         return;
+//       }
+
+//       this._authService.completeGoogleProfile(formData, token).subscribe({
+//         next: (response) => {
+//           console.log(response.token)
+//           localStorage.setItem('token', response.token);
+//           this._router.navigate(['/home']);
+//         },
+//         error: (err) => {
+//           this.error = err.error?.message || 'Something went wrong';
+//           this._notification.open(this.error?this.error:'', 'Close', {
+//             duration: 5000,
+//             panelClass: ['snackbar-error']
+//           });
+//         }
+//       });
+//     } else {
+//       this.CompleteProfileForm.markAllAsTouched();
+//     }
+// }
+
+
+onSubmit(): void {
   if (this.CompleteProfileForm.valid && this.selectedFile) {
     const formData = new FormData();
     formData.append('phone_number', this.CompleteProfileForm.get('phone_number')?.value);
@@ -121,8 +161,9 @@ export class CompleteProfileComponent implements OnInit {
     formData.append('lat', this.CompleteProfileForm.get('lat')?.value);
     formData.append('lng', this.CompleteProfileForm.get('lng')?.value);
 
-    const token = localStorage.getItem('token'); // 👈 Get the token here
-    console.log("Token in frontend: ", token)
+    const token = localStorage.getItem('token');
+    console.log("Token in frontend: ", token);
+
     if (!token) {
       this.error = 'User token not found. Please sign in again.';
       this._notification.open(this.error, 'Close', {
@@ -134,21 +175,41 @@ export class CompleteProfileComponent implements OnInit {
 
     this._authService.completeGoogleProfile(formData, token).subscribe({
       next: (response) => {
-        console.log(response.token)
         localStorage.setItem('token', response.token);
+
+        // Check for pendingBooking
+        const pendingBooking = localStorage.getItem('pendingBooking');
+        if (pendingBooking) {
+          const bookingData = JSON.parse(pendingBooking);
+          localStorage.removeItem('pendingBooking');
+
+          this._router.navigate(['/cars'], {
+            queryParams: {
+              carId: bookingData.carId,
+              pickupDate: bookingData.pickupDate,
+              dropoffDate: bookingData.dropoffDate,
+              location: bookingData.location,
+            }
+          });
+
+          return; // Don't proceed with default route
+        }
+
+        // Default route
         this._router.navigate(['/home']);
       },
       error: (err) => {
         this.error = err.error?.message || 'Something went wrong';
-        this._notification.open(this.error?this.error:'', 'Close', {
+        this._notification.open(this.error || '', 'Close', {
           duration: 5000,
           panelClass: ['snackbar-error']
         });
       }
     });
-  } else {
-    this.CompleteProfileForm.markAllAsTouched();
+    } else {
+      this.CompleteProfileForm.markAllAsTouched();
+    }
   }
-}
+
 
 }

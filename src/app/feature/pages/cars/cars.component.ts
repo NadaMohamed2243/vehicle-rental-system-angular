@@ -110,6 +110,8 @@ export class CarsComponent implements OnInit, OnDestroy {
   // Map related properties
   userLocation: Location | null = null;
   selectedDeliveryLocation: Location | null = null;
+  private pendingCarIdFromRedirect: string | null = null;
+
 
   // Booking state
   isBooking = false;
@@ -171,40 +173,134 @@ export class CarsComponent implements OnInit, OnDestroy {
     this.setupFilterSubscription();
     this.getUserLocation();
     this.minDate = new Date();
+
+    // ✅ Restore pending booking info from queryParams or localStorage
+    this._route.queryParams.subscribe((params) => {
+      const carId = params['carId'];
+      const pickup = params['pickupDate'];
+      const dropoff = params['dropoffDate'];
+      const location = params['location'];
+
+      if (pickup && dropoff) {
+        this.pickupDate = new Date(pickup);
+        this.dropoffDate = new Date(dropoff);
+      }
+
+      if (location) {
+        this.selectedCarLocation = {
+          lat: 0,
+          lng: 0,
+          address: location,
+        };
+      }
+
+      if (carId && this.cars.length) {
+        const car = this.cars.find((c) => c._id === carId);
+        if (car) {
+          this.showCarDetails(car);
+        }
+      }
+    });
   }
+
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
 
-  private loadInitialData(): void {
-    this.subscriptions.add(
-      this._route.queryParams
-        .pipe(
-          switchMap((params) => {
-            this.filtration = params['filtration'] || null;
-            this.type = params['type'] || null;
-            this.brand = params['brand'] || null;
-            return this.loadCars();
-          })
-        )
-        .subscribe({
-          next: (cars) => {
-            this.cars = cars;
-            this.filteredCars = [...this.cars];
-            this.isLoading = false;
-            this.errorMessage = null;
-          },
-          error: (err) => {
-            console.error('Error loading cars:', err);
-            this.isLoading = false;
-            this.errorMessage = 'Failed to load cars. Please try again later.';
-            this.cars = [];
-            this.filteredCars = [];
-          },
+  // private loadInitialData(): void {
+  //   this.subscriptions.add(
+  //     this._route.queryParams
+  //       .pipe(
+  //         switchMap((params) => {
+  //           this.filtration = params['filtration'] || null;
+  //           this.type = params['type'] || null;
+  //           this.brand = params['brand'] || null;
+  //           return this.loadCars();
+  //         })
+  //       )
+  //       .subscribe({
+  //         next: (cars) => {
+  //           this.cars = cars;
+  //           this.filteredCars = [...this.cars];
+  //           this.isLoading = false;
+  //           this.errorMessage = null;
+  //         },
+  //         error: (err) => {
+  //           console.error('Error loading cars:', err);
+  //           this.isLoading = false;
+  //           this.errorMessage = 'Failed to load cars. Please try again later.';
+  //           this.cars = [];
+  //           this.filteredCars = [];
+  //         },
+  //       })
+  //   );
+  // }
+
+private loadInitialData(): void {
+  this.subscriptions.add(
+    this._route.queryParams
+      .pipe(
+        switchMap((params) => {
+          this.filtration = params['filtration'] || null;
+          this.type = params['type'] || null;
+          this.brand = params['brand'] || null;
+
+          // 🟨 Restore booking data from query params if present
+          const pickupDateParam = params['pickupDate'];
+          const dropoffDateParam = params['dropoffDate'];
+          const locationParam = params['location'];
+          const carIdParam = params['carId'];
+
+          if (pickupDateParam) {
+            this.pickupDate = new Date(pickupDateParam);
+          }
+
+          if (dropoffDateParam) {
+            this.dropoffDate = new Date(dropoffDateParam);
+          }
+
+          if (locationParam) {
+            this.selectedCarLocation = {
+              lat: 0, // Optional: default, update later if needed
+              lng: 0,
+              address: locationParam,
+            };
+          }
+
+          this.pendingCarIdFromRedirect = carIdParam; // 👇 Save it for later matching after loading cars
+
+          return this.loadCars();
         })
-    );
-  }
+      )
+      .subscribe({
+        next: (cars) => {
+          this.cars = cars;
+          this.filteredCars = [...this.cars];
+          this.isLoading = false;
+          this.errorMessage = null;
+
+          //  If a carId was in query params, open the car details
+          if (this.pendingCarIdFromRedirect) {
+            const car = this.cars.find(c => c._id === this.pendingCarIdFromRedirect);
+            if (car) {
+              this.showCarDetails(car);
+            }
+            this.pendingCarIdFromRedirect = null; // clear
+          }
+        },
+        error: (err) => {
+          console.error('Error loading cars:', err);
+          this.isLoading = false;
+          this.errorMessage = 'Failed to load cars. Please try again later.';
+          this.cars = [];
+          this.filteredCars = [];
+        },
+      })
+  );
+}
+
+
 
   private setupFilterSubscription(): void {
     this.subscriptions.add(
