@@ -1,4 +1,5 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -6,8 +7,10 @@ import { Injectable } from "@angular/core";
 export class ClientauthService {
   private userRole: string | null = null;
   private token: string | null = null;
+  private isBrowser: boolean;
 
-  constructor() {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    this.isBrowser = isPlatformBrowser(platformId);
     this.loadToken();
   }
 
@@ -16,16 +19,21 @@ export class ClientauthService {
     const decoded = this.decodeToken(token);
     this.userRole = decoded ? decoded.role : null;
     console.log("Token and role set:", this.token, this.userRole);
-    localStorage.setItem('token', token);
+
+    if (this.isBrowser) {
+      localStorage.setItem('token', token);
+    }
   }
 
   private loadToken() {
-    const token = localStorage.getItem('token');
-    if (token) {
-      this.token = token;
-      const decoded = this.decodeToken(token);
-      this.userRole = decoded ? decoded.role : null;
-      console.log("Loaded token and role from localStorage:", this.token, this.userRole);
+    if (this.isBrowser) {
+      const token = localStorage.getItem('token');
+      if (token) {
+        this.token = token;
+        const decoded = this.decodeToken(token);
+        this.userRole = decoded ? decoded.role : null;
+        console.log("Loaded token and role from localStorage:", this.token, this.userRole);
+      }
     }
   }
 
@@ -44,7 +52,10 @@ export class ClientauthService {
   clear() {
     this.token = null;
     this.userRole = null;
-    localStorage.removeItem('token');
+
+    if (this.isBrowser) {
+      localStorage.removeItem('token');
+    }
   }
 
   private decodeToken(token: string): any {

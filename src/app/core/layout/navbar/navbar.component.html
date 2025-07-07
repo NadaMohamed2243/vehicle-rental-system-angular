@@ -28,9 +28,18 @@
       </ul>
     </div>
 <!-- Sign Up Button -->
-<div class="hidden md:block">
-  <a href="/register" class="px-4 py-2 bg-blue-600 text-white rounded-md">Sign up / Log in</a>
+<div *ngIf="!isLoggedIn; else loggedInButtons" class="hidden md:flex gap-2">
+  <a routerLink="/register" class="px-4 py-2  rounded-md bg-blue-600 font-medium text-white shadow-sm hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600">Register</a>
+  <a routerLink="/login" class="px-4 py-2  rounded-md bg-blue-600  font-medium text-white shadow-sm hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600">Log In</a>
 </div>
+
+<!-- ✅ Show if logged in -->
+<ng-template #loggedInButtons>
+  <div class="hidden md:flex gap-2">
+    <button (click)="goToDashboard()" class="px-4 py-2  rounded-md bg-blue-600  font-medium text-white shadow-sm hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 cursor-pointer">{{page_name}}</button>
+    <button (click)="logout()" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-500 cursor-pointer">Logout</button>
+  </div>
+</ng-template>
 
 
 

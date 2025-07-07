@@ -15,12 +15,12 @@
 
 <div>
 <button class="sm:hidden p-2 text-gray-400 hover:text-blue-500" (click)="toggleSidebar()">
-  <i class="pi pi-times text-2xl"></i> 
+  <i class="pi pi-times text-2xl"></i>
 </button>
 </div>
 
 
-  
+
   <nav class="flex-1 flex flex-col items-center space-y-8 mt-8">
 
     <a routerLink="agent-overview" routerLinkActive="active"  class="text-gray-400 hover:text-blue-500">
@@ -37,11 +37,16 @@
     <a routerLink="agent-add-car" routerLinkActive="active" class="text-gray-400 hover:text-blue-500">
       <i class="pi pi-plus-circle text-xl"></i>
     </a>
-    
+
   </nav>
 
   <!-- logout icon -->
-  <div class="mt-auto text-gray-400 hover:text-blue-500">
-    <i class="pi pi-sign-out text-xl"></i>
-  </div>
+  <div
+  class="mt-auto relative text-gray-400 hover:text-blue-500 cursor-pointer group" (click)="logout()"
+  tabindex="0" role="button" aria-label="Logout">
+  <i class="pi pi-sign-out text-xl"></i>
+  <span class="absolute left-full top-1/2 -translate-y-1/2 ml-2 bg-gray-800 text-white text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10 shadow-md">
+    Logout
+  </span>
+</div>
 </div>
