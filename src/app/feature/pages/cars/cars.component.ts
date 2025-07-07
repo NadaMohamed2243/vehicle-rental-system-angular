@@ -1,4 +1,12 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  OnDestroy,
+  PLATFORM_ID,
+  Inject,
+} from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { LayoutComponent } from '../../../core/pages/layout/layout.component';
 import { FilterComponent } from '../../components/ui/filter/filter.component';
 import { CardComponent } from '../../../shared/components/ui/card/card.component';
@@ -31,6 +39,10 @@ import {
 } from '../../../core/services/booking.service';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../../core/services/auth.service';
+import { AgreementService } from '../../../core/services/agreement.service';
+import { SafeUrlPipe } from '../../../shared/pipes/safe-url.pipe';
+import { DialogModule } from 'primeng/dialog';
+import { SignatureCanvasComponent } from '../../../shared/components/ui/signature-canvas/signature-canvas.component';
 
 @Component({
   selector: 'app-cars',
@@ -53,6 +65,9 @@ import { AuthService } from '../../../core/services/auth.service';
     FilterSidebarComponent,
     MapComponent,
     ToastModule,
+    SafeUrlPipe,
+    DialogModule,
+    SignatureCanvasComponent,
   ],
   templateUrl: './cars.component.html',
   styleUrls: ['./cars.component.css'],
@@ -103,6 +118,24 @@ export class CarsComponent implements OnInit, OnDestroy {
   carBookingHistory: any[] = [];
   isLoadingBookingHistory = false;
 
+  // Agreement state
+  agreement: any = null;
+  showAgreementModal: boolean = false;
+
+  // Signature data
+  signatureData: string = '';
+
+  // Add payment URL storage
+  private pendingPaymentUrl: string = '';
+
+  // Loading states
+  isSubmittingSignature: boolean = false;
+  isDownloading: boolean = false;
+  isProcessingPayment: boolean = false;
+
+  // Add browser check property
+  isBrowser: boolean;
+
   // Services
   private _carService = inject(CarService);
   private _filterService = inject(FilterStateService);
@@ -112,9 +145,13 @@ export class CarsComponent implements OnInit, OnDestroy {
   private _bookingService = inject(BookingService);
   private _messageService = inject(MessageService);
   private _authService = inject(AuthService);
+  private _agreementService = inject(AgreementService);
   private subscriptions = new Subscription();
 
-  // Computed properties
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+  }
+
   get rentalDuration() {
     if (this.pickupDate && this.dropoffDate) {
       const diffTime = Math.abs(
@@ -426,15 +463,35 @@ export class CarsComponent implements OnInit, OnDestroy {
           this.isBooking = false;
 
           if (response.booking && response.iframeUrl) {
+            // Store payment URL for later use
+            this.pendingPaymentUrl = response.iframeUrl;
+
             this._messageService.add({
               severity: 'success',
               summary: 'Booking Created Successfully',
-              detail: `Booking ID: ${response.booking._id}. Redirecting to payment...`,
+              detail: `Booking ID: ${response.booking._id}. Please sign the agreement to proceed to payment.`,
             });
 
-            setTimeout(() => {
-              window.location.href = response.iframeUrl;
-            }, 2000);
+            // Generate agreement after successful booking
+            this._agreementService
+              .generateAgreement(response.booking._id)
+              .subscribe({
+                next: (res) => {
+                  this.agreement = res.agreement;
+                  this.showAgreementModal = true;
+                  console.log('Agreement generated:', res.agreement);
+                },
+                error: (err) => {
+                  console.error('Agreement generation failed:', err);
+                  // If agreement generation fails, still proceed to payment
+                  this._messageService.add({
+                    severity: 'warn',
+                    summary: 'Agreement Generation Failed',
+                    detail: 'Proceeding to payment without digital agreement.',
+                  });
+                  this.proceedToPayment();
+                },
+              });
           } else {
             this._messageService.add({
               severity: 'error',
@@ -458,5 +515,280 @@ export class CarsComponent implements OnInit, OnDestroy {
         },
       })
     );
+  }
+
+  onSignatureChange(signature: string) {
+    console.log('=== onSignatureChange called ===');
+    console.log('Signature received:', !!signature);
+    console.log('Signature length:', signature?.length || 0);
+
+    if (signature && signature.length > 100) {
+      console.log('Signature preview:', signature.substring(0, 50) + '...');
+      this.signatureData = signature;
+      console.log('✅ Valid signature data saved');
+    } else {
+      console.log('❌ Invalid or empty signature data');
+      this.signatureData = '';
+    }
+  }
+
+  onSignatureStart() {
+    console.log('🎨 === Signature drawing started ===');
+  }
+
+  onSignatureEnd() {
+    console.log('✅ === Signature drawing ended ===');
+    console.log(
+      'Current signature data length:',
+      this.signatureData?.length || 0
+    );
+  }
+
+  submitSignature() {
+    console.log('=== Submit signature called ===');
+    console.log('Agreement:', !!this.agreement);
+    console.log('Signature data length:', this.signatureData?.length || 0);
+
+    if (!this.agreement || !this.signatureData) {
+      this._messageService.add({
+        severity: 'warn',
+        summary: 'Missing Signature',
+        detail: 'Please provide your signature before submitting',
+      });
+      return;
+    }
+
+    // Validate signature is not empty (check for blank canvas)
+    if (this.isSignatureEmpty(this.signatureData)) {
+      console.log('❌ Signature is empty');
+      this._messageService.add({
+        severity: 'warn',
+        summary: 'Empty Signature',
+        detail: 'Please draw your signature in the provided area',
+      });
+      return;
+    }
+
+    console.log('✅ Submitting signature to backend...');
+    this.isSubmittingSignature = true;
+
+    this._agreementService
+      .signAgreement(this.agreement.id, this.signatureData)
+      .subscribe({
+        next: (res) => {
+          console.log('✅ Signature submitted successfully');
+          this.agreement = res.agreement;
+          this.isSubmittingSignature = false;
+          this._messageService.add({
+            severity: 'success',
+            summary: 'Agreement Signed Successfully',
+            detail:
+              'Your digital signature has been embedded in the agreement.',
+          });
+
+          // Refresh the agreement to get the signed document URL
+          this.refreshAgreement();
+        },
+        error: (err) => {
+          console.error('❌ Signing agreement failed:', err);
+          this.isSubmittingSignature = false;
+          this._messageService.add({
+            severity: 'error',
+            summary: 'Signing Failed',
+            detail:
+              err.error?.message ||
+              'Failed to sign agreement. Please try again.',
+          });
+        },
+      });
+  }
+
+  // Helper method to check if signature is actually empty
+  private isSignatureEmpty(signatureData: string): boolean {
+    // Check for standard empty canvas base64
+    const emptyCanvasData = [
+      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==',
+      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=',
+    ];
+
+    if (emptyCanvasData.includes(signatureData)) {
+      return true;
+    }
+
+    // Additional check: if signature is very small in file size, it's likely empty
+    const base64Data = signatureData.split(',')[1];
+    if (base64Data && base64Data.length < 100) {
+      return true;
+    }
+
+    return false;
+  }
+
+  // Method to refresh agreement data after signing
+  private refreshAgreement() {
+    if (!this.agreement) return;
+
+    this._agreementService.getAgreement(this.agreement.id).subscribe({
+      next: (updatedAgreement) => {
+        this.agreement = updatedAgreement;
+      },
+      error: (err) => {
+        console.error('Error refreshing agreement:', err);
+      },
+    });
+  }
+
+  reviewSignedDocument() {
+    if (!this.agreement) {
+      this._messageService.add({
+        severity: 'warn',
+        summary: 'Document Not Available',
+        detail: 'Agreement document is not available for review.',
+      });
+      return;
+    }
+
+    // Use signed document URL if available, otherwise fallback to original
+    const documentUrl =
+      this.agreement.signedDocumentUrl || this.agreement.documentUrl;
+
+    if (!documentUrl) {
+      this._messageService.add({
+        severity: 'warn',
+        summary: 'Document Not Available',
+        detail: 'Signed document is not yet available for review.',
+      });
+      return;
+    }
+
+    // Open the document in a new window/tab
+    window.open(
+      documentUrl,
+      '_blank',
+      'width=800,height=600,scrollbars=yes,resizable=yes'
+    );
+  }
+
+  downloadAgreement() {
+    if (!this.agreement) return;
+
+    this.isDownloading = true;
+    console.log('Downloading agreement:', this.agreement);
+
+    this._agreementService.downloadAgreement(this.agreement._id).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+
+        // Use a more descriptive filename
+        const fileName =
+          this.agreement.status === 'signed'
+            ? `signed_agreement_${this.agreement.id}_${
+                new Date().toISOString().split('T')[0]
+              }.pdf`
+            : `agreement_${this.agreement.id}_${
+                new Date().toISOString().split('T')[0]
+              }.pdf`;
+
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+
+        this.isDownloading = false;
+        this._messageService.add({
+          severity: 'success',
+          summary: 'Download Complete',
+          detail: 'Agreement document has been downloaded successfully.',
+        });
+      },
+      error: (err) => {
+        console.error('Download failed:', err);
+        this.isDownloading = false;
+        this._messageService.add({
+          severity: 'error',
+          summary: 'Download Failed',
+          detail: 'Failed to download agreement. Please try again.',
+        });
+      },
+    });
+  }
+
+  proceedToPayment() {
+    if (!this.pendingPaymentUrl) {
+      this._messageService.add({
+        severity: 'error',
+        summary: 'Payment Error',
+        detail: 'Payment URL not available. Please try booking again.',
+      });
+      return;
+    }
+
+    this.isProcessingPayment = true;
+
+    // Show confirmation message
+    this._messageService.add({
+      severity: 'info',
+      summary: 'Redirecting to Payment',
+      detail: 'You will be redirected to complete your payment...',
+    });
+
+    // Close the agreement modal
+    this.showAgreementModal = false;
+
+    // Redirect to payment after a short delay
+    setTimeout(() => {
+      window.location.href = this.pendingPaymentUrl;
+    }, 1500);
+  }
+
+  closeAgreementModal() {
+    // Only allow closing if agreement is signed or user confirms
+    if (this.agreement && this.agreement.status === 'signed') {
+      // If signed, ask if they want to proceed to payment
+      if (
+        confirm('Agreement is signed. Do you want to proceed to payment now?')
+      ) {
+        this.proceedToPayment();
+      } else {
+        this.showAgreementModal = false;
+        this.agreement = null;
+      }
+    } else {
+      // If not signed, ask if they want to proceed without signing
+      this._messageService.add({
+        severity: 'info',
+        summary: 'Agreement Not Signed',
+        detail:
+          'You can proceed to payment without signing, but the agreement will remain unsigned.',
+      });
+
+      if (
+        confirm(
+          'Do you want to proceed to payment without signing the agreement?'
+        )
+      ) {
+        this.proceedToPayment();
+      }
+    }
+  }
+
+  skipSigningAndProceed() {
+    const confirmed = confirm(
+      'Are you sure you want to proceed without signing the agreement? You can sign it later from your booking history.'
+    );
+
+    if (confirmed) {
+      this._messageService.add({
+        severity: 'info',
+        summary: 'Skipped Agreement Signing',
+        detail: 'Proceeding to payment without digital signature.',
+      });
+
+      this.showAgreementModal = false;
+      this.proceedToPayment();
+    }
   }
 }
