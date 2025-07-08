@@ -37,8 +37,30 @@ export class LoginComponent {
       console.log('Sending data to API', this.loginForm.value);
       this._authService.login(this.loginForm.value).subscribe({
         next: (res) => {
-           this.loading = false;
+          this.loading = false;
           localStorage.setItem('token', res.token);
+// Check for saved booking info
+        const pendingBooking = localStorage.getItem('pendingBooking');
+        if (pendingBooking) {
+          const bookingData = JSON.parse(pendingBooking);
+
+          // Clear it so it's not reused next time
+          localStorage.removeItem('pendingBooking');
+
+          this._router.navigate(['/cars'], {
+            queryParams: {
+              carId: bookingData.carId,
+              pickupDate: bookingData.pickupDate,
+              dropoffDate: bookingData.dropoffDate,
+              location: bookingData.location,
+            }
+          });
+
+          return; // Stop further redirection
+        }
+
+        // Default role-based redirect
+
           if (res.user.role == 'admin') {
             this._router.navigate(['/dashboard']);
           } else if (res.user.role == 'client') {
@@ -57,7 +79,7 @@ export class LoginComponent {
     } else {
       this.loginForm.markAllAsTouched();
     }
-       setTimeout(() => this.showError = false, 5000);
+         setTimeout(() => this.showError = false, 5000);
   }
   closeError() {
   this.showError = false;

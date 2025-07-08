@@ -4,21 +4,27 @@ import { HistoryService } from '../../../core/services/history.service';
 import { Booking } from '../../../core/services/history.service';
 import { CommonModule } from '@angular/common';
 import { BookingService } from '../../../core/services/booking.service';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-client-history',
   standalone: true,
-  imports: [LayoutComponent, CommonModule],
+  imports: [LayoutComponent, CommonModule, ToastModule],
   templateUrl: './client-history.component.html',
   styleUrl: './client-history.component.css',
+  providers: [MessageService],
 })
 export class ClientHistoryComponent implements OnInit {
   bookingHistory: Booking[] = [];
   isLoading = true;
+  isResumingPayment = false;
+  resumingBookingId: string | null = null;
 
   constructor(
     private historyService: HistoryService,
-    private bookingService: BookingService
+    private bookingService: BookingService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -59,6 +65,7 @@ export class ClientHistoryComponent implements OnInit {
       case 'cancelled':
         return 'bg-red-100 text-red-800';
       case 'confirmed':
+      case 'paid':
         return 'bg-blue-100 text-blue-800';
       default:
         return 'bg-gray-100 text-gray-800';
@@ -74,13 +81,63 @@ export class ClientHistoryComponent implements OnInit {
     );
   }
 
+  canResumePayment(booking: Booking): boolean {
+    const eligibleStatuses = ['pending', 'failed', 'incomplete'];
+    return eligibleStatuses.includes(booking.status.toLowerCase());
+  }
+
   refundBooking(bookingId: string): void {
     this.bookingService.refundBooking(bookingId).subscribe({
       next: (response) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Refund Requested',
+          detail: 'Your refund request has been submitted successfully.',
+        });
         this.loadHistory();
       },
       error: (error) => {
         console.error('Error processing refund:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Refund Failed',
+          detail: 'Failed to process refund request. Please try again.',
+        });
+      },
+    });
+  }
+
+  resumePayment(bookingId: string): void {
+    this.isResumingPayment = true;
+    this.resumingBookingId = bookingId;
+
+    this.bookingService.resumePayment(bookingId).subscribe({
+      next: (response) => {
+        this.isResumingPayment = false;
+        this.resumingBookingId = null;
+
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Redirecting to Payment',
+          detail: 'Redirecting you to complete your payment...',
+        });
+
+        setTimeout(() => {
+          window.location.href = response.iframeUrl;
+        }, 1500);
+      },
+      error: (error) => {
+        this.isResumingPayment = false;
+        this.resumingBookingId = null;
+
+        console.error('Error resuming payment:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Resume Payment Failed',
+          detail:
+            error.error?.message ||
+            'Failed to resume payment. Please try again.',
+        });
       },
     });
   }

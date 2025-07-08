@@ -36,6 +36,10 @@ export interface BookingResponse {
   iframeUrl: string;
 }
 
+export interface ResumePaymentResponse {
+  iframeUrl: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -60,6 +64,12 @@ export class BookingService {
     return this.http.post<any>(
       `http://localhost:5000/api/payments/refund/${bookingId}`,
       {}
+    );
+  }
+
+  resumePayment(bookingId: string): Observable<ResumePaymentResponse> {
+    return this.http.get<ResumePaymentResponse>(
+      `http://localhost:5000/api/payments/resume/${bookingId}`
     );
   }
 }
