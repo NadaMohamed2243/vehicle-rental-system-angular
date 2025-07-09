@@ -6,6 +6,7 @@ import { AvatarModule } from 'primeng/avatar';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive,Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
+import { ClientauthService } from '../../../../core/services/clientauth.service';
 
 
 @Component({
@@ -18,14 +19,16 @@ export class SidebarComponent {
   sidebarVisible = false;
   constructor(
   private authService: AuthService,
-  private router: Router
+  private router: Router,
+  private logoutAuth: ClientauthService
 ) {}
   toggleSidebar() {
     this.sidebarVisible = !this.sidebarVisible;
   }
   logout() {
+  this.logoutAuth.clear();
   this.authService.removeToken();
-  this.router.navigate(['/login']); 
+  this.router.navigate(['/landing']);
 }
 
 }
