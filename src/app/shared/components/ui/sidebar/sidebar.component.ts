@@ -2,6 +2,7 @@ import { ClientauthService } from './../../../../core/services/clientauth.servic
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive,Router } from '@angular/router';
 import { links } from '../../../constants/navLinks';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -11,10 +12,12 @@ import { links } from '../../../constants/navLinks';
 })
 export class SidebarComponent {
   links = links;
-  _auth=inject(ClientauthService);
+  _auth=inject(AuthService);
+  _clientAuth=inject(ClientauthService);
   _router=inject(Router);
   logout(){
-    this._auth.clear();
+    this._clientAuth.clear();
+    this._auth.removeToken();
     this._router.navigate(['/landing']);
   }
 }

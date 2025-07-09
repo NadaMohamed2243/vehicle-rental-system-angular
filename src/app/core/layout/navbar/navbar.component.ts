@@ -2,6 +2,7 @@ import { Component, inject, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { ClientauthService } from '../../services/clientauth.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -17,13 +18,13 @@ export class NavbarComponent {
   page_name='Home';
   role: string | null = null;
   _router = inject(Router)
-  constructor(@Inject(PLATFORM_ID) private platformId: Object,private authService: ClientauthService) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object,private authService: ClientauthService,private logoutService:AuthService) {}
   ngOnInit(): void {
     this.isLoggedIn = this.authService.isLoggedIn();
     this.role = this.authService.getRole();
   }
   logout(): void {
-    this.authService.clear();
+    this.logoutService.removeToken();
     this.isLoggedIn = false;
     this.role = null;
     this._router.navigate(['/landing']);

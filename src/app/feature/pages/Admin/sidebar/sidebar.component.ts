@@ -25,7 +25,7 @@ export class SidebarComponent {
   }
   logout() {
   this.authService.removeToken();
-  this.router.navigate(['/login']); // أو ['admin/login'] حسب حالتك
+  this.router.navigate(['/login']); 
 }
 
 }

@@ -33,8 +33,9 @@ export class PaymentResultComponent {
   }
   fetchdata(){
      this.route.queryParams.subscribe(params => {
-      const rawBookingId = params['bookingId'];
-      const bookingId = rawBookingId?.replace(/'/g, '');
+
+      const bookingId = params['bookingId'];
+      console.log("bookingId from URL:", bookingId);
       this.status = null;
       this.error = null;
       this.isLoading = false;

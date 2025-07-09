@@ -46,7 +46,10 @@ export class ClientauthService {
   }
 
   isLoggedIn(): boolean {
-    return !!this.token;
+      if (!this.token && this.isBrowser) {
+    this.loadToken();
+  }
+  return !!this.token;
   }
 
   clear() {
