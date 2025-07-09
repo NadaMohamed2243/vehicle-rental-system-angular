@@ -592,10 +592,7 @@ export class CarsComponent implements OnInit, OnDestroy {
         error: (error) => {
           this.isBooking = false;
           console.error('Booking error:', error);
-          let errorMessage = 'Failed to book the vehicle. Please try again.';
-          if (error.error?.message) {
-            errorMessage = error.error.message;
-          }
+          let errorMessage = typeof error.error === 'string' ? error.error : error.error?.error || 'Failed to book the vehicle. Please try again.';
           this._messageService.add({
             severity: 'error',
             summary: 'Booking Error',
