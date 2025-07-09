@@ -7,6 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { AuthapiService } from '../../services/authapi.service';
+import { ClientauthService } from '../../services/clientauth.service';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +18,7 @@ import { AuthapiService } from '../../services/authapi.service';
 export class LoginComponent {
   _router = inject(Router);
   _authService = inject(AuthapiService);
+  _clientAuthService = inject(ClientauthService);
   apiError: string = '';
   loading: boolean = false;
   showError: boolean = false;
@@ -38,7 +40,7 @@ export class LoginComponent {
       this._authService.login(this.loginForm.value).subscribe({
         next: (res) => {
           this.loading = false;
-          localStorage.setItem('token', res.token);
+          this._clientAuthService.setTokenAndRole(res.token);
 // Check for saved booking info
         const pendingBooking = localStorage.getItem('pendingBooking');
         if (pendingBooking) {
