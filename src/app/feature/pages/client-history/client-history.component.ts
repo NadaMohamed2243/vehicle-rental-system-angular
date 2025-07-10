@@ -92,7 +92,7 @@ export class ClientHistoryComponent implements OnInit {
         this.messageService.add({
           severity: 'success',
           summary: 'Refund Requested',
-          detail: 'Your refund request has been submitted successfully.',
+          detail: `Your refund request has been submitted successfully, Amount of refund :${response.refundAmount} `,
         });
         this.loadHistory();
       },
@@ -101,7 +101,7 @@ export class ClientHistoryComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Refund Failed',
-          detail: 'Failed to process refund request. Please try again.',
+          detail: 'Failed to process refund request. Please try again later.',
         });
       },
     });

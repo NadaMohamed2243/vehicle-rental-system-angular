@@ -25,11 +25,13 @@ export class NavbarComponent {
   }
   logout(): void {
     this.logoutService.removeToken();
+    this.authService.clear();
     this.isLoggedIn = false;
     this.role = null;
     this._router.navigate(['/landing']);
   }
   goToDashboard(): void {
+    console.log(this.role);
     if (this.role === 'admin') {
       this.page_name = 'Dashboard';
       this._router.navigate(['/dashboard']);

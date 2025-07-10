@@ -7,10 +7,10 @@
       <h3 class="text-lg font-medium mb-4">Car Specifications</h3>
       <hr class=" mb-4 text-gray-300"/>
       <form [formGroup]="carForm" (ngSubmit)="submitForm()" class="space-y-4">
-        
-       
 
-        
+
+
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <!-- Brand -->
           <div>
@@ -28,7 +28,7 @@
         </div>
         </div>
 
-        
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- Year -->
         <div>
@@ -46,7 +46,7 @@
         </div>
         </div>
 
-       
+
 
         <!-- Type and Seats -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -64,33 +64,15 @@
           </div>
         </div>
 
-        
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Fuel Type -->
-        <div>
-          <p-floatLabel variant="on">
-            <input id="fuel_type" pInputText formControlName="fuel_type" class="w-full" />
-            <label for="fuel_type">Fuel Type</label>
-          </p-floatLabel>
-        </div>
-        <!-- Color -->
+           <!-- Color -->
         <div>
           <p-floatLabel variant="on">
             <input id="color" pInputText formControlName="color" class="w-full" />
             <label for="color">Color</label>
           </p-floatLabel>
         </div>
-        </div>
 
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Transmission -->
-        <div>
-          <p-floatLabel variant="on">
-            <input id="transmission" pInputText formControlName="transmission" class="w-full" />
-            <label for="transmission">Transmission</label>
-          </p-floatLabel>
-        </div>
         <!-- Odometer -->
         <div>
           <p-floatLabel variant="on">
@@ -106,7 +88,7 @@
           <div>
             <p-floatLabel variant="on">
               <input id="totalPricePerDay" pInputText type="number" formControlName="totalPricePerDay" class="w-full" />
-              <label for="totalPricePerDay">Price Per Day(EGP)</label>  
+              <label for="totalPricePerDay">Price Per Day(EGP)</label>
             </p-floatLabel>
           </div>
           <!-- Hourly Rate -->
@@ -117,14 +99,40 @@
             </p-floatLabel>
           </div>
         </div>
+         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Fuel Type -->
+        <div class="w-full">
+          <label for="fuel_type" class="ml-2 block text-[13px] font-medium text-gray-700 ">Fuel Type</label>
+          <p-dropdown
+            inputId="fuel_type"
+            [options]="fuelTypeOptions"
+            formControlName="fuel_type"
+            [autoDisplayFirst]="false"
+            dataKey="value"
+            class="w-full transition duration-200 hover:shadow-lg hover:border-blue-500 hover:ring-1 hover:ring-blue-400 rounded-md"
+            placeholder="Select Fuel Type"
+          ></p-dropdown>
+        </div>
+         <!-- Transmission -->
+       <div class="w-full">
+          <label for="transmission" class=" ml-2 block text-[13px] font-medium text-gray-700 ">Transmission</label>
+          <p-dropdown
+            inputId="transmission"
+            [options]="transmissionOptions"
+            formControlName="transmission"
+            [autoDisplayFirst]="false"
+            class="w-full transition duration-200 hover:shadow-lg hover:border-blue-500 hover:ring-1 hover:ring-blue-400 rounded-md">
+          </p-dropdown>
+        </div>
+        </div>
 
         <!-- Rental Rates with Calendar Selection -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <p-floatLabel variant="on">
-              <p-calendar formControlName="lastMaintenanceDate" 
+              <p-calendar formControlName="lastMaintenanceDate"
                         inputId="lastMaintenanceDate"
-                        [showIcon]="true" 
+                        [showIcon]="true"
                         dateFormat="dd/mm/yy"
                         [showButtonBar]="true"
                         class="w-full"></p-calendar>
@@ -133,13 +141,13 @@
           </div>
           <div>
             <p-floatLabel variant="on">
-              <p-calendar formControlName="nextMaintenanceDue" 
+              <p-calendar formControlName="nextMaintenanceDue"
                         inputId="nextMaintenanceDue"
-                        [showIcon]="true" 
+                        [showIcon]="true"
                         dateFormat="dd/mm/yy"
                         [showButtonBar]="true"
                         class="w-full"></p-calendar>
-              <label for="nextMaintenanceDue">next Maintenance Due</label>
+              <label for="nextMaintenanceDue">next Maintenance Date</label>
             </p-floatLabel>
           </div>
         </div>
@@ -153,11 +161,16 @@
             </p-floatLabel>
           </div> -->
           <div>
-            <p-floatLabel variant="on">
-              <input id="availabilityStatus" pInputText formControlName="availabilityStatus" class="w-full" />
-              <label for="availabilityStatus">Availability Status</label>
-              <!-- <p-dropdown [options]="availabilityOptions" formControlName="availability_status" placeholder="Select Availability"></p-dropdown> -->
-            </p-floatLabel>
+           <label for="availabilityStatus" class="ml-2 block text-[13px] font-medium text-gray-700">
+    Availability Status
+  </label>
+  <p-dropdown
+    inputId="availabilityStatus"
+    [options]="availabilityOptions"
+    formControlName="availabilityStatus"
+    [autoDisplayFirst]="false"
+    class="w-full transition duration-200 hover:shadow-lg hover:border-blue-500 hover:ring-1 hover:ring-blue-400 rounded-md">
+  </p-dropdown>
           </div>
         <!-- </div> -->
 
@@ -183,10 +196,10 @@
     <div class="border border-gray-200 rounded-lg p-6 bg-white shadow-sm">
       <h3 class="text-lg font-medium mb-4">Upload Car Images and Documents</h3>
       <hr class="p-4 text-gray-300"/>
-      
+
       <div class="grid grid-cols-1 gap-2 mb-6">
         <label class="text-sm font-medium text-gray-700">Main Image</label>
-        <p-fileUpload mode="basic" chooseLabel="Choose File" accept="image/*" 
+        <p-fileUpload mode="basic" chooseLabel="Choose File" accept="image/*"
                      (onSelect)="onImageSelected($event)" class="w-full">
         </p-fileUpload>
       </div>
@@ -206,7 +219,7 @@
       <h4 class="text-sm font-medium text-gray-700 mb-2">Additional Images Preview</h4>
       <div class="grid grid-cols-3 gap-2">
         <div *ngFor="let preview of additionalImagesPreviews" class="relative">
-          <i 
+          <i
             class="pi pi-times absolute top-1 right-1 text-gray-600 cursor-pointer p-1 hover:text-red-500"
             (click)="removeAdditionalImage(preview)">
           </i>
@@ -230,10 +243,11 @@
 
     </div>
 
-   
+
 
 
   </div>
 
-  
+
 </div>
+

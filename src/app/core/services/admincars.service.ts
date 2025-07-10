@@ -63,6 +63,12 @@ export class AdmincarsService {
   }
 
 
+  getAgentBookings(): Observable<any[]> {
+  return this.http.get<any[]>(
+    'http://localhost:5000/api/agent/cars/bookings',
+    { headers: this.getAuthHeaders() }
+  );
+}
 
   getAvailableCars(): Observable<Cars[]> {
   return this.getAllCars().pipe(
@@ -107,6 +113,7 @@ getUnderMaintenanceCarCount(): Observable<number> {
     map(cars => cars.length)
   );
 }
+
 // -----admin dashboard car list see all cars & Approve Car-----
 
 // getALLCarsAdmin(): Observable<Cars[]> {

@@ -9,6 +9,7 @@ import { MessageModule } from 'primeng/message';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { FileUploadModule } from 'primeng/fileupload';
 import { CalendarModule } from 'primeng/calendar';
+import { DropdownModule } from 'primeng/dropdown';
 import { Observable } from 'rxjs';
 
 import { AdmincarsService } from '../../../../core/services/admincars.service';
@@ -26,7 +27,8 @@ import { HttpClient } from '@angular/common/http';
     MessageModule,
     FloatLabelModule,
     FileUploadModule,
-    CalendarModule
+    CalendarModule,
+    DropdownModule
   ],
   templateUrl: './agent-add-car.component.html',
   styleUrls: ['./agent-add-car.component.css']
@@ -44,6 +46,22 @@ export class AgentAddCarComponent implements OnInit {
   documentsPreviews: string[] = [];
 
   carId = '';
+  transmissionOptions = [
+  { label: 'Automatic', value: 'Automatic' },
+  { label: 'Manual', value: 'Manual' }
+];
+
+fuelTypeOptions = [
+  { label: 'Petrol', value: 'Petrol' },
+  { label: 'Diesel', value: 'Diesel' },
+  { label: 'Electric', value: 'Electric' },
+  { label: 'Hybrid', value: 'Hybrid' }
+];
+
+availabilityOptions = [
+  { label: 'Available', value: 'Available' },
+  { label: 'Rented', value: 'Rented' }
+];
 
   constructor(
     private fb: FormBuilder,
@@ -95,7 +113,7 @@ export class AgentAddCarComponent implements OnInit {
       next: car => {
         this.carForm.patchValue(car);
 
-        //previews 
+        //previews
         const imgs: string[] = [];
         const docs: string[] = [];
 
@@ -151,11 +169,15 @@ export class AgentAddCarComponent implements OnInit {
   submitForm(): void {
     if (this.carForm.invalid) return;
 
-    //Build FormData 
+    //Build FormData
     const fd = new FormData();
-    Object.entries(this.carForm.value).forEach(
-      ([k, v]) => v !== null && fd.append(k, v as any)
-    );
+    Object.entries(this.carForm.value).forEach(([k, v]) => {
+  if (v !== null && v !== undefined) {
+    // If the value is an object with a `value` field (like a dropdown), extract it
+    const valueToAppend: string = typeof v === 'object' && v !== null && 'value' in v ? (v as any).value : String(v);
+    fd.append(k, valueToAppend);
+  }
+});
 
     // images/files
     if (this.mainImage) fd.append('carPhotos', this.mainImage);
