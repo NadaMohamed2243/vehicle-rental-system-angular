@@ -6,13 +6,13 @@
     <!-- Pending Customers -->
     <p-tabPanel header="Pending Customers">
       <div class="overflow-x-auto">
-           <p-table 
+           <p-table
           [value]="pendingClients"
           stripedRows
           class="w-full min-w-[800px] "
           [paginator]="true"
           [rows]="5"
-        
+
         >
           <ng-template pTemplate="header">
             <tr>
@@ -65,13 +65,13 @@
     <!-- Approved Customers -->
     <p-tabPanel header="Approved Customers">
       <div class="overflow-x-auto">
-          <p-table 
+          <p-table
           [value]="approvedClients"
           stripedRows
           class="w-full min-w-[800px] "
           [paginator]="true"
           [rows]="5"
-        
+
         >
           <ng-template pTemplate="header">
             <tr>
@@ -121,13 +121,13 @@
     <!-- Rejected Customers -->
     <p-tabPanel header="Rejected Customers">
       <div class="overflow-x-auto">
-          <p-table 
+          <p-table
           [value]="rejectedClients"
           stripedRows
           class="w-full min-w-[800px] "
           [paginator]="true"
           [rows]="5"
-        
+
         >
           <ng-template pTemplate="header">
             <tr>
@@ -162,13 +162,13 @@
     <!-- Banned Customers -->
     <p-tabPanel header="Banned Customers">
       <div class="overflow-x-auto">
-           <p-table 
+           <p-table
           [value]="bannedClients"
           stripedRows
           class="w-full min-w-[800px] "
           [paginator]="true"
           [rows]="5"
-        
+
         >
           <ng-template pTemplate="header">
             <tr>
@@ -203,13 +203,13 @@
     <!-- Suspended Customers -->
     <p-tabPanel header="Suspended Customers">
       <div class="overflow-x-auto">
-          <p-table 
+          <p-table
           [value]="suspendedClients"
           stripedRows
           class="w-full min-w-[800px] "
           [paginator]="true"
-          [rows]="5"
-        
+          [rows]="6"
+
         >
           <ng-template pTemplate="header">
             <tr>
@@ -218,6 +218,7 @@
               <th>Phone</th>
               <th>City</th>
               <th>License</th>
+              <th>End Suspended Date</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-client>
@@ -235,6 +236,7 @@
                   (click)="openLicenseDialog(client.driver_license)"
                 />
               </td>
+              <td>{{client.suspended_until  | date:'yyyy-MM-dd'}}</td>
             </tr>
           </ng-template>
         </p-table>

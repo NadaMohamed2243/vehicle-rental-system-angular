@@ -4,7 +4,7 @@
   <h1 class="text-2xl font-semibold text-blue-500">Overview</h1>
 
   <!-- Summary Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6 ">
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-6 ">
 
     <div class="bg-white rounded-xl p-4 shadow border-l-4 border-l-green-400">
      <div class="flex items-center gap-3 mb-2">
@@ -13,7 +13,7 @@
       </span>
       <p class="text-sm text-gray-400">Total Profit</p>
     </div>
-      <h3 class="text-xl font-bold mt-2">EGP 93,247.38</h3>
+      <h3 class="text-xl font-bold mt-2">EGP {{totalProfit}}</h3>
     </div>
 
     <div class="bg-white rounded-xl p-4 shadow border-l-4 border-l-pink-500">
@@ -23,37 +23,48 @@
       </span>
       <p class="text-sm text-gray-400">Total renteling</p>
       </div>
-      <h3 class="text-xl font-bold mt-2">EGP 8,49,752.01</h3>
+      <h3 class="text-xl font-bold mt-2">EGP {{totalRevenue}}</h3>
     </div>
+
 
     <div class="bg-white rounded-xl p-4 shadow border-l-4 border-l-blue-500">
       <div class="flex items-center gap-3 mb-2">
       <span class="bg-blue-500 p-2 rounded-full w-10 h-10 flex items-center justify-center">
       <i class="pi pi-car text-white text-xl"></i>
       </span>
-      <p class="text-sm text-gray-400">All cars</p>
+      <p class="text-sm text-gray-400">Approved cars</p>
       </div>
-      <h3 class="text-xl font-bold mt-2">8,200</h3>
+      <h3 class="text-xl font-bold mt-2">{{totalCars}} / {{totalCars+rejectedCars+pendingCars}}</h3>
     </div>
 
-    <div class="bg-white rounded-xl p-4 shadow border-l-4 border-l-purple-500">
-      <div class="flex items-center gap-3 mb-2">
-      <span class="bg-purple-500 p-2 rounded-full w-10 h-10 flex items-center justify-center">
-      <i class="pi pi-car text-white text-xl "></i>
-      </span>
-      <p class="text-sm text-gray-400">Rented cars</p>
-      </div>
-      <h3 class="text-xl font-bold mt-2">5,600</h3>
-    </div>
-    
-     <div class="bg-white rounded-xl p-4 shadow border-l-4 border-l-yellow-500">
+    <div class="bg-white rounded-xl p-4 shadow border-l-4 border-l-yellow-500">
       <div class="flex items-center gap-3 mb-2">
       <span class="bg-yellow-500 p-2 rounded-full w-10 h-10 flex items-center justify-center">
-      <i class="pi pi-wrench text-white text-xl animate-spin"></i>
+      <i class="pi pi-users text-white text-xl "></i>
       </span>
-      <p class="text-sm text-gray-400">Under Maintenance cars</p>
+      <p class="text-sm text-gray-400">All Agents</p>
       </div>
-      <h3 class="text-xl font-bold mt-2">834</h3>
+      <h3 class="text-xl font-bold mt-2"> {{ agentsTotal }}</h3>
+    </div>
+
+     <div class="bg-white rounded-xl p-4 shadow border-l-4 border-l-purple-500">
+      <div class="flex items-center gap-3 mb-2">
+      <span class="bg-purple-500 p-2 rounded-full w-10 h-10 flex items-center justify-center">
+      <i class="pi pi-users text-white text-xl "></i>
+      </span>
+      <p class="text-sm text-gray-400">Approved Clients</p>
+      </div>
+      <h3 class="text-xl font-bold mt-2">{{ clientsApproved }} / {{ clientsTotal }}</h3>
+    </div>
+
+    <div class="bg-white rounded-xl p-4 shadow border-l-4 border-l-red-400">
+      <div class="flex items-center gap-3 mb-2">
+      <span class="bg-red-400 p-2 rounded-full w-10 h-10 flex items-center justify-center">
+      <i class="pi pi-car text-white text-xl animate-pulse"></i>
+      </span>
+      <p class="text-sm text-gray-400">Rented Cars</p>
+      </div>
+      <h3 class="text-xl font-bold mt-2">{{rentedCars}}</h3>
     </div>
 
   </div>
@@ -102,7 +113,7 @@
         <td class="px-6 py-4">78,000 EGP</td>
         <td class="px-6 py-4">12 May 2025</td>
       </tr>
-      
+
     </tbody>
     </table>
     </div>
@@ -127,7 +138,7 @@
   </div>
 </div>
 
-   
+
 
 
   <div class="grid grid-cols-2 gap-3 text-sm">
@@ -145,7 +156,7 @@
     </div>
   </div>
 
- 
+
 
 </div>
 

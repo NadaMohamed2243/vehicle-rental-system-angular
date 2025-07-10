@@ -10,13 +10,13 @@
     <!-- All Orders -->
     <p-tabPanel header="All Bookings">
       <div class="overflow-x-auto">
-       <p-table 
+       <p-table
           [value]="allOrders"
           stripedRows
           class="w-full min-w-[800px]"
           [paginator]="true"
           [rows]="5"
-        
+
         >
           <ng-template pTemplate="header">
             <tr>
@@ -63,16 +63,16 @@
              <td>
               <div class="flex gap-1">
              <!-- Cancel Button -->
-              <p-button 
+              <!-- <p-button
                 label="Cancel"
                 severity="help"
                 class="text-xs px-2 py-1 h-10 rounded-sm"
                 [disabled]="order.status !== 'pending'"
                 (click)="cancelOrder(order._id)">
-              </p-button>
+              </p-button> -->
 
               <!-- Delete Button -->
-              <p-button 
+              <p-button
                 icon="pi pi-trash"
                 severity="danger"
                 class="text-xs px-2 py-1 h-10 rounded-sm"
@@ -88,19 +88,19 @@
       </div>
     </p-tabPanel>
 
-  
-   
+
+
 
     <!-- Cancelled Orders -->
     <p-tabPanel header="Cancelled Bookings">
       <div class="overflow-x-auto">
-        <p-table 
+        <p-table
           [value]="cancelledOrders"
           stripedRows
           class="w-full min-w-[800px] "
           [paginator]="true"
           [rows]="5"
-        
+
         >
           <ng-template pTemplate="header">
             <tr>
