@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Cars } from '../interfaces/cars';
+import { environment } from '../../../environments/environment';
 
 export interface Booking {
   clientId: string;
@@ -30,7 +31,7 @@ export class HistoryService {
 
   getHistory() {
     return this.http.get<Booking[]>(
-      'http://localhost:5000/api/client/cars/history'
+      `${environment.apiUrl}/client/cars/history`
     );
   }
 }

@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface Agreement {
   _id?: string; // MongoDB uses _id
@@ -18,7 +19,7 @@ export interface Agreement {
 @Injectable({ providedIn: 'root' })
 export class AgreementService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5000/api/agreements';
+  private apiUrl = `${environment.apiUrl}/agreements`;
 
   generateAgreement(
     bookingId: string

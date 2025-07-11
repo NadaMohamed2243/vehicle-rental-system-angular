@@ -3,6 +3,7 @@ import { Cars } from '../../core/interfaces/cars';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, map, switchMap } from 'rxjs';
 import { GeoLocationService } from './geo-location.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -30,7 +31,7 @@ export class CarService {
 
   // Fetch all cars from API
   getCars(): Observable<Cars[]> {
-    return this.http.get<Cars[]>('http://localhost:5000/api/cars/approved').pipe(
+    return this.http.get<Cars[]>(`${environment.apiUrl}/cars/approved`).pipe(
       map((cars) => {
         this._cars = cars;
         return cars;
@@ -208,17 +209,16 @@ export class CarService {
   }
 
   getAvailableCars(
-  location: string,
-  pickupDate: Date,
-  returnDate: Date
-): Observable<Cars[]> {
-  const params = {
-    pickupLocation: location,
-    pickupDate: pickupDate.toISOString(),
-    returnDate: returnDate.toISOString(),
-  };
+    location: string,
+    pickupDate: Date,
+    returnDate: Date
+  ): Observable<Cars[]> {
+    const params = {
+      pickupLocation: location,
+      pickupDate: pickupDate.toISOString(),
+      returnDate: returnDate.toISOString(),
+    };
 
-  return this.http.get<Cars[]>('http://localhost:5000/api/search', { params });
-}
-
+    return this.http.get<Cars[]>(`${environment.apiUrl}/search`, { params });
+  }
 }

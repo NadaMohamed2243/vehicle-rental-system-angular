@@ -7,14 +7,15 @@ import {
   ClientRegisterData,
   AuthResponse,
   LoginData,
-  RegisterAgentData
+  RegisterAgentData,
 } from '../interfaces/auth';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthapiService {
-  private baseUrl = 'http://localhost:5000/api/auth';
+  private baseUrl = `${environment.apiUrl}/auth`;
   constructor(private http: HttpClient) {}
 
   registerClient(data: FormData): Observable<any> {
@@ -25,7 +26,10 @@ export class AuthapiService {
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => formData.append(key, value));
     formData.append('ID_document', file);
-    return this.http.post<AuthResponse>(`${this.baseUrl}/register/agent`, formData);
+    return this.http.post<AuthResponse>(
+      `${this.baseUrl}/register/agent`,
+      formData
+    );
   }
 
   login(credentials: LoginData): Observable<AuthResponse> {
@@ -33,24 +37,23 @@ export class AuthapiService {
   }
 
   forgotPassword(data: { email: string }) {
-    return this.http.post(`${this.baseUrl}/forgot-password`, data );
+    return this.http.post(`${this.baseUrl}/forgot-password`, data);
   }
 
   resetPassword(token: string, password: string) {
-    return this.http.post(`${this.baseUrl}/reset-password/${token}`, { password });
+    return this.http.post(`${this.baseUrl}/reset-password/${token}`, {
+      password,
+    });
   }
-completeGoogleProfile(data: FormData, token: string) {
-  return this.http.post<{ token: string }>(
-    'http://localhost:5000/api/auth/google/complete-profile',
-    data,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-}
-
-
-
+  completeGoogleProfile(data: FormData, token: string) {
+    return this.http.post<{ token: string }>(
+      `${environment.apiUrl}/auth/google/complete-profile`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  }
 }
