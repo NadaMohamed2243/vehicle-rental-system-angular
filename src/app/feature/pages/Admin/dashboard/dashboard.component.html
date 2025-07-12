@@ -1,4 +1,4 @@
-
+<!-- 
 <div class="flex h-screen custom-bg">
     <app-admin-sidebar></app-admin-sidebar>
 
@@ -11,4 +11,20 @@
 
 
 
+ -->
+
+ <div class="flex h-screen custom-bg">
+  <app-admin-sidebar (sidebarToggle)="toggleSidebar($event)"></app-admin-sidebar>
+
+  <div
+    class="flex-1 px-4 overflow-y-auto transition-all duration-300"
+    [ngClass]="{
+      'ml-56': sidebarExpanded,
+      'ml-14': !sidebarExpanded
+    }"
+  >
+    <app-user-header></app-user-header>
+    <router-outlet></router-outlet>
+  </div>
+</div>
 

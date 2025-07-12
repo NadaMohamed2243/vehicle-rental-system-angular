@@ -14,4 +14,10 @@ import { UserHeaderComponent } from '../../user-header/user-header.component';
 })
 export class DashboardComponent {
 
+  sidebarExpanded = true;
+// Method to handle sidebar toggle from the sidebar component to make it responsive and show components accoding to the sidebar state
+toggleSidebar(expanded: boolean) {
+  this.sidebarExpanded = expanded;
+}
+
 }

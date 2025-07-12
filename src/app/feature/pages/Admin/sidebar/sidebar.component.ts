@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SidebarModule } from 'primeng/sidebar';
 import { RouterModule } from '@angular/router';
+import { EventEmitter, Output } from '@angular/core';
 
 
 @Component({
@@ -18,11 +19,15 @@ import { RouterModule } from '@angular/router';
 export class SidebarComponent {
   sidebarVisible = true;
   hovered = false;
+// used to toggle the sidebar from the dashboard component
+  @Output() sidebarToggle = new EventEmitter<boolean>();
 
-  toggleSidebar() {
-    this.sidebarVisible = !this.sidebarVisible;
-  }
+toggleSidebar() {
+  this.sidebarVisible = !this.sidebarVisible;
+  this.sidebarToggle.emit(this.sidebarVisible);
+}
 
+  
 
 
 }

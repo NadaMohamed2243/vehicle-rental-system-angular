@@ -6,41 +6,11 @@
 
 <h1 class="text-center text-3xl font-bold">Cars List</h1>
 
-<div class="flex flex-col-reverse md:flex-row gap-4 ml-4 mr-4 pl-12 mt-2">
+<div class="flex flex-col-reverse md:flex-row gap-4  mt-2">
   <!-- cars-container -->
   <div class="car-container border border-gray-200 rounded-lg bg-white shadow-sm p-4 flex-1">
 
     <p-tabView class="my-custom-tabs">
-      <!-- <p-tabPanel header="All Cars">
-        <div class="flex mt-4 gap-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4 flex-1">
-            <p-card
-              *ngFor="let car of cars"
-              (click)="selectCar(car)"
-              header=" {{ car.licensePlate }}"
-              class="cursor-pointer hover:shadow-lg transition duration-300"
-            >
-            <hr class="my-2 border-gray-200" />
-            <div class="flex items-center gap-2">
-              <i class="pi pi-car text-gray-400"></i>
-              <p>{{ car.brand }}</p>
-            </div>
-            <div class="flex items-center gap-2">
-              <i class="pi pi-tag text-gray-400"></i>
-              <p>{{ car.type }}</p>
-            </div>
-            <div class="flex items-center gap-2">
-              <i class="pi pi-cog text-gray-400"></i>
-              <p>{{ car.model }}</p>
-            </div>
-            <div class="flex items-center gap-2">
-              <i class="pi pi-dollar text-gray-400"></i>
-              <p>{{ car.totalPricePerDay }} / day</p>
-            </div>
-            </p-card>
-          </div>
-        </div>
-      </p-tabPanel> -->
 
      
        <!--pending cars -->
