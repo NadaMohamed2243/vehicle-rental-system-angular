@@ -58,16 +58,10 @@ export class AdmincarsService {
 
   deleteCar(id: string): Observable<any> {
     return this.http.delete<any>(
-      `http://localhost:5000/api/agent/cars/${id}`,
+      `${environment.apiUrl}/api/agent/cars/${id}`,
       { headers: this.getAuthHeaders() }
     );
   }
-  getAgentBookings(): Observable<any[]> {
-  return this.http.get<any[]>(
-    'http://localhost:5000/api/agent/cars/bookings',
-    { headers: this.getAuthHeaders() }
-  );
-}
 
   getAvailableCars(): Observable<Cars[]> {
     return this.getAllCars().pipe(
@@ -77,25 +71,13 @@ export class AdmincarsService {
     );
   }
 
-  getRentedCars(): Observable<Cars[]> {
-    return this.getAllCars().pipe(
-      map((cars) => cars.filter((car) => car.availabilityStatus === 'Rented'))
-    );
-  }
 
   getAgentBookings(): Observable<any[]> {
   return this.http.get<any[]>(
-    'http://localhost:5000/api/agent/cars/bookings',
+    `${environment.apiUrl}/api/agent/cars/bookings`,
     { headers: this.getAuthHeaders() }
   );
 }
-  getUnderMaintenanceCars(): Observable<Cars[]> {
-    return this.getAllCars().pipe(
-      map((cars) =>
-        cars.filter((car) => car.availabilityStatus === 'Under Maintenance')
-      )
-    );
-  }
 
   // -----admin dashboard car list see all cars & Approve Car-----
 
