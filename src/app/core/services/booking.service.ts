@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface BookingRequest {
   carId: string;
@@ -36,12 +37,16 @@ export interface BookingResponse {
   iframeUrl: string;
 }
 
+export interface ResumePaymentResponse {
+  iframeUrl: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class BookingService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5000/api/bookings';
+  private apiUrl = `${environment.apiUrl}/bookings`;
 
   bookAndPay(bookingData: BookingRequest): Observable<BookingResponse> {
     return this.http.post<BookingResponse>(
@@ -52,7 +57,20 @@ export class BookingService {
 
   getCarBookingHistory(carId: string): Observable<Booking[]> {
     return this.http.get<Booking[]>(
-      `http://localhost:5000/api/client/cars/bookings/${carId}`
+      `${environment.apiUrl}/client/cars/bookings/${carId}`
+    );
+  }
+
+  refundBooking(bookingId: string): Observable<any> {
+    return this.http.post<any>(
+      `${environment.apiUrl}/payments/refund/${bookingId}`,
+      {}
+    );
+  }
+
+  resumePayment(bookingId: string): Observable<ResumePaymentResponse> {
+    return this.http.get<ResumePaymentResponse>(
+      `${environment.apiUrl}/payments/resume/${bookingId}`
     );
   }
 }

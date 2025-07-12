@@ -5,3 +5,102 @@ html {
 section{
   scroll-margin-top: 50px;
 }
+
+
+.agreement-container {
+  max-width: 100%;
+}
+
+.signature-pad-container {
+  position: relative;
+  min-height: 200px;
+}
+
+.signature-pad {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: white;
+}
+
+.signature-section {
+  margin-top: 1rem;
+}
+
+.post-signing-section {
+  animation: slideIn 0.3s ease-in-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.document-actions button {
+  transition: all 0.2s ease;
+}
+
+.document-actions button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.grid-cols-1.md\:grid-cols-2 {
+  gap: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .agreement-container {
+    padding: 0.5rem;
+  }
+
+  .signature-pad-container {
+    min-height: 150px;
+  }
+
+  .flex {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .flex.justify-between {
+    align-items: stretch;
+  }
+
+  .grid-cols-1.md\:grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .post-signing-section {
+    padding: 1rem;
+  }
+
+  .document-actions button {
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* Enhance button loading states */
+.p-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.p-button .pi-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

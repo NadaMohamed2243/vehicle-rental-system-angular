@@ -167,34 +167,84 @@ export class RegisterComponent implements OnInit{
   },{ validators:this._customValidator.matchPasswords() });
 
 
+  // onSubmit() {
+  //   if (this.registerForm.valid  && this.selectedFile) {
+  //     console.log('Sending data to API', this.registerForm.value);
+  //     // Api
+  //     const formData = new FormData();
+  //     formData.append('first_name', this.registerForm.get('first_name')?.value);
+  //     formData.append('last_name', this.registerForm.get('last_name')?.value);
+  //     formData.append('email', this.registerForm.get('email')?.value);
+  //     formData.append('password', this.registerForm.get('password')?.value);
+  //     formData.append('phone_number', this.registerForm.get('phone_number')?.value);
+  //     formData.append('location', this.registerForm.get('location')?.value);
+  //     formData.append('driver_license', this.selectedFile);
+  //     formData.append('lat', this.registerForm.get('lat')?.value );
+  //     formData.append('lng', this.registerForm.get('lng')?.value );
+  //     this._authService.registerClient(formData).subscribe({
+  // next: (response) => {
+  //     console.log('Register success:', response);
+  //     localStorage.setItem('token', response.token);
+  //     // Navigate to another page
+  //     this._router.navigate(['/home']);
+  //   },
+  //   error: err => {
+  //     this.error= err.error.error
+  //     console.log(err.error.error);
+  //   }
+  //   });
+  //   } else {
+  //     this.registerForm.markAllAsTouched();
+  //   }
+  // }
+
+
   onSubmit() {
-    if (this.registerForm.valid  && this.selectedFile) {
-      console.log('Sending data to API', this.registerForm.value);
-      // Api
-      const formData = new FormData();
-      formData.append('first_name', this.registerForm.get('first_name')?.value);
-      formData.append('last_name', this.registerForm.get('last_name')?.value);
-      formData.append('email', this.registerForm.get('email')?.value);
-      formData.append('password', this.registerForm.get('password')?.value);
-      formData.append('phone_number', this.registerForm.get('phone_number')?.value);
-      formData.append('location', this.registerForm.get('location')?.value);
-      formData.append('driver_license', this.selectedFile);
-      formData.append('lat', this.registerForm.get('lat')?.value );
-      formData.append('lng', this.registerForm.get('lng')?.value );
-      this._authService.registerClient(formData).subscribe({
-  next: (response) => {
-      console.log('Register success:', response);
-      localStorage.setItem('token', response.token);
-      // Navigate to another page
-      this._router.navigate(['/home']);
-    },
-    error: err => {
-      this.error= err.error.error
-      console.log(err.error.error);
-    }
+  if (this.registerForm.valid && this.selectedFile) {
+    const formData = new FormData();
+    formData.append('first_name', this.registerForm.get('first_name')?.value);
+    formData.append('last_name', this.registerForm.get('last_name')?.value);
+    formData.append('email', this.registerForm.get('email')?.value);
+    formData.append('password', this.registerForm.get('password')?.value);
+    formData.append('phone_number', this.registerForm.get('phone_number')?.value);
+    formData.append('location', this.registerForm.get('location')?.value);
+    formData.append('driver_license', this.selectedFile);
+    formData.append('lat', this.registerForm.get('lat')?.value);
+    formData.append('lng', this.registerForm.get('lng')?.value);
+
+    this._authService.registerClient(formData).subscribe({
+      next: (response) => {
+        console.log('Register success:', response);
+        localStorage.setItem('token', response.token);
+
+        // Check for pending booking
+        const pendingBooking = localStorage.getItem('pendingBooking');
+        if (pendingBooking) {
+          const bookingData = JSON.parse(pendingBooking);
+          localStorage.removeItem('pendingBooking');
+
+          this._router.navigate(['/cars'], {
+            queryParams: {
+              carId: bookingData.carId,
+              pickupDate: bookingData.pickupDate,
+              dropoffDate: bookingData.dropoffDate,
+              location: bookingData.location,
+            },
+          });
+
+          return; // Stop here if redirecting to cars page
+        }
+
+        this._router.navigate(['/home']);
+      },
+      error: (err) => {
+        this.error = err.error.error;
+        console.log(err.error.error);
+      },
     });
-    } else {
-      this.registerForm.markAllAsTouched();
-    }
+  } else {
+    this.registerForm.markAllAsTouched();
   }
+}
+
 }

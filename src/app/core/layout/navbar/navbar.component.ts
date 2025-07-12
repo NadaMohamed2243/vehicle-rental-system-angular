@@ -1,6 +1,6 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, inject, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -12,7 +12,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 export class NavbarComponent {
   dropdownOpen = false;
   mobileMenuOpen = false;
-
+  _router = inject(Router)
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   toggleDropdown(): void {
@@ -32,10 +32,29 @@ export class NavbarComponent {
   }
 
   navigateToSection(sectionId: string): void {
-    this.closeDropdown();
-    this.closeMobileMenu();
+  this.closeDropdown();
+  this.closeMobileMenu();
 
-    if (isPlatformBrowser(this.platformId)) {
+  if (isPlatformBrowser(this.platformId)) {
+
+
+    // First navigate to home if we're not already there
+    const currentRoute = this._router.url.split('?')[0];
+    if (currentRoute !== '/') {
+      this._router.navigate(['/']).then(() => {
+        setTimeout(() => {
+          const element = document.getElementById(sectionId);
+          if (element) {
+            element.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        }, 100);
+      });
+
+
+    } else {
       setTimeout(() => {
         const element = document.getElementById(sectionId);
         if (element) {
@@ -47,6 +66,5 @@ export class NavbarComponent {
       }, 100);
     }
   }
-
-
+}
 }

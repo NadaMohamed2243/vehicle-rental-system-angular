@@ -12,182 +12,404 @@
   <app-footer></app-footer>
 
 
-  <div class="card flex justify-center">
-    <p-drawer [(visible)]="visible" position="right" styleClass="!w-full md:!w-80 lg:!w-[30rem]">
-      <ng-template #header>
-        <div class="flex items-center gap-2">
-          <p-avatar
-            image="https://plus.unsplash.com/premium_photo-1682089468743-5a31e96f8dd3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            shape="circle" />
-          <span class="font-bold">{{selectedCar?.agent?.company_name}}</span>
-        </div>
-      </ng-template>
-      <ng-template #content>
-        <div>
-          <app-car-slider [carImages]="selectedCar?.carPhotos"></app-car-slider>
-        </div>
-        <div class="flex justify-between pt-5">
-          <p class="font-semibold text-[#8c8c8c] text-sm">{{selectedCar?.brand}}</p>
-          <button (click)="toggleFavorite()" class="bg-gray-50 p-1 rounded-full shadow-md hover:bg-gray-100"
-            aria-label="Add to favorites">
-            @if (isFavorite) {
-            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"
-              class="w-6 h-6 text-red-600">
-              <path
-                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-            </svg>
-            }
-            @else {
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-              class="w-6 h-6 text-red-500 hover:text-red-600 transition-colors duration-200" stroke="currentColor"
-              stroke-width="1.8">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-            </svg>
-
-            }
-          </button>
-        </div>
-        <div class="flex justify-between pb-3">
-          <p class="font-bold text-lg">{{selectedCar?.brand}} {{selectedCar?.model}} {{selectedCar?.year}}</p>
-          <p class="font-semibold">EG {{selectedCar?.totalPricePerHour}} <span
-              class="text-sm text-[#8c8c8c]">/hour</span>
-          </p>
-        </div>
-        <div class="card">
-          <p-tabs value="0">
-            <p-tablist>
-              <p-tab value="0">Rent details</p-tab>
-              <p-tab value="1">Vechicle info</p-tab>
-            </p-tablist>
-            <p-tabpanels>
-              <p-tabpanel value="0">
-                @if (selectedCar?.agent?.location) {
-                <app-map [carLocation]="selectedCarLocation" [userLocation]="userLocation || undefined"
-                  [enableDeliverySelection]="true" (deliveryLocationSelected)="onDeliveryLocationSelected($event)">
-                </app-map>
-                } @else {
-                <div class="w-full h-[250px] bg-gray-100 rounded-lg flex items-center justify-center">
-                  <p class="text-gray-500">Location not available</p>
+   <div class="card flex justify-center">
+        <p-drawer [(visible)]="visible" position="right" styleClass="!w-full md:!w-80 lg:!w-[30rem]">
+            <ng-template #header>
+                <div class="flex items-center gap-2">
+                    <p-avatar
+                        image="https://plus.unsplash.com/premium_photo-1682089468743-5a31e96f8dd3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        shape="circle" />
+                    <span class="font-bold">{{selectedCar?.agent?.company_name}}</span>
                 </div>
-                }
-                <div class="card flex py-5">
-                  <div class="flex flex-col gap-5">
-                    <div class="flex flex-col gap-2">
-                      <p class="text-xs font-bold">PICK-UP DATA & TIME</p>
-                      <p-datepicker [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [showTime]="true"
-                        [(ngModel)]="pickupDate" />
-                    </div>
-                    <div class="flex flex-col gap-2">
-                      <p class="text-xs font-bold">DROP-OFF DATA & TIME</p>
-                      <p-datepicker [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [showTime]="true"
-                        [(ngModel)]="dropoffDate" />
-                    </div>
-                    @if (selectedCar?.with_driver) {
-                    <div class="mt-6 mb-3 flex justify-between items-center">
-                      <span class="text-xs font-bold">WITH DRIVER</span>
-                      <p-toggleswitch [(ngModel)]="withDriver" />
-                    </div>
-                    }
-                  </div>
-                  <p-divider layout="vertical" />
-                  <div class="flex flex-col gap-2 w-50">
-                    <div class="flex justify-between items-center">
-                      <p class="text-xs font-bold">CAR RENTAL</p>
-                      <p class="text-sm font-semibold">EG {{(selectedCar?.totalPricePerHour ?? 0)
-                        * (rentalDuration ?? 0) | number:'1.2-2'}}</p>
-                    </div>
-
-                    @if (withDriver) {
-                    <div class="flex justify-between items-center">
-                      <p class="text-xs font-bold">DRIVER FEE</p>
-                      <p class="text-sm font-semibold">EG {{25 * rentalDuration | number:'1.2-2'}}
-                      </p>
-                    </div>
-                    }
-
-                    <!-- <div class="flex justify-between items-center">
-                                            <p class="text-xs font-bold">INSURANCE</p>
-                                            <p class="text-sm font-semibold">{{selectedInsurance !== 'No insurance' ?
-                                                '$52.00' : '$0.00'}}</p>
+            </ng-template>
+            <ng-template #content>
+                <div>
+                    <app-car-slider [carImages]="selectedCar?.carPhotos"></app-car-slider>
+                </div>
+                <div class="flex justify-between pt-5">
+                    <p class="font-semibold text-[#8c8c8c] text-sm">{{selectedCar?.brand}}</p>
+                </div>
+                <div class="flex justify-between pb-3">
+                    <p class="font-bold text-lg">{{selectedCar?.brand}} {{selectedCar?.model}} {{selectedCar?.year}}</p>
+                    <p class="font-semibold">EG {{selectedCar?.totalPricePerHour}} <span
+                            class="text-sm text-[#8c8c8c]">/hour</span></p>
+                </div>
+                <div class="card">
+                    <p-tabs value="0">
+                        <p-tablist>
+                            <p-tab value="0">Rent details</p-tab>
+                            <p-tab value="1">Vehicle info</p-tab>
+                            <p-tab value="2">Booking History</p-tab>
+                        </p-tablist>
+                        <p-tabpanels>
+                            <p-tabpanel value="0">
+                                @if (selectedCar?.agent?.location) {
+                                <app-map [carLocation]="selectedCarLocation" [userLocation]="userLocation || undefined"
+                                    [enableDeliverySelection]="true"
+                                    (deliveryLocationSelected)="onDeliveryLocationSelected($event)">
+                                </app-map>
+                                } @else {
+                                <div class="w-full h-[250px] bg-gray-100 rounded-lg flex items-center justify-center">
+                                    <p class="text-gray-500">Location not available</p>
+                                </div>
+                                }
+                                <div class="card flex py-5">
+                                    <div class="flex flex-col gap-5">
+                                        <div class="flex flex-col gap-2">
+                                            <p class="text-xs font-bold">PICK-UP DATE & TIME</p>
+                                            <p-datepicker [iconDisplay]="'input'" [showIcon]="true" inputId="pickupDate"
+                                                [showTime]="true" [(ngModel)]="pickupDate" [minDate]="minDate"
+                                                (ngModelChange)="onPickupDateChange()" [showButtonBar]="true"
+                                                placeholder="Select pickup date & time" />
+                                            @if (pickupDate && pickupDate < minDate) { <small
+                                                class="text-red-500 text-xs">Pickup date cannot be in the past</small>
+                                                }
+                                        </div>
+                                        <div class="flex flex-col gap-2">
+                                            <p class="text-xs font-bold">DROP-OFF DATE & TIME</p>
+                                            <p-datepicker [iconDisplay]="'input'" [showIcon]="true"
+                                                inputId="dropoffDate" [showTime]="true" [(ngModel)]="dropoffDate"
+                                                [minDate]="minDropoffDate" (ngModelChange)="onDropoffDateChange()"
+                                                [showButtonBar]="true" placeholder="Select drop-off date & time" />
+                                            @if (dropoffDate && pickupDate && dropoffDate <= pickupDate) { <small
+                                                class="text-red-500 text-xs">Drop-off date must be after pickup
+                                                date</small>
+                                                }
+                                        </div>
+                                        @if (selectedCar?.with_driver) {
+                                        <div class="mt-6 mb-3 flex justify-between items-center">
+                                            <span class="text-xs font-bold">WITH DRIVER</span>
+                                            <p-toggleswitch [(ngModel)]="withDriver" />
+                                        </div>
+                                        }
+                                    </div>
+                                    <p-divider layout="vertical" />
+                                    <div class="flex flex-col gap-2 w-50">
+                                        <div class="flex justify-between items-center">
+                                            <p class="text-xs font-bold">CAR RENTAL</p>
+                                            <p class="text-sm font-semibold">EG {{(selectedCar?.totalPricePerHour || 0)
+                                                * rentalDuration | number:'1.2-2'}}</p>
                                         </div>
 
-                                        <div class="grid grid-cols-1 gap-y-3">
-                                            @for (in of insurance; track $index) {
-                                            <div class="flex items-center">
-                                                <p-radiobutton name="group" [value]="in"
-                                                    [(ngModel)]="selectedInsurance" />
-                                                <label [for]="in" class="ml-2"> {{ in }} </label>
-                                            </div>
+                                        @if (withDriver) {
+                                        <div class="flex justify-between items-center">
+                                            <p class="text-xs font-bold">DRIVER FEE</p>
+                                            <p class="text-sm font-semibold">EG {{25 * rentalDuration | number:'1.2-2'}}
+                                            </p>
+                                        </div>
+                                        }
+
+                                        <div class="flex justify-between items-center my-4">
+                                            <p class="text-xs font-bold">SALES TAXES</p>
+                                            <p class="text-sm font-semibold">$13.06</p>
+                                        </div>
+
+                                        <div class="flex justify-between items-center">
+                                            <p class="text-lg font-bold">Total Price</p>
+                                            <p class="text-lg font-semibold">EG {{totalPrice | number:'1.2-2'}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w-full h-[80px] bg-light-blue flex justify-between items-center rounded-lg">
+                                    <div class="ps-5">
+                                        <p class="text-xs text-white font-semibold">BOOK VEHICLE</p>
+                                        <p class="text-sm text-white font-semibold">{{selectedCar?.brand}}
+                                            {{selectedCar?.model}}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-white font-semibold">FREE BOOKING</p>
+                                        <p class="text-sm text-white font-semibold">10 minutes</p>
+                                    </div>
+                                    <div class="h-full">
+                                        <button
+                                            class="bg-[#3e9efb] h-full w-[80px] rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                            [disabled]="isBooking || !pickupDate || !dropoffDate || !isValidDateRange()"
+                                            (click)="bookVehicle()">
+                                            @if (isBooking) {
+                                            <i class="pi pi-spinner pi-spin" style="color: white"></i>
+                                            } @else {
+                                            <i class="pi pi-angle-right" style="color: white"></i>
                                             }
-                                        </div> -->
+                                        </button>
+                                    </div>
+                                </div>
+                            </p-tabpanel>
+                            <p-tabpanel value="1">
+                                <div class="flex flex-col gap-3">
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-sm font-bold">Brand</p>
+                                        <p class="text-sm">{{selectedCar?.brand}}</p>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-sm font-bold">Model</p>
+                                        <p class="text-sm">{{selectedCar?.model}}</p>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-sm font-bold">Year</p>
+                                        <p class="text-sm">{{selectedCar?.year}}</p>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-sm font-bold">Body Style</p>
+                                        <p class="text-sm">{{selectedCar?.type}}</p>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-sm font-bold">Transmission</p>
+                                        <p class="text-sm">{{selectedCar?.transmission}}</p>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-sm font-bold">Fuel Type</p>
+                                        <p class="text-sm">{{selectedCar?.fuel_type}}</p>
+                                    </div>
+                                </div>
+                            </p-tabpanel>
+                            <p-tabpanel value="2">
+                                <div class="flex flex-col gap-3">
+                                    @if (isLoadingBookingHistory) {
+                                    <div class="flex justify-center items-center py-8">
+                                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#007efc]">
+                                        </div>
+                                    </div>
+                                    }
 
-                    <div class="flex justify-between items-center my-4">
-                      <p class="text-xs font-bold">SALES TAXES</p>
-                      <p class="text-sm font-semibold">$13.06</p>
+                                    @if (!isLoadingBookingHistory && carBookingHistory.length === 0) {
+                                    <div class="text-center py-8">
+                                        <i class="pi pi-calendar text-gray-400 text-4xl mb-2"></i>
+                                        <p class="text-gray-500">No booking history available for this car</p>
+                                    </div>
+                                    }
+
+                                    @if (!isLoadingBookingHistory && carBookingHistory.length > 0) {
+                                    <div class="space-y-3 max-h-[300px] overflow-y-auto">
+                                        @for (booking of carBookingHistory; track booking._id) {
+                                        <div class="border rounded-lg p-3"
+                                            [class.border-blue-200]="isFutureBooking(booking.startDate)"
+                                            [class.bg-blue-50]="isFutureBooking(booking.startDate)"
+                                            [class.border-gray-200]="!isFutureBooking(booking.startDate)"
+                                            [class.bg-gray-50]="!isFutureBooking(booking.startDate)">
+                                            <div class="flex justify-between items-start mb-2">
+                                                <span class="text-xs font-semibold"
+                                                    [class.text-blue-700]="isFutureBooking(booking.startDate)"
+                                                    [class.text-gray-700]="!isFutureBooking(booking.startDate)">
+                                                    Booking #{{ booking._id.slice(-6) }}
+                                                </span>
+                                                <span class="text-xs px-2 py-1 rounded-full font-medium"
+                                                    [class.bg-blue-100]="isFutureBooking(booking.startDate)"
+                                                    [class.text-blue-800]="isFutureBooking(booking.startDate)"
+                                                    [class.bg-gray-100]="!isFutureBooking(booking.startDate)"
+                                                    [class.text-gray-800]="!isFutureBooking(booking.startDate)">
+                                                    {{ isFutureBooking(booking.startDate) ? 'Upcoming' : 'Past' }}
+                                                </span>
+                                            </div>
+
+                                            <div class="space-y-1 text-xs">
+                                                <div class="flex items-center gap-2">
+                                                    <i class="pi pi-calendar text-green-500"></i>
+                                                    <span class="text-gray-600">Start:</span>
+                                                    <span class="font-medium">{{ formatBookingDate(booking.startDate)
+                                                        }}</span>
+                                                </div>
+                                                <div class="flex items-center gap-2">
+                                                    <i class="pi pi-calendar text-red-500"></i>
+                                                    <span class="text-gray-600">End:</span>
+                                                    <span class="font-medium">{{ formatBookingDate(booking.endDate)
+                                                        }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        }
+                                    </div>
+                                    }
+                                </div>
+                            </p-tabpanel>
+                        </p-tabpanels>
+                    </p-tabs>
+                </div>
+            </ng-template>
+        </p-drawer>
+    </div>
+
+    <p-dialog [(visible)]="showAgreementModal" [modal]="true" [style]="{width: '80vw', maxWidth: '800px'}"
+        header="Digital Agreement Signing" [closable]="false">
+
+        @if (agreement) {
+        <div class="agreement-container">
+            <!-- PDF Viewer -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-3">Please review and sign the rental agreement:</h3>
+                <p class="text-sm text-gray-600 mb-3">
+                    Your digital signature will be embedded directly into the PDF document.
+                </p>
+
+                <!-- Show signed document if available, otherwise show original -->
+                @if (agreement.status === 'signed' && agreement.signedDocumentUrl) {
+                <div class="mb-2">
+                    <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                        ✓ Viewing signed document
+                    </span>
+                </div>
+                <iframe [src]="agreement.signedDocumentUrl | safeUrl" width="100%" height="400px"
+                    class="border rounded-lg">
+                </iframe>
+                } @else {
+                <iframe [src]="agreement.documentUrl | safeUrl" width="100%" height="400px" class="border rounded-lg">
+                </iframe>
+                }
+            </div>
+
+            <!-- Pre-Signing Section -->
+            @if (agreement.status !== 'signed') {
+            <div class="signature-section bg-gray-50 p-4 rounded-lg">
+                <h4 class="text-md font-semibold mb-3">Digital Signature:</h4>
+
+                <!-- Modern Signature Canvas -->
+                <div class="signature-pad-container border-2 border-dashed border-gray-300 rounded-lg p-4 bg-white">
+                    <!-- Only render signature canvas in browser -->
+                    @if (isBrowser) {
+                    <app-signature-canvas [canvasWidth]="500" [canvasHeight]="200"
+                        [label]="'Please provide your digital signature:'" [showPreview]="true" [penColor]="'#1f2937'"
+                        [backgroundColor]="'#ffffff'" [minWidth]="1.5" [maxWidth]="3.5"
+                        (signatureChange)="onSignatureChange($event)" (signatureStart)="onSignatureStart()"
+                        (signatureEnd)="onSignatureEnd()">
+                    </app-signature-canvas>
+                    } @else {
+                    <div
+                        class="flex items-center justify-center h-[200px] bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+                        <p class="text-gray-500">Signature pad loading...</p>
+                    </div>
+                    }
+                </div>
+
+                <!-- Pre-Signing Controls -->
+                <div class="flex justify-between items-center mt-4">
+                    <div class="flex gap-2">
+                        <button pButton type="button" label="Skip & Proceed" class="p-button-secondary p-button-sm"
+                            (click)="skipSigningAndProceed()" title="Proceed to payment without signing">
+                        </button>
                     </div>
 
-                    <div class="flex justify-between items-center">
-                      <p class="text-lg font-bold">Total Price</p>
-                      <p class="text-lg font-semibold">EG {{totalPrice | number:'1.2-2'}}</p>
+                    <div class="flex gap-2">
+                        <button pButton type="button" icon="pi pi-check" class="p-button-primary p-button-sm"
+                            (click)="submitSignature()" [disabled]="!signatureData || isSubmittingSignature">
+                            @if (isSubmittingSignature) {
+                            <i class="pi pi-spinner pi-spin mr-2"></i>
+                            Signing...
+                            } @else {
+                            Sign Agreement
+                            }
+                        </button>
                     </div>
-                  </div>
                 </div>
-                <div class="w-full h-[80px] bg-light-blue flex justify-between items-center rounded-lg">
-                  <div class="ps-5">
-                    <p class="text-xs text-white font-semibold">BOOK VECHICLE</p>
-                    <p class="text-sm text-white font-semibold">{{selectedCar?.brand}}
-                      {{selectedCar?.model}}</p>
-                  </div>
-                  <div>
-                    <p class="text-xs text-white font-semibold">FREE BOOKING</p>
-                    <p class="text-sm text-white font-semibold">10 minutes</p>
-                  </div>
-                  <div class="h-full">
-                    <button
-                      class="bg-[#3e9efb] h-full w-[80px] rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                      [disabled]="isBooking || !pickupDate || !dropoffDate" (click)="bookVehicle()">
-                      @if (isBooking) {
-                      <i class="pi pi-spinner pi-spin" style="color: white"></i>
-                      } @else {
-                      <i class="pi pi-angle-right" style="color: white"></i>
-                      }
-                    </button>
-                  </div>
+
+                <!-- Agreement Status -->
+                <div class="mt-4 p-3 rounded-lg bg-yellow-100 text-yellow-800">
+                    <div class="flex items-center">
+                        <i class="pi pi-clock"></i>
+                        <span class="ml-2 font-medium">Status: Pending Signature</span>
+                        <span class="ml-2 text-sm">- Signature required before payment</span>
+                    </div>
                 </div>
-              </p-tabpanel>
-              <p-tabpanel value="1">
-                <div class="flex flex-col gap-3">
-                  <div class="flex justify-between items-center">
-                    <p class="text-sm font-bold">Brand</p>
-                    <p class="text-sm">{{selectedCar?.brand}}</p>
-                  </div>
-                  <div class="flex justify-between items-center">
-                    <p class="text-sm font-bold">Model</p>
-                    <p class="text-sm">{{selectedCar?.model}}</p>
-                  </div>
-                  <div class="flex justify-between items-center">
-                    <p class="text-sm font-bold">Year</p>
-                    <p class="text-sm">{{selectedCar?.year}}</p>
-                  </div>
-                  <div class="flex justify-between items-center">
-                    <p class="text-sm font-bold">Body Style</p>
-                    <p class="text-sm">{{selectedCar?.type}}</p>
-                  </div>
-                  <div class="flex justify-between items-center">
-                    <p class="text-sm font-bold">Transmission</p>
-                    <p class="text-sm">{{selectedCar?.transmission}}</p>
-                  </div>
-                  <div class="flex justify-between items-center">
-                    <p class="text-sm font-bold">Fuel Type</p>
-                    <p class="text-sm">{{selectedCar?.fuel_type}}</p>
-                  </div>
+            </div>
+            }
+
+            <!-- Post-Signing Section -->
+            @if (agreement.status === 'signed') {
+            <div class="post-signing-section bg-green-50 p-4 rounded-lg border border-green-200">
+                <div class="flex items-center mb-4">
+                    <i class="pi pi-check-circle text-green-600 text-2xl mr-3"></i>
+                    <div>
+                        <h4 class="text-lg font-semibold text-green-800">Agreement Successfully Signed!</h4>
+                        <p class="text-sm text-green-700">Your digital signature has been applied to the document.</p>
+                    </div>
                 </div>
-              </p-tabpanel>
-            </p-tabpanels>
-          </p-tabs>
+
+                <!-- Agreement Status -->
+                <div class="mb-4 p-3 rounded-lg bg-green-100 text-green-800">
+                    <div class="flex items-center">
+                        <i class="pi pi-check-circle"></i>
+                        <span class="ml-2 font-medium">Status: Signed</span>
+                        @if (agreement.signedAt) {
+                        <span class="ml-2 text-sm">(Signed on {{ agreement.signedAt | date:'medium' }})</span>
+                        }
+                    </div>
+                </div>
+
+                <!-- Document Actions -->
+                <div class="bg-white p-4 rounded-lg border border-green-200 mb-4">
+                    <h5 class="font-semibold text-gray-900 mb-3">Document Actions:</h5>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <button pButton type="button" label="Review Signed Document" icon="pi pi-file-pdf"
+                            class="p-button-outlined p-button-sm w-full" (click)="reviewSignedDocument()"
+                            title="Open the signed document in a new window" [disabled]="!agreement.documentUrl">
+                        </button>
+                        <button pButton type="button" icon="pi pi-download" class="p-button-outlined p-button-sm w-full"
+                            (click)="downloadAgreement()" [disabled]="isDownloading">
+                            @if (isDownloading) {
+                            <i class="pi pi-spinner pi-spin mr-2"></i>
+                            Downloading...
+                            } @else {
+                            {{ agreement.status === 'signed' ? 'Download Signed PDF' : 'Download PDF' }}
+                            }
+                        </button>
+                    </div>
+
+                    @if (agreement.status === 'signed' && agreement.signatureImageUrl) {
+                    <div class="mt-3 p-2 bg-green-50 rounded border border-green-200">
+                        <div class="flex items-center text-xs text-green-700">
+                            <i class="pi pi-check-circle mr-2"></i>
+                            Your signature has been embedded in the PDF document
+                        </div>
+                    </div>
+                    }
+                </div>
+
+                <!-- Payment Confirmation -->
+                <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <div class="flex items-start mb-3">
+                        <i class="pi pi-info-circle text-blue-600 mr-2 mt-0.5"></i>
+                        <div class="text-sm text-blue-800">
+                            <p class="font-medium mb-1">Ready to Proceed:</p>
+                            <p>Your agreement has been signed successfully. You can now proceed to payment to complete
+                                your booking.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center mt-4">
+                        <div class="text-sm text-blue-700">
+                            <p class="font-medium">Booking Total: <span class="text-lg">EG {{totalPrice |
+                                    number:'1.2-2'}}</span></p>
+                        </div>
+                        <button pButton type="button" label="Proceed to Payment" icon="pi pi-arrow-right"
+                            class="p-button-primary p-button-sm" (click)="proceedToPayment()"
+                            [disabled]="isProcessingPayment">
+                            @if (isProcessingPayment) {
+                            <i class="pi pi-spinner pi-spin mr-2"></i>
+                            Processing...
+                            } @else {
+                            Proceed to Payment
+                            }
+                        </button>
+                    </div>
+                </div>
+            </div>
+            }
+
+            <!-- Footer Notice -->
+            <div class="mt-6 pt-4 border-t bg-blue-50 p-3 rounded-lg">
+                <div class="flex items-start">
+                    <i class="pi pi-info-circle text-blue-600 mr-2 mt-0.5"></i>
+                    <div class="text-sm text-blue-800">
+                        <p class="font-medium">Important:</p>
+                        @if (agreement.status !== 'signed') {
+                        <p>After signing this agreement, you will be able to review and download the document before
+                            proceeding to payment.</p>
+                        } @else {
+                        <p>Keep a copy of this signed agreement for your records. You can download it anytime from your
+                            booking history.</p>
+                        }
+                    </div>
+                </div>
+            </div>
         </div>
-      </ng-template>
-    </p-drawer>
-  </div>
+        }
+    </p-dialog>
 </app-layout>
