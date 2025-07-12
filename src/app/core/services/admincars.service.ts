@@ -58,11 +58,17 @@ export class AdmincarsService {
 
   deleteCar(id: string): Observable<any> {
     return this.http.delete<any>(
-      `${environment.apiUrl}/api/agent/cars/${id}`,
+      `${environment.apiUrl}/agent/cars/${id}`,
       { headers: this.getAuthHeaders() }
     );
   }
 
+  getAgentBookings(): Observable<any[]> {
+  return this.http.get<any[]>(
+    `${environment.apiUrl}/agent/cars/bookings`,
+    { headers: this.getAuthHeaders() }
+  );
+}
   getAvailableCars(): Observable<Cars[]> {
     return this.getAllCars().pipe(
       map((cars) =>
@@ -71,31 +77,21 @@ export class AdmincarsService {
     );
   }
 
-
-  getAgentBookings(): Observable<any[]> {
-  return this.http.get<any[]>(
-    `${environment.apiUrl}/api/agent/cars/bookings`,
-    { headers: this.getAuthHeaders() }
-  );
-}
-
-  // -----admin dashboard car list see all cars & Approve Car-----
-
   getRentedCars(): Observable<Cars[]> {
     return this.getAllCars().pipe(
       map((cars) => cars.filter((car) => car.availabilityStatus === 'Rented'))
     );
   }
 
-getUnderMaintenanceCars(): Observable<Cars[]> {
-  return this.getAllCars().pipe(
-    map(cars => cars.filter(car => car.availabilityStatus === 'Under Maintenance'))
-  );
-}
+  getUnderMaintenanceCars(): Observable<Cars[]> {
+    return this.getAllCars().pipe(
+      map(cars => cars.filter(car => car.availabilityStatus === 'Under Maintenance'))
+    );
+  }
 
-// ------------------ AGENT Counts ------------------
+  // ------------------ AGENT Counts ------------------
 
-getAgentCarCount(): Observable<number> {
+  getAgentCarCount(): Observable<number> {
   return this.getAllCars().pipe(
     map(cars => cars.length)
   );
@@ -199,4 +195,48 @@ getUnderMaintenanceCarCount(): Observable<number> {
       headers: this.getAuthHeaders(),
     });
   }
+   getAllBookings(): Observable<any[]> {
+  return this.http.get<any[]>(
+    `${environment.apiUrl}/bookings`,
+    { headers: this.getAuthHeaders() }
+  );
+}
+ // ------------------ ADMIN Counts ------------------
+
+  getTotalApprovedCarCount(): Observable<number> {
+    return this.getapprovedCarsAdmin().pipe(
+      map(cars => cars.length)
+    );
+  }
+
+  getAvailableCarCountAdmin(): Observable<number> {
+    return this.getAvailableCarsAdmin().pipe(
+      map(cars => cars.length)
+    );
+  }
+
+  getRentedCarCountAdmin(): Observable<number> {
+    return this.getRentedCarsAdmin().pipe(
+      map(cars => cars.length)
+    );
+  }
+
+  getUnderMaintenanceCarCountAdmin(): Observable<number> {
+    return this.getUnderMaintenanceCarsAdmin().pipe(
+      map(cars => cars.length)
+    );
+  }
+
+  getPendingCarCountAdmin(): Observable<number> {
+    return this.getPendingCarsAdmin().pipe(
+      map(cars => cars.length)
+    );
+  }
+
+  getRejectedCarCountAdmin(): Observable<number> {
+    return this.getRejectedCarsAdmin().pipe(
+      map(cars => cars.length)
+    );
+  }
+
 }
