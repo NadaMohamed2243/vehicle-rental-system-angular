@@ -18,7 +18,7 @@ export const links: NavLink[] = [
   },
   {
     img: 'heart',
-    route: '/wishlist',
+    route: '/favourites',
   },
   {
     img: 'history',

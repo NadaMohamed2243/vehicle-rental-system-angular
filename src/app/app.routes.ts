@@ -47,7 +47,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'wishlist',
+    path: 'favourites',
     component: ClientWishlistComponent,
     canActivate: [AuthGuard],
   },
