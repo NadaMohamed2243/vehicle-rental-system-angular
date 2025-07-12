@@ -43,6 +43,11 @@ import { AgreementService } from '../../../core/services/agreement.service';
 import { SafeUrlPipe } from '../../../shared/pipes/safe-url.pipe';
 import { DialogModule } from 'primeng/dialog';
 import { SignatureCanvasComponent } from '../../../shared/components/ui/signature-canvas/signature-canvas.component';
+import { BookingDetailsComponent } from '../../components/ui/booking-details/booking-details.component';
+import { BookingActionComponent } from '../../components/ui/booking-action/booking-action.component';
+import { VehicleInfoComponent } from '../../components/ui/vehicle-info/vehicle-info.component';
+import { BookingHistoryComponent } from '../../components/ui/booking-history/booking-history.component';
+import { AgreementModalComponent } from '../../components/ui/agreement-modal/agreement-modal.component';
 
 @Component({
   selector: 'app-cars',
@@ -68,6 +73,11 @@ import { SignatureCanvasComponent } from '../../../shared/components/ui/signatur
     SafeUrlPipe,
     DialogModule,
     SignatureCanvasComponent,
+    BookingDetailsComponent,
+    BookingActionComponent,
+    VehicleInfoComponent,
+    BookingHistoryComponent,
+    AgreementModalComponent,
   ],
   templateUrl: './cars.component.html',
   styleUrls: ['./cars.component.css'],
@@ -205,35 +215,6 @@ export class CarsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
-
-  // private loadInitialData(): void {
-  //   this.subscriptions.add(
-  //     this._route.queryParams
-  //       .pipe(
-  //         switchMap((params) => {
-  //           this.filtration = params['filtration'] || null;
-  //           this.type = params['type'] || null;
-  //           this.brand = params['brand'] || null;
-  //           return this.loadCars();
-  //         })
-  //       )
-  //       .subscribe({
-  //         next: (cars) => {
-  //           this.cars = cars;
-  //           this.filteredCars = [...this.cars];
-  //           this.isLoading = false;
-  //           this.errorMessage = null;
-  //         },
-  //         error: (err) => {
-  //           console.error('Error loading cars:', err);
-  //           this.isLoading = false;
-  //           this.errorMessage = 'Failed to load cars. Please try again later.';
-  //           this.cars = [];
-  //           this.filteredCars = [];
-  //         },
-  //       })
-  //   );
-  // }
 
   private loadInitialData(): void {
     this.subscriptions.add(
@@ -847,5 +828,20 @@ export class CarsComponent implements OnInit, OnDestroy {
       this.showAgreementModal = false;
       this.proceedToPayment();
     }
+  }
+
+  // Event handlers for the new components
+  onPickupDateChangeFromComponent(date: Date | null) {
+    this.pickupDate = date;
+    this.onPickupDateChange();
+  }
+
+  onDropoffDateChangeFromComponent(date: Date | null) {
+    this.dropoffDate = date;
+    this.onDropoffDateChange();
+  }
+
+  onWithDriverChangeFromComponent(withDriver: boolean) {
+    this.withDriver = withDriver;
   }
 }
