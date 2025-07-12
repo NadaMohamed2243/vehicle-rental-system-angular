@@ -2,3 +2,8 @@
     color: #007EFC;
 
 }
+
+/* optional shadow on hover */
+button:hover i {
+  color: #2563eb;
+}
