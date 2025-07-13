@@ -1,75 +1,70 @@
 import { Component, OnInit } from '@angular/core';
 import { TabViewModule } from 'primeng/tabview';
 import { TableModule } from 'primeng/table';
-import { ClientService } from '../../../../core/services/client.service';
 import { ButtonModule } from 'primeng/button';
-import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
-
-
+import { CommonModule } from '@angular/common';
+import { ClientService } from '../../../../core/services/client.service';
 
 @Component({
   selector: 'app-accept-user',
   standalone: true,
-  imports: [TabViewModule, TableModule, ButtonModule,CommonModule, DialogModule],
   templateUrl: './accept-user.component.html',
-  styleUrl: './accept-user.component.css'
+  styleUrls: ['./accept-user.component.css'],
+  imports: [CommonModule, TabViewModule, TableModule, ButtonModule, DialogModule]
 })
 export class AcceptUserComponent implements OnInit {
-  pendingClients: any[] = [];
-  approvedClients: any[] = [];
-  rejectedClients: any[] = [];
-  bannedClients: any[] = [];
-  suspendedClients: any[] = [];
-  licenseDialogVisible: boolean = false;
+  licenseDialogVisible = false;
   selectedLicenseImage: string | null = null;
 
+  statusTabs = [
+  { label: 'Pending Customers', key: 'pending' },
+  { label: 'Approved Customers', key: 'approved' },
+  { label: 'Rejected Customers', key: 'rejected' },
+  { label: 'Banned Customers', key: 'banned' },
+  { label: 'Suspended Customers', key: 'suspended' }
+  ];
 
+  clientsMap: Record<string, any[]> = {
+  pending: [],
+  approved: [],
+  rejected: [],
+  banned: [],
+  suspended: []
+  };
 
   constructor(public _ClientService: ClientService) {}
 
-  ngOnInit() {
-    this.loadClients();
+  ngOnInit(): void {
+  this.loadClients();
   }
 
-  loadClients() {
-    this._ClientService.getAllClients().subscribe(data => {
-      this.pendingClients = data.filter((client: any) => client.verification_status === 'pending');
-      this.approvedClients = data.filter((client: any) => client.verification_status === 'approved');
-      this.rejectedClients = data.filter((client: any) => client.verification_status === 'rejected');
-      this.bannedClients = data.filter((client: any) => client.verification_status === 'banned');
-      this.suspendedClients = data.filter((client: any) => client.verification_status === 'suspended');
-    });
+  loadClients(): void {
+  this._ClientService.getAllClients().subscribe((data: any[]) => {
+  this.statusTabs.forEach(tab => {
+  this.clientsMap[tab.key] = data.filter(client => client.verification_status === tab.key);
+  });
+  });
   }
 
-  approveClient(id: string) {
-    this._ClientService.approveClient(id).subscribe(() => {
-      this.loadClients();
-    });
+  handleAction(action: string, clientId: string): void {
+  switch (action) {
+  case 'approve':
+  this._ClientService.approveClient(clientId).subscribe(() => this.loadClients());
+  break;
+  case 'reject':
+  this._ClientService.rejectClient(clientId).subscribe(() => this.loadClients());
+  break;
+  case 'ban':
+  this._ClientService.banClient(clientId).subscribe(() => this.loadClients());
+  break;
+  case 'suspend':
+  this._ClientService.suspendClient(clientId).subscribe(() => this.loadClients());
+  break;
+  }
   }
 
-  rejectClient(id: string) {
-    this._ClientService.rejectClient(id).subscribe(() => {
-      this.loadClients();
-    });
-  }
-
-  banClient(id: string) {
-    this._ClientService.banClient(id).subscribe(() => {
-      this.loadClients();
-    });
-  }
-
-  
-  suspendClient(id: string) {
-    this._ClientService.suspendClient(id).subscribe(() => {
-      this.loadClients();
-    });
-  }
-
-
-  // Function to open the license dialog with the selected image
-  openLicenseDialog(imagePath: string) {
+  openLicenseDialog(imagePath: string): void {
   this.selectedLicenseImage = imagePath;
   this.licenseDialogVisible = true;
   }
