@@ -425,10 +425,13 @@ export class CarsComponent implements OnInit, OnDestroy {
 
   onPickupDateChange(): void {
     if (this.pickupDate) {
+      // Set minimum dropoff date to be at least 1 hour after pickup
+      // This allows same-day bookings with different times
       this.minDropoffDate = new Date(
         this.pickupDate.getTime() + 60 * 60 * 1000
       );
 
+      // If dropoff is already selected and is now invalid, clear it
       if (this.dropoffDate && this.dropoffDate <= this.pickupDate) {
         this.dropoffDate = null;
       }
@@ -443,8 +446,8 @@ export class CarsComponent implements OnInit, OnDestroy {
     ) {
       this._messageService.add({
         severity: 'warn',
-        summary: 'Invalid Date',
-        detail: 'Drop-off date must be after pickup date',
+        summary: 'Invalid Time',
+        detail: 'Drop-off time must be at least 1 hour after pickup time',
       });
       this.dropoffDate = null;
     }
@@ -457,25 +460,30 @@ export class CarsComponent implements OnInit, OnDestroy {
       this._messageService.add({
         severity: 'warn',
         summary: 'Missing Information',
-        detail: 'Please select both pickup and drop-off dates',
+        detail: 'Please select both pickup and drop-off dates and times',
       });
       return false;
     }
 
-    if (this.pickupDate < now) {
+    // Check if pickup date is in the past (including time)
+    if (this.pickupDate <= now) {
       this._messageService.add({
         severity: 'warn',
         summary: 'Invalid Date',
-        detail: 'Pickup date cannot be in the past',
+        detail: 'Pickup date and time must be in the future',
       });
       return false;
     }
 
-    if (this.dropoffDate <= this.pickupDate) {
+    // Check if dropoff is at least 1 hour after pickup (allows same day)
+    const minimumDropoffTime = new Date(
+      this.pickupDate.getTime() + 60 * 60 * 1000
+    );
+    if (this.dropoffDate < minimumDropoffTime) {
       this._messageService.add({
         severity: 'warn',
-        summary: 'Invalid Date',
-        detail: 'Drop-off date must be after pickup date',
+        summary: 'Invalid Time',
+        detail: 'Drop-off time must be at least 1 hour after pickup time',
       });
       return false;
     }
@@ -489,7 +497,12 @@ export class CarsComponent implements OnInit, OnDestroy {
     }
 
     const now = new Date();
-    return this.pickupDate >= now && this.dropoffDate > this.pickupDate;
+    const minimumDropoffTime = new Date(
+      this.pickupDate.getTime() + 60 * 60 * 1000
+    );
+
+    // Pickup must be in future and dropoff must be at least 1 hour after pickup
+    return this.pickupDate > now && this.dropoffDate >= minimumDropoffTime;
   }
 
   bookVehicle(): void {
