@@ -34,6 +34,11 @@ import { AgreementService } from '../../../core/services/agreement.service';
 import { SafeUrlPipe } from '../../../shared/pipes/safe-url.pipe';
 import { DialogModule } from 'primeng/dialog';
 import { SignatureCanvasComponent } from '../../../shared/components/ui/signature-canvas/signature-canvas.component';
+import { AgreementModalComponent } from "../../components/ui/agreement-modal/agreement-modal.component";
+import { BookingHistoryComponent } from "../../components/ui/booking-history/booking-history.component";
+import { VehicleInfoComponent } from "../../components/ui/vehicle-info/vehicle-info.component";
+import { BookingActionComponent } from "../../components/ui/booking-action/booking-action.component";
+import { BookingDetailsComponent } from "../../components/ui/booking-details/booking-details.component";
 import { CarCategoryComponent } from "../../components/car-category/car-category.component";
 
 @Component({
@@ -64,6 +69,11 @@ import { CarCategoryComponent } from "../../components/car-category/car-category
     SafeUrlPipe,
     DialogModule,
     SignatureCanvasComponent,
+    AgreementModalComponent,
+    BookingHistoryComponent,
+    VehicleInfoComponent,
+    BookingActionComponent,
+    BookingDetailsComponent,
     CarCategoryComponent
 ],
   templateUrl: './landing.component.html',
@@ -159,23 +169,11 @@ export class LandingComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.minDate = new Date();
 
-    // Subscribe to selectedCar changes
+    // Subscribe to selectedCar changes from FeaturedCarsComponent
     this.subscriptions.add(
       this._carService.getSelectedCar().subscribe((car) => {
         if (car) {
-          this.selectedCar = car;
-          this.visible = true;
-          if (car) {
-            this.selectedCarLocation = {
-              lat: car.agent.lat,
-              lng: car.agent.lng,
-              address: car.agent.location,
-            };
-            this.loadCarBookingHistory(car._id);
-          } else {
-            this.selectedCarLocation = null;
-            this.carBookingHistory = [];
-          }
+          this.showCarDetails(car);
         }
       })
     );
@@ -222,6 +220,22 @@ export class LandingComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
+  showCarDetails(car: Cars | null): void {
+    this.selectedCar = car;
+    this.visible = true;
+    if (car) {
+      this.selectedCarLocation = {
+        lat: car.agent.lat,
+        lng: car.agent.lng,
+        address: car.agent.location,
+      };
+      this.loadCarBookingHistory(car._id);
+    } else {
+      this.selectedCarLocation = null;
+      this.carBookingHistory = [];
+    }
+  }
+
   private getUserLocation(): void {
     this.subscriptions.add(
       this._geoLocationService.getLocation().subscribe({
@@ -265,28 +279,6 @@ export class LandingComponent implements OnInit, OnDestroy {
         },
       })
     );
-  }
-
-  isFutureBooking(dateString: string): boolean {
-    const bookingDate = new Date(dateString);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return bookingDate > today;
-  }
-
-  formatBookingDate(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  }
-
-  toggleFavorite(): void {
-    this.isFavorite = !this.isFavorite;
   }
 
   onDeliveryLocationSelected(location: Location) {
@@ -733,5 +725,20 @@ export class LandingComponent implements OnInit, OnDestroy {
       this.showAgreementModal = false;
       this.proceedToPayment();
     }
+  }
+
+  // Event handlers for the new components
+  onPickupDateChangeFromComponent(date: Date | null) {
+    this.pickupDate = date;
+    this.onPickupDateChange();
+  }
+
+  onDropoffDateChangeFromComponent(date: Date | null) {
+    this.dropoffDate = date;
+    this.onDropoffDateChange();
+  }
+
+  onWithDriverChangeFromComponent(withDriver: boolean) {
+    this.withDriver = withDriver;
   }
 }

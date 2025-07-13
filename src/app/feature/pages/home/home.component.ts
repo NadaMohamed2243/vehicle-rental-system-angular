@@ -32,6 +32,11 @@ import { AgreementService } from '../../../core/services/agreement.service';
 import { SafeUrlPipe } from '../../../shared/pipes/safe-url.pipe';
 import { DialogModule } from 'primeng/dialog';
 import { SignatureCanvasComponent } from '../../../shared/components/ui/signature-canvas/signature-canvas.component';
+import { AgreementModalComponent } from "../../components/ui/agreement-modal/agreement-modal.component";
+import { BookingDetailsComponent } from "../../components/ui/booking-details/booking-details.component";
+import { BookingActionComponent } from "../../components/ui/booking-action/booking-action.component";
+import { VehicleInfoComponent } from "../../components/ui/vehicle-info/vehicle-info.component";
+import { BookingHistoryComponent } from "../../components/ui/booking-history/booking-history.component";
 
 @Component({
   selector: 'app-home',
@@ -59,7 +64,12 @@ import { SignatureCanvasComponent } from '../../../shared/components/ui/signatur
     HomebannerComponent,
     SafeUrlPipe,
     DialogModule,
-    SignatureCanvasComponent
+    SignatureCanvasComponent,
+    AgreementModalComponent,
+    BookingDetailsComponent,
+    BookingActionComponent,
+    VehicleInfoComponent,
+    BookingHistoryComponent
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
@@ -136,7 +146,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
-  // Computed properties
   get rentalDuration() {
     if (this.pickupDate && this.dropoffDate) {
       const diffTime = Math.abs(
@@ -158,19 +167,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this._carService.getSelectedCar().subscribe((car) => {
         if (car) {
-          this.selectedCar = car;
-          this.visible = true;
-          if (car) {
-            this.selectedCarLocation = {
-              lat: car.agent.lat,
-              lng: car.agent.lng,
-              address: car.agent.location,
-            };
-            this.loadCarBookingHistory(car._id);
-          } else {
-            this.selectedCarLocation = null;
-            this.carBookingHistory = [];
-          }
+          this.showCarDetails(car);
         }
       })
     );
@@ -180,7 +177,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         const token = params['token'];
         if (token) {
           localStorage.setItem('token', token);
-          // Optionally remove token from URL
           this._router.navigate([], { queryParams: {} });
         }
 
@@ -215,6 +211,22 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+
+  showCarDetails(car: Cars | null): void {
+    this.selectedCar = car;
+    this.visible = true;
+    if (car) {
+      this.selectedCarLocation = {
+        lat: car.agent.lat,
+        lng: car.agent.lng,
+        address: car.agent.location,
+      };
+      this.loadCarBookingHistory(car._id);
+    } else {
+      this.selectedCarLocation = null;
+      this.carBookingHistory = [];
+    }
   }
 
   private getUserLocation(): void {
@@ -262,28 +274,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
   }
 
-  isFutureBooking(dateString: string): boolean {
-    const bookingDate = new Date(dateString);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return bookingDate > today;
-  }
-
-  formatBookingDate(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  }
-
-  toggleFavorite(): void {
-    this.isFavorite = !this.isFavorite;
-  }
-
   onDeliveryLocationSelected(location: Location) {
     this.selectedDeliveryLocation = location;
     console.log('Delivery location selected:', location);
@@ -314,10 +304,12 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   onPickupDateChange(): void {
     if (this.pickupDate) {
+      // Set minimum dropoff date to be at least 1 hour after pickup
       this.minDropoffDate = new Date(
         this.pickupDate.getTime() + 60 * 60 * 1000
       );
 
+      // If dropoff is already selected and is now invalid, clear it
       if (this.dropoffDate && this.dropoffDate <= this.pickupDate) {
         this.dropoffDate = null;
       }
@@ -332,8 +324,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     ) {
       this._messageService.add({
         severity: 'warn',
-        summary: 'Invalid Date',
-        detail: 'Drop-off date must be after pickup date',
+        summary: 'Invalid Time',
+        detail: 'Drop-off time must be at least 1 hour after pickup time',
       });
       this.dropoffDate = null;
     }
@@ -346,25 +338,30 @@ export class HomeComponent implements OnInit, OnDestroy {
       this._messageService.add({
         severity: 'warn',
         summary: 'Missing Information',
-        detail: 'Please select both pickup and drop-off dates',
+        detail: 'Please select both pickup and drop-off dates and times',
       });
       return false;
     }
 
-    if (this.pickupDate < now) {
+    // Check if pickup date is in the past (including time)
+    if (this.pickupDate <= now) {
       this._messageService.add({
         severity: 'warn',
         summary: 'Invalid Date',
-        detail: 'Pickup date cannot be in the past',
+        detail: 'Pickup date and time must be in the future',
       });
       return false;
     }
 
-    if (this.dropoffDate <= this.pickupDate) {
+    // Check if dropoff is at least 1 hour after pickup (allows same day)
+    const minimumDropoffTime = new Date(
+      this.pickupDate.getTime() + 60 * 60 * 1000
+    );
+    if (this.dropoffDate < minimumDropoffTime) {
       this._messageService.add({
         severity: 'warn',
-        summary: 'Invalid Date',
-        detail: 'Drop-off date must be after pickup date',
+        summary: 'Invalid Time',
+        detail: 'Drop-off time must be at least 1 hour after pickup time',
       });
       return false;
     }
@@ -378,7 +375,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     const now = new Date();
-    return this.pickupDate >= now && this.dropoffDate > this.pickupDate;
+    const minimumDropoffTime = new Date(
+      this.pickupDate.getTime() + 60 * 60 * 1000
+    );
+
+    // Pickup must be in future and dropoff must be at least 1 hour after pickup
+    return this.pickupDate > now && this.dropoffDate >= minimumDropoffTime;
   }
 
   bookVehicle(): void {
@@ -463,26 +465,16 @@ export class HomeComponent implements OnInit, OnDestroy {
         error: (error) => {
           this.isBooking = false;
           console.error('Booking error:', error);
-
-          if (error.status === 400 && error.error?.error === 'Invalid Token') {
-            this._messageService.add({
-              severity: 'error',
-              summary: 'Session Expired',
-              detail: 'Your session has expired. Please log in again.',
-            });
-            this._router.navigate(['/login']);
-          } else {
-            let errorMessage = 'Failed to book the vehicle. Please try again.';
-            if (error.error?.message) {
-              errorMessage = error.error.message;
-            }
-
-            this._messageService.add({
-              severity: 'error',
-              summary: 'Booking Error',
-              detail: errorMessage,
-            });
-          }
+          let errorMessage =
+            typeof error.error === 'string'
+              ? error.error
+              : error.error?.error ||
+                'Failed to book the vehicle. Please try again.';
+          this._messageService.add({
+            severity: 'error',
+            summary: 'Booking Error',
+            detail: errorMessage,
+          });
         },
       })
     );
@@ -685,34 +677,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     }, 1500);
   }
 
-  closeAgreementModal() {
-    if (this.agreement && this.agreement.status === 'signed') {
-      if (
-        confirm('Agreement is signed. Do you want to proceed to payment now?')
-      ) {
-        this.proceedToPayment();
-      } else {
-        this.showAgreementModal = false;
-        this.agreement = null;
-      }
-    } else {
-      this._messageService.add({
-        severity: 'info',
-        summary: 'Agreement Not Signed',
-        detail:
-          'You can proceed to payment without signing, but the agreement will remain unsigned.',
-      });
-
-      if (
-        confirm(
-          'Do you want to proceed to payment without signing the agreement?'
-        )
-      ) {
-        this.proceedToPayment();
-      }
-    }
-  }
-
   skipSigningAndProceed() {
     const confirmed = confirm(
       'Are you sure you want to proceed without signing the agreement? You can sign it later from your booking history.'
@@ -728,5 +692,20 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.showAgreementModal = false;
       this.proceedToPayment();
     }
+  }
+
+  // Event handlers for the components
+  onPickupDateChangeFromComponent(date: Date | null) {
+    this.pickupDate = date;
+    this.onPickupDateChange();
+  }
+
+  onDropoffDateChangeFromComponent(date: Date | null) {
+    this.dropoffDate = date;
+    this.onDropoffDateChange();
+  }
+
+  onWithDriverChangeFromComponent(withDriver: boolean) {
+    this.withDriver = withDriver;
   }
 }
