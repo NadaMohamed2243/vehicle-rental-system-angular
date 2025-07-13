@@ -59,35 +59,35 @@
                   <button
                     *ngIf="tab.key === 'pending'"
                     (click)="approveAgent(agent._id)"
-                    class="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white text-[10px] px-2 py-[8px] rounded"
+                    class="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white text-[10px] px-2 py-[6px] rounded hover:cursor-pointer"
                   >
                     <i class="pi pi-check text-[12px]"></i> Approve
                   </button>
 
                   <button
                     (click)="rejectAgent(agent._id)"
-                    class="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white text-[10px] px-2 py-[8px] rounded"
+                    class="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white text-[10px] px-2 py-[6px] rounded hover:cursor-pointer"
                   >
                     <i class="pi pi-times text-[12px]"></i> Reject
                   </button>
 
                   <button
                     (click)="banAgent(agent._id)"
-                    class="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600 text-white text-[10px] px-2 py-[8px] rounded"
+                    class="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600 text-white text-[10px] px-2 py-[6px] rounded hover:cursor-pointer"
                   >
                     <i class="pi pi-ban text-[12px]"></i> Ban
                   </button>
 
                   <button
                     (click)="suspendAgent(agent._id)"
-                    class="flex items-center gap-1 bg-purple-500 hover:bg-purple-600 text-white text-[10px] px-2 py-[8px] rounded"
+                    class="flex items-center gap-1 bg-purple-500 hover:bg-purple-600 text-white text-[10px] px-2 py-[6px] rounded hover:cursor-pointer"
                   >
                     <i class="pi pi-pause text-[12px]"></i> Suspend
                   </button>
 
                   <button
                     (click)="showAgentDetails(agent)"
-                    class="flex items-center gap-1 border border-blue-300 text-blue-500 hover:bg-blue-100 text-[10px] px-2 py-[8px] rounded"
+                    class="flex items-center gap-1 border border-blue-300 text-blue-500 hover:bg-blue-100 text-[10px] px-2 py-[6px] rounded hover:cursor-pointer"
                   >
                     <i class="pi pi-eye text-[12px]  text-blue-500"></i> View
                   </button>
