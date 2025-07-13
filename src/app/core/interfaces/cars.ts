@@ -29,7 +29,8 @@ export interface Cars {
   approval_status?: 'pending' | 'approved' | 'rejected';
   with_driver?: boolean;
   carPhotos: string[]
-  agent: Agent
+  agent: Agent;
+  category: string;
   createdAt: string
   updatedAt: string
   __v: number

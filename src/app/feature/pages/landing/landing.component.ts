@@ -34,6 +34,7 @@ import { AgreementService } from '../../../core/services/agreement.service';
 import { SafeUrlPipe } from '../../../shared/pipes/safe-url.pipe';
 import { DialogModule } from 'primeng/dialog';
 import { SignatureCanvasComponent } from '../../../shared/components/ui/signature-canvas/signature-canvas.component';
+import { CarCategoryComponent } from "../../components/car-category/car-category.component";
 
 @Component({
   selector: 'app-landing',
@@ -62,8 +63,9 @@ import { SignatureCanvasComponent } from '../../../shared/components/ui/signatur
     CommonModule,
     SafeUrlPipe,
     DialogModule,
-    SignatureCanvasComponent
-  ],
+    SignatureCanvasComponent,
+    CarCategoryComponent
+],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.css',
   providers: [MessageService],
