@@ -1,87 +1,127 @@
-<h1 class="text-center text-2xl font-bold mb-4">Customers</h1>
+<!--Top Bar -->
+<div class="fixed top-0 left-0 w-full  bg-white shadow-sm  mb-5">
+  <div class="flex items-center justify-between flex-wrap gap-4 px-4 py-2">
+    <!-- Title -->
+    <h1 class="text-xl font-bold text-gray-800 ml-60">Customers</h1>
+
+    <!-- Search Box -->
+    <div class="relative w-full sm:w-1/3">
+      <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+        <i class="pi pi-search"></i>
+      </span>
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        placeholder="Search..."
+        class="pl-10 pr-3 py-1.5 text-sm text-gray-700 placeholder-gray-400 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 bg-white w-full"
+        style="height: 34px;"
+      />
+    </div>
+
+    <div>
+      <app-user-header></app-user-header>
+    </div>
+  </div>
+</div>
+
+<div class="h-[85px]"></div>
+
 
 <div class="px-2 sm:px-5 border border-gray-200 rounded-lg bg-white shadow-sm p-4 overflow-x-auto">
-  <p-tabView [scrollable]="true">
-    <p-tabPanel *ngFor="let tab of statusTabs" [header]="tab.label">
-      <div class="overflow-x-auto">
-        <p-table
-          [value]="clientsMap[tab.key]"
-          [paginator]="true"
-          [rows]="5"
-          stripedRows
-          class="w-full text-sm"
-        >
-          <ng-template pTemplate="header">
-            <tr>
-              <th class="text-center whitespace-nowrap">Id</th>
-              <th class="text-center whitespace-nowrap">Name</th>
-              <th class="text-center whitespace-nowrap">Phone</th>
-              <th class="text-center whitespace-nowrap">City</th>
-              <th class="text-center whitespace-nowrap">License</th>
-              <th
-                class="text-center whitespace-nowrap"
-                *ngIf="tab.key === 'pending' || tab.key === 'approved'"
+  
+  <div class="flex flex-col sm:flex-row justify-between items-center gap-2 mb-3">
+   
+      <!-- Tabs -->
+    <p-tabView
+      [(activeIndex)]="activeTabIndex"
+      (onChange)="onTabChange($event)"
+      styleClass="w-full"
+      [scrollable]="true"
+    >
+      <p-tabPanel *ngFor="let tab of statusTabs" [header]="tab.label"></p-tabPanel>
+    </p-tabView>
+
+
+  
+  </div>
+
+  <div class="overflow-x-auto">
+    <p-table
+      [value]="getFilteredClients()"
+      [paginator]="true"
+      [rows]="5"
+      stripedRows
+      class="w-full text-sm"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="text-center whitespace-nowrap">Id</th>
+          <th class="text-center whitespace-nowrap">Name</th>
+          <th class="text-center whitespace-nowrap">Phone</th>
+          <th class="text-center whitespace-nowrap">City</th>
+          <th class="text-center whitespace-nowrap">License</th>
+          <th
+            class="text-center whitespace-nowrap"
+            *ngIf="selectedTabKey === 'pending' || selectedTabKey === 'approved'"
+          >
+            Actions
+          </th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-client let-i="rowIndex">
+        <tr>
+          <td class="text-center">{{ i + 1 }}</td>
+          <td class="text-center">{{ client.first_name }} {{ client.last_name }}</td>
+          <td class="text-center">{{ client.phone_number }}</td>
+          <td class="text-center">{{ client.location }}</td>
+          <td class="text-center">
+            <img
+              *ngIf="client.driver_license"
+              [src]="_ClientService.getDriverLicenseImageUrl(client.driver_license)"
+              class="w-16 h-10 object-cover rounded cursor-pointer hover:brightness-110"
+              (click)="openLicenseDialog(client.driver_license)"
+            />
+          </td>
+          <td
+            class="text-center align-middle"
+            *ngIf="selectedTabKey === 'pending' || selectedTabKey === 'approved'"
+          >
+            <div class="inline-flex flex-wrap justify-center gap-1">
+              <button
+                *ngIf="selectedTabKey === 'pending'"
+                (click)="handleAction('approve', client._id)"
+                class="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white text-[10px] px-2 py-[6px] rounded hover:cursor-pointer"
               >
-                Actions
-              </th>
-            </tr>
-          </ng-template>
+                <i class="pi pi-check text-[12px]"></i> Approve
+              </button>
 
-          <ng-template pTemplate="body" let-client let-i="rowIndex">
-            <tr>
-              <td class="text-center">{{ i + 1 }}</td>
-              <td class="text-center">{{ client.first_name }} {{ client.last_name }}</td>
-              <td class="text-center">{{ client.phone_number }}</td>
-              <td class="text-center">{{ client.location }}</td>
-              <td class="text-center">
-                <img
-                  *ngIf="client.driver_license"
-                  [src]="_ClientService.getDriverLicenseImageUrl(client.driver_license)"
-                  class="w-16 h-10 object-cover rounded cursor-pointer hover:brightness-110"
-                  (click)="openLicenseDialog(client.driver_license)"
-                />
-              </td>
-              <td
-                class="text-center align-middle"
-                *ngIf="tab.key === 'pending' || tab.key === 'approved'"
+              <button
+                (click)="handleAction('reject', client._id)"
+                class="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white text-[10px] px-2 py-[6px] rounded hover:cursor-pointer"
               >
-                <div class="inline-flex flex-wrap justify-center gap-1">
-                  <button
-                    *ngIf="tab.key === 'pending'"
-                    (click)="handleAction('approve', client._id)"
-                    class="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white text-[10px] px-2 py-[8px] rounded"
-                  >
-                    <i class="pi pi-check text-[12px]"></i> Approve
-                  </button>
+                <i class="pi pi-times text-[12px]"></i> Reject
+              </button>
 
-                  <button
-                    (click)="handleAction('reject', client._id)"
-                    class="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white text-[10px] px-2 py-[8px] rounded"
-                  >
-                    <i class="pi pi-times text-[12px]"></i> Reject
-                  </button>
+              <button
+                (click)="handleAction('ban', client._id)"
+                class="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600 text-white text-[10px] px-2 py-[6px] rounded hover:cursor-pointer"
+              >
+                <i class="pi pi-ban text-[12px]"></i> Ban
+              </button>
 
-                  <button
-                    (click)="handleAction('ban', client._id)"
-                    class="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600 text-white text-[10px] px-2 py-[8px] rounded"
-                  >
-                    <i class="pi pi-ban text-[12px]"></i> Ban
-                  </button>
-
-                  <button
-                    (click)="handleAction('suspend', client._id)"
-                    class="flex items-center gap-1 bg-purple-500 hover:bg-purple-600 text-white text-[10px] px-2 py-[8px] rounded"
-                  >
-                    <i class="pi pi-pause text-[12px]"></i> Suspend
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
-      </div>
-    </p-tabPanel>
-  </p-tabView>
+              <button
+                (click)="handleAction('suspend', client._id)"
+                class="flex items-center gap-1 bg-purple-500 hover:bg-purple-600 text-white text-[10px] px-2 py-[6px] rounded hover:cursor-pointer"
+              >
+                <i class="pi pi-pause text-[12px]"></i> Suspend
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 </div>
 
 <!-- Dialog -->

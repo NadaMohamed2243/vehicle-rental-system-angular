@@ -1,27 +1,26 @@
-<div class="flex justify-between items-center p-4 bg-transparent">
+<div class="flex justify-between items-center px-4 py-2 bg-transparent">
   <!-- LEFT: Title -->
   <div>
-    <h1 class="text-xl font-bold text-gray-700">{{ pageTitle }}</h1>
+    <h1 class="text-lg font-semibold text-gray-700">{{ pageTitle }}</h1>
   </div>
 
   <!-- RIGHT: User Info -->
   <div class="flex items-center">
     <p-avatar 
       [image]="user.avatarUrl || defaultAvatar" 
-      size="large" 
+      size="normal" 
       shape="circle"
-      class="border border-gray-300" 
+      class="border border-gray-300"
+      styleClass="w-12 h-12"
     ></p-avatar>
 
     <div class="ml-2">
-      <h2 class="text-lg font-semibold text-gray-800">
+      <h2 class="text-sm font-medium text-gray-800">
         {{ user.name }}
       </h2>
-      <p class="text-sm text-gray-500 capitalize">
+      <p class="text-xs text-gray-500 capitalize">
         {{ user.role }}
       </p>
     </div>
   </div>
 </div>
-
-<hr class="border-t border-gray-200">
