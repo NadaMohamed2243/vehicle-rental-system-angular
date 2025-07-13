@@ -15,7 +15,7 @@
 
       <!-- Status badges -->
       <div class="absolute top-0 left-0 flex justify-between items-center w-full">
-        @if(carDetails()?.availabilityStatus == "Available"){
+        <!-- @if(carDetails()?.availabilityStatus == "Available"){
         <p class="bg-green-100 text-green-900 font-semibold px-3 py-0.5 m-2 rounded-2xl">
           {{carDetails()?.availabilityStatus}}
         </p>
@@ -27,7 +27,7 @@
         <p class="bg-yellow-100 text-yellow-900 font-semibold px-3 py-0.5 m-2 rounded-2xl">
           {{carDetails()?.availabilityStatus}}
         </p>
-        }
+        } -->
 
         <!-- <p class="font-semibold px-3 py-0.5 m-2 rounded-2xl" [class]="{
           'bg-green-100 text-green-900': carDetails()?.availability_status === 'Available',
@@ -46,7 +46,7 @@
       @if(fromWho()!="landing"){
       <!-- Heart Favorite Icon -->
       <button (click)="toggleFavorite()"
-        class="absolute top-10 right-2 z-10 bg-gray-50 p-1 rounded-full shadow-md hover:bg-gray-100 cursor-pointer"
+        class="absolute top-2 right-2 z-10 bg-gray-50 p-1 rounded-full shadow-md hover:bg-gray-100 cursor-pointer"
         aria-label="Add to favorites">
         @if (isFavorite) {
         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6 text-red-600">

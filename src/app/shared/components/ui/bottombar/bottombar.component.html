@@ -1,12 +1,20 @@
 <section class="fixed bottom-0 z-10 w-full rounded-t-3xl bg-white border-t border-[#d2d2d2] p-4 xs:px-7 md:hidden">
     <div class="flex justify-around">
         @for (link of links; track link.img) {
-        <a [routerLink]="link.route" routerLinkActive="active" class="nav-link rounded-full transition-all duration-300"
+        <a [routerLink]="link.route" routerLinkActive="active"
+            class="nav-link rounded-full transition-all duration-300 flex flex-col items-center gap-1"
             [style.background-color]="rla.isActive ? '#007efc' : 'transparent'"
             [style.padding]="rla.isActive ? '8px' : '8px'" #rla="routerLinkActive">
+
             <i class="pi pi-{{link.img}}" [style.color]="rla.isActive ? 'white' : '#d2d2d2'"
                 [style.transform]="rla.isActive ? 'scale(1.1)' : 'scale(1)'"
                 style="font-size: 1.3rem; transition: all 0.3s ease"></i>
+
+            <!-- Optional: Show label on bottom bar too -->
+            <span class="text-xs font-medium transition-all duration-300"
+                [style.color]="rla.isActive ? 'white' : '#9ca3af'">
+                {{ link.label }}
+            </span>
         </a>
         }
     </div>
