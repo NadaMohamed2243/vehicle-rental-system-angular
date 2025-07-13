@@ -8,7 +8,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class AgentService {
-  private apiUrl = `${environment.apiUrl}/admin`;
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
@@ -97,6 +97,6 @@ export class AgentService {
 
   getDocumentUrl(path: string): string {
     const formattedPath = path.replace(/\\/g, '/');
-    return `${environment.baseUrl}/${formattedPath}`;
+    return `https://lucky-growth-production.up.railway.app/${formattedPath}`;
   }
 }

@@ -20,6 +20,13 @@ import { EventEmitter, Output } from '@angular/core';
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
+
+   constructor(
+  private authService: AuthService,
+  private router: Router,
+  private logoutAuth: ClientauthService
+) {}
+
   sidebarVisible = true;
   hovered = false;
 // used to toggle the sidebar from the dashboard component
@@ -28,6 +35,12 @@ export class SidebarComponent {
 toggleSidebar() {
   this.sidebarVisible = !this.sidebarVisible;
   this.sidebarToggle.emit(this.sidebarVisible);
+}
+
+  logout() {
+  this.logoutAuth.clear();
+  this.authService.removeToken();
+  this.router.navigate(['/landing']);
 }
 
   
