@@ -15,6 +15,9 @@ export class RegisterComponent implements OnInit{
   licensePreview: string | ArrayBuffer | null = null;
   selectedFile: File | null = null;
   error:string |null=null;
+  loading = false;
+  apiError: string = '';
+  showApiError: boolean = false;
   locations: { label: string; value: string }[] = [
     { label: 'Cairo', value: 'cairo' },
     { label: 'Giza', value: 'giza' },
@@ -200,22 +203,27 @@ export class RegisterComponent implements OnInit{
 
 
   onSubmit() {
-  if (this.registerForm.valid && this.selectedFile) {
-    const formData = new FormData();
-    formData.append('first_name', this.registerForm.get('first_name')?.value);
-    formData.append('last_name', this.registerForm.get('last_name')?.value);
-    formData.append('email', this.registerForm.get('email')?.value);
-    formData.append('password', this.registerForm.get('password')?.value);
-    formData.append('phone_number', this.registerForm.get('phone_number')?.value);
-    formData.append('location', this.registerForm.get('location')?.value);
-    formData.append('driver_license', this.selectedFile);
-    formData.append('lat', this.registerForm.get('lat')?.value);
-    formData.append('lng', this.registerForm.get('lng')?.value);
-
-    this._authService.registerClient(formData).subscribe({
-      next: (response) => {
-        console.log('Register success:', response);
-        localStorage.setItem('token', response.token);
+    this.apiError = '';
+    this.showApiError = false;
+    if (this.registerForm.valid  && this.selectedFile) {
+      this.loading = true;
+      console.log('Sending data to API', this.registerForm.value);
+      // Api
+      const formData = new FormData();
+      formData.append('first_name', this.registerForm.get('first_name')?.value);
+      formData.append('last_name', this.registerForm.get('last_name')?.value);
+      formData.append('email', this.registerForm.get('email')?.value);
+      formData.append('password', this.registerForm.get('password')?.value);
+      formData.append('phone_number', this.registerForm.get('phone_number')?.value);
+      formData.append('location', this.registerForm.get('location')?.value);
+      formData.append('driver_license', this.selectedFile);
+      formData.append('lat', this.registerForm.get('lat')?.value );
+      formData.append('lng', this.registerForm.get('lng')?.value );
+      this._authService.registerClient(formData).subscribe({
+  next: (response) => {
+      this.loading = false;
+      console.log('Register success:', response);
+      localStorage.setItem('token', response.token);
 
         // Check for pending booking
         const pendingBooking = localStorage.getItem('pendingBooking');
@@ -234,17 +242,33 @@ export class RegisterComponent implements OnInit{
 
           return; // Stop here if redirecting to cars page
         }
+      // Navigate to another page
+      this._router.navigate(['/home']);
+    },
+    error: (err) => {
+        this.loading = false;
+        this.apiError = typeof err.error === 'string' ? err.error : err.error?.error || 'Login failed. Please try again.';
+        this.showApiError = true;
 
-        this._router.navigate(['/home']);
-      },
-      error: (err) => {
-        this.error = err.error.error;
-        console.log(err.error.error);
+        //  Keep preview and file reference active on error
+        if (this.selectedFile && !this.licensePreview) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            this.licensePreview = reader.result;
+          };
+          reader.readAsDataURL(this.selectedFile);
+        }
+
+        setTimeout(() => (this.showApiError = false), 5000);
       },
     });
-  } else {
-    this.registerForm.markAllAsTouched();
+    // Let user know if file is missing
+    if (!this.selectedFile) {
+      this._notification.open('Please upload your driver\'s license image.', 'Close', {
+        duration: 4000,
+        panelClass: ['snackbar-error'],
+      });
+    }
   }
 }
-
 }

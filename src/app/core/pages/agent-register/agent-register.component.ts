@@ -23,6 +23,9 @@ import { CustomValidatorService } from '../../services/validators/custom-validat
 export class AgentRegisterComponent implements OnInit {
   agentRegisterForm!: FormGroup;
   workingHoursFormArray!: FormArray;
+  loading = false;
+  apiError: string = '';
+  showApiError: boolean = false;
 
   licensePreview: string | ArrayBuffer | null = null;
   selectedFile: File | null = null;
@@ -245,18 +248,25 @@ export class AgentRegisterComponent implements OnInit {
 
   onSubmit(): void {
     this.updateWorkingHoursString();
+    this.apiError = '';
+  this.showApiError = false;
     if (this.agentRegisterForm.valid && this.selectedFile) {
+      this.loading = true;
       console.log('Sending data to API', this.agentRegisterForm.value);
       this._authService.registerAgent(this.agentRegisterForm.value, this.selectedFile).subscribe({
         next: (res) => {
+          this.loading = false;
           localStorage.setItem('token', res.token);
-          this._router.navigate(['/home']);
+          this._router.navigate(['/agent-dashboard']);
         },
         error: (err) => {
-          this.error= err.error.error
-      console.log(err.error.error);
+          this.loading = false;
+        this.apiError = typeof err.error === 'string' ? err.error : err.error?.error || 'Login failed. Please try again.';
+        this.showApiError = true;
+        setTimeout(() => (this.showApiError = false), 5000);
         },
       });
+
     } else {
       console.log('Form is invalid', this.agentRegisterForm.errors);
       this.agentRegisterForm.markAllAsTouched();

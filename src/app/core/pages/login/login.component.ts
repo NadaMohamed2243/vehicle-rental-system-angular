@@ -7,6 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { AuthapiService } from '../../services/authapi.service';
+import { ClientauthService } from '../../services/clientauth.service';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +18,10 @@ import { AuthapiService } from '../../services/authapi.service';
 export class LoginComponent {
   _router = inject(Router);
   _authService = inject(AuthapiService);
+  _clientAuthService = inject(ClientauthService);
+  apiError: string = '';
+  loading: boolean = false;
+  showError: boolean = false;
 
   loginForm: FormGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -26,14 +31,17 @@ export class LoginComponent {
     ]),
   });
 
-
-onSubmit() {
-  if (this.loginForm.valid) {
-    this._authService.login(this.loginForm.value).subscribe({
-      next: (res) => {
-        localStorage.setItem('token', res.token);
-
-        // Check for saved booking info
+  onSubmit() {
+    console.log(this.loginForm.value);
+    if (this.loginForm.valid) {
+      this.loading = true;
+      this.showError = false;
+      console.log('Sending data to API', this.loginForm.value);
+      this._authService.login(this.loginForm.value).subscribe({
+        next: (res) => {
+          this.loading = false;
+          this._clientAuthService.setTokenAndRole(res.token);
+// Check for saved booking info
         const pendingBooking = localStorage.getItem('pendingBooking');
         if (pendingBooking) {
           const bookingData = JSON.parse(pendingBooking);
@@ -54,19 +62,28 @@ onSubmit() {
         }
 
         // Default role-based redirect
-        if (res.user.role == 'admin') {
-          this._router.navigate(['/dashboard']);
-        } else if (res.user.role == 'client') {
-          this._router.navigate(['/home']);
-        } else if (res.user.role == 'agent') {
-          this._router.navigate(['/agent-dashboard']);
-        }
-      },
-      error: (err) => console.error('Login error:', err),
-    });
-  } else {
-    this.loginForm.markAllAsTouched();
-  }
-}
 
+          if (res.user.role == 'admin') {
+            this._router.navigate(['/dashboard']);
+          } else if (res.user.role == 'client') {
+            this._router.navigate(['/home']);
+          } else if (res.user.role == 'agent') {
+            this._router.navigate(['/agent-dashboard']);
+          }
+        },
+        error:(err) =>{
+           this.loading = false;
+          console.error('Login error:', err),
+          this.apiError =typeof err.error === 'string' ? err.error : err.error?.error || 'Login failed. Please try again.';
+          this.showError = true;
+          }
+      });
+    } else {
+      this.loginForm.markAllAsTouched();
+    }
+         setTimeout(() => this.showError = false, 5000);
+  }
+  closeError() {
+  this.showError = false;
+}
 }

@@ -1,4 +1,19 @@
 <div class="login-container min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+<!-- This is the main container for the login page, with a gradient background --> @if(showError){
+  <div
+    class="fixed mx-auto sm:max-w-3xl flex items-center justify-between gap-4 rounded-md bg-red-50 py-3 px-4 border border-red-200 text-red-700 shadow-sm transition duration-300"
+    style="margin-top: 1.5rem;"
+  >
+    <p class="text-sm font-medium">{{ apiError }}</p>
+    <button
+      (click)="closeError()"
+      class="text-xl cursor-pointer font-semibold text-red-500 hover:text-red-700 focus:outline-none"
+      aria-label="Close"
+    >
+      &times;
+    </button>
+  </div>
+}
   <div class="flex min-h-full flex-col justify-center px-4 py-10 lg:px-8 ">
     <div class="sm:mx-auto sm:w-full sm:max-w-3xl text-center animate-fade-in">
       <div
@@ -58,14 +73,23 @@
             <p class="font-medium text-sm">Password must be at least 6 characters long.</p>
           </div>
           }
-          }
+        }
         </div>
 
 
         <!--Submit Button-->
-        <div class="sm:col-span-2">
+         <div class="sm:col-span-2">
           <button type="submit"
-            class="flex w-full justify-center cursor-pointer  rounded-md bg-light-blue px-4 py-2 font-medium text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Login</button>
+            [disabled]="loading"
+            class="flex w-full justify-center items-center gap-2 cursor-pointer rounded-md bg-light-blue px-4 py-2 font-medium text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-60">
+
+            @if(loading){
+              <div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <span>Logging in...</span>
+            } @else {
+              <span>Login</span>
+            }
+          </button>
         </div>
 
         <!--Login Using Google Button-->

@@ -13,10 +13,6 @@ export const links: NavLink[] = [
     route: '/cars',
   },
   {
-    img: 'calendar',
-    route: '/calendar',
-  },
-  {
     img: 'heart',
     route: '/wishlist',
   },

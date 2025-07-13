@@ -34,6 +34,7 @@ import { ClientHistoryComponent } from './feature/pages/client-history/client-hi
 import { AboutUsComponent } from './feature/pages/about-us/about-us.component';
 import { ContactUsComponent } from './feature/pages/contact-us/contact-us.component';
 import { TermsAndConditionsComponent } from './feature/pages/terms-and-conditions/terms-and-conditions.component';
+import { PaymentResultComponent } from './feature/pages/payment-result/payment-result.component';
 import { SearchComponent } from './feature/pages/search/search.component';
 
 export const routes: Routes = [
@@ -63,6 +64,7 @@ export const routes: Routes = [
   { path: 'about-us', component: AboutUsComponent },
   { path: 'contact-us', component: ContactUsComponent },
   { path: 'terms-and-conditions', component: TermsAndConditionsComponent },
+  {path:'payment-result',component:PaymentResultComponent},
   { path: 'search', component: SearchComponent },
 
   // Admin routes
