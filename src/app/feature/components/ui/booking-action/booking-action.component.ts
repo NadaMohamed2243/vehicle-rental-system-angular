@@ -23,9 +23,7 @@ import { Cars } from '../../../../core/interfaces/cars';
       <div class="h-full">
         <button
           class="bg-[#3e9efb] h-full w-[80px] rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-          [disabled]="
-            isBooking || !pickupDate || !dropoffDate || !isValidDateRange
-          "
+          [disabled]="isBookingDisabled()"
           (click)="bookVehicle.emit()"
         >
           @if (isBooking) {
@@ -46,4 +44,23 @@ export class BookingActionComponent {
   @Input() isValidDateRange: boolean = false;
 
   @Output() bookVehicle = new EventEmitter<void>();
+
+  isBookingDisabled(): boolean {
+    if (this.isBooking) return true;
+    if (!this.pickupDate || !this.dropoffDate) return true;
+
+    const now = new Date();
+
+    // Check if pickup date/time is in the future
+    if (this.pickupDate <= now) return true;
+
+    // Check if dropoff is at least 1 hour after pickup (allows same day)
+    const minimumDropoffTime = new Date(
+      this.pickupDate.getTime() + 60 * 60 * 1000
+    );
+    if (this.dropoffDate < minimumDropoffTime) return true;
+
+    // Use the isValidDateRange if provided, otherwise use our logic
+    return !this.isValidDateRange;
+  }
 }
