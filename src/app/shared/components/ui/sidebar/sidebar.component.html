@@ -43,17 +43,16 @@
             <i class="pi pi-sign-out text-xl" [style.color]="rla.isActive ? 'white' : '#d2d2d2'"
                 [style.transform]="rla.isActive ? 'scale(1.1)' : 'scale(1)'"
                 style="font-size: 1.3rem; transition: all 0.3s ease; flex-shrink: 0;"></i>
-
             @if (isExpanded) {
             <span class="ml-4 font-medium text-sm whitespace-nowrap transition-all duration-300"
                 [style.color]="rla.isActive ? 'white' : '#4a5568'">
-                {{ link.label }}
+                Logout
             </span>
             }
         </a>
     </div>
 
-    <!-- Footer (optional) -->
+    <!-- Footer -->
     @if (isExpanded) {
     <div class="px-6 mt-4">
         <div class="border-t border-gray-200 pt-4">
