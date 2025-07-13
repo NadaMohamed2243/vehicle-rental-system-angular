@@ -77,17 +77,17 @@ export class OverviewComponent implements OnInit {
   }
 
  loadAllCars(): void {
-  console.log('🟡 loadAllCars() called');
+  // console.log('loadAllCars() called');
   this.adminCarsService. getALLCarsAdmin().subscribe(cars => {
-    console.log('🟢 Cars response:', cars);
+    // console.log('Cars response:', cars);
     this.cars = cars;
     this.latestCar = cars.length ? cars[cars.length - 1] : null;
 
-    console.log('✅ Latest Car:', this.latestCar);
+    // console.log('Latest Car:', this.latestCar);
 
     if (this.bookings.length) {
       this.calculateTopRentedCars();
-      console.log('🔵 Top Rented Cars after loading cars:', this.topRentedCars);
+      // console.log('Top Rented Cars after loading cars:', this.topRentedCars);
     }
   });
 }
