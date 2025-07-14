@@ -19,6 +19,14 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { importProvidersFrom } from '@angular/core';
 // import { provideAnimations } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+
+// AoT requires an exported function for factories
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -37,5 +45,16 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay()),
     provideHttpClient(withInterceptors([authInterceptor])),
     importProvidersFrom(ReactiveFormsModule),
+    importProvidersFrom(HttpClientModule),
+    importProvidersFrom(
+      TranslateModule.forRoot({
+        defaultLanguage: 'en',
+        loader: {
+          provide: TranslateLoader,
+          useFactory: HttpLoaderFactory,
+          deps: [HttpClient],
+        },
+      })
+    ),
   ],
 };
