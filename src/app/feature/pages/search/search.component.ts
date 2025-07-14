@@ -31,7 +31,7 @@ import {
 } from '../../../core/services/booking.service';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../../core/services/auth.service';
-import { NavbarComponent } from "../../../core/layout/navbar/navbar.component";
+import { NavbarComponent } from '../../../core/layout/navbar/navbar.component';
 
 @Component({
   selector: 'app-cars',
@@ -54,8 +54,8 @@ import { NavbarComponent } from "../../../core/layout/navbar/navbar.component";
     FilterSidebarComponent,
     MapComponent,
     ToastModule,
-    NavbarComponent
-],
+    NavbarComponent,
+  ],
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.css'],
   providers: [MessageService],
@@ -148,10 +148,13 @@ export class SearchComponent implements OnInit, OnDestroy {
       this._route.queryParams
         .pipe(
           switchMap((params) => {
-
             this.location = params['location'] || null;
-            this.pickupDate = params['pickupDate'] ? new Date(params['pickupDate']) : null;
-            this.dropoffDate = params['returnDate'] ? new Date(params['returnDate']) : null;
+            this.pickupDate = params['pickupDate']
+              ? new Date(params['pickupDate'])
+              : null;
+            this.dropoffDate = params['returnDate']
+              ? new Date(params['returnDate'])
+              : null;
             return this.loadCars();
           })
         )
@@ -207,28 +210,31 @@ export class SearchComponent implements OnInit, OnDestroy {
     );
   }
 
-loadCars(): Observable<Cars[]> {
-  this.isLoading = true;
-  this.errorMessage = null;
+  loadCars(): Observable<Cars[]> {
+    this.isLoading = true;
+    this.errorMessage = null;
 
-  if (this.location && this.pickupDate && this.dropoffDate) {
-    return this._carService.getAvailableCars(this.location, this.pickupDate, this.dropoffDate);
+    if (this.location && this.pickupDate && this.dropoffDate) {
+      return this._carService.getAvailableCars(
+        this.location,
+        this.pickupDate,
+        this.dropoffDate
+      );
+    }
+
+    // Existing filters
+    if (this.type) {
+      return this._carService.getCarsByType(this.type);
+    } else if (this.brand) {
+      return this._carService.getCarsByBrand(this.brand);
+    } else if (this.filtration === 'most-popular') {
+      return this._carService.getMostPopularCars();
+    } else if (this.filtration === 'NearBy') {
+      return this._carService.getNearByCars();
+    } else {
+      return this._carService.getCars();
+    }
   }
-
-  // Existing filters
-  if (this.type) {
-    return this._carService.getCarsByType(this.type);
-  } else if (this.brand) {
-    return this._carService.getCarsByBrand(this.brand);
-  } else if (this.filtration === 'most-popular') {
-    return this._carService.getMostPopularCars();
-  } else if (this.filtration === 'NearBy') {
-    return this._carService.getNearByCars();
-  } else {
-    return this._carService.getCars();
-  }
-}
-
 
   showCarDetails(car: Cars | null): void {
     this.selectedCar = car;
@@ -391,16 +397,18 @@ loadCars(): Observable<Cars[]> {
   }
 
   bookVehicle(): void {
+    localStorage.setItem(
+      'pendingBooking',
+      JSON.stringify({
+        redirect: 'cars',
+        carId: this.selectedCar ? this.selectedCar._id : '',
+        pickupDate: this.pickupDate?.toISOString(),
+        dropoffDate: this.dropoffDate?.toISOString(),
+        location: this.selectedCarLocation?.address || '',
+      })
+    );
 
-     localStorage.setItem('pendingBooking', JSON.stringify({
-      redirect: 'cars',
-      carId: this.selectedCar ? this.selectedCar._id : '',
-      pickupDate: this.pickupDate?.toISOString(),
-      dropoffDate: this.dropoffDate?.toISOString(),
-      location: this.selectedCarLocation?.address || ''
-    }));
-
-      this._router.navigate(['/register']);
+    this._router.navigate(['/register']);
 
     // this.isBooking = true;
 
@@ -455,5 +463,9 @@ loadCars(): Observable<Cars[]> {
     //     },
     //   })
     // );
+  }
+
+  isDeliverySelectionAllowed(): boolean {
+    return this.selectedCar?.with_driver || false;
   }
 }

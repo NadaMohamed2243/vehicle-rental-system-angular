@@ -27,12 +27,28 @@ export interface Location {
   selector: 'app-map',
   standalone: true,
   template: `
-    <div #mapContainer [id]="mapId" class="w-full h-[250px] rounded-lg"></div>
+    <div
+      #mapContainer
+      [id]="mapId"
+      class="w-full h-[250px] rounded-lg"
+      [class.cursor-not-allowed]="!enableDeliverySelection"
+      [class.opacity-75]="!enableDeliverySelection"
+    ></div>
     <div class="mt-2 text-sm text-gray-600">
       @if (distance) {
       <p>Distance to car: {{ distance }} km</p>
-      } @if (selectedDeliveryLocation) {
-      <p>
+      } @if (!enableDeliverySelection) {
+      <div
+        class="flex items-center text-amber-600 bg-amber-50 p-2 rounded border border-amber-200 mt-2"
+      >
+        <i class="pi pi-info-circle mr-2"></i>
+        <span class="text-xs"
+          >Delivery selection is disabled for this vehicle</span
+        >
+      </div>
+      } @if (selectedDeliveryLocation && enableDeliverySelection) {
+      <p class="text-green-600">
+        <i class="pi pi-check-circle mr-1"></i>
         Delivery location:
         {{ selectedDeliveryLocation.address || 'Selected location' }}
       </p>
@@ -127,7 +143,6 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
     const mapElement = this.mapContainerRef?.nativeElement;
     if (!mapElement) return;
 
-    // Defensive: Remove any previous map instance from this container
     mapElement.innerHTML = '';
 
     this.map = L.map(this.mapId).setView(
@@ -216,10 +231,20 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
         };
         this.setDeliveryLocation(location);
       });
+    } else {
+      this.map.on('click', (e: any) => {
+        console.log('Delivery selection is disabled for this vehicle');
+        // You could emit an event here to show a toast message
+      });
     }
   }
 
   private setDeliveryLocation(location: Location) {
+    if (!this.enableDeliverySelection) {
+      console.warn('Delivery selection is disabled');
+      return;
+    }
+
     if (this.deliveryMarker) {
       this.map.removeLayer(this.deliveryMarker);
     }

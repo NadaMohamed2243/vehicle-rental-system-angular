@@ -243,7 +243,7 @@ export class CarsComponent implements OnInit, OnDestroy {
 
             if (locationParam) {
               this.selectedCarLocation = {
-                lat: 0, // Optional: default, update later if needed
+                lat: 0,
                 lng: 0,
                 address: locationParam,
               };
@@ -399,9 +399,22 @@ export class CarsComponent implements OnInit, OnDestroy {
     this.isFavorite = !this.isFavorite;
   }
 
-  onDeliveryLocationSelected(location: Location) {
+  onDeliveryLocationSelected(location: Location): void {
+    if (!this.isDeliverySelectionAllowed()) {
+      this._messageService.add({
+        severity: 'warn',
+        summary: 'Delivery Not Available',
+        detail:
+          'Delivery location selection is only available for cars with driver option.',
+      });
+      return;
+    }
+
     this.selectedDeliveryLocation = location;
-    console.log('Delivery location selected:', location);
+  }
+
+  isDeliverySelectionAllowed(): boolean {
+    return !!this.selectedCar?.with_driver;
   }
 
   private formatDateForAPI(date: Date): string {
@@ -430,7 +443,6 @@ export class CarsComponent implements OnInit, OnDestroy {
   onPickupDateChange(): void {
     if (this.pickupDate) {
       // Set minimum dropoff date to be at least 1 hour after pickup
-      // This allows same-day bookings with different times
       this.minDropoffDate = new Date(
         this.pickupDate.getTime() + 60 * 60 * 1000
       );
@@ -469,7 +481,6 @@ export class CarsComponent implements OnInit, OnDestroy {
       return false;
     }
 
-    // Check if pickup date is in the past (including time)
     if (this.pickupDate <= now) {
       this._messageService.add({
         severity: 'warn',
@@ -479,7 +490,7 @@ export class CarsComponent implements OnInit, OnDestroy {
       return false;
     }
 
-    // Check if dropoff is at least 1 hour after pickup (allows same day)
+    // Check if dropoff is at least 1 hour after pickup
     const minimumDropoffTime = new Date(
       this.pickupDate.getTime() + 60 * 60 * 1000
     );
@@ -523,6 +534,17 @@ export class CarsComponent implements OnInit, OnDestroy {
       return;
     }
 
+    if (this.selectedDeliveryLocation && !this.isDeliverySelectionAllowed()) {
+      this._messageService.add({
+        severity: 'warn',
+        summary: 'Invalid Delivery Location',
+        detail:
+          'Delivery location is not allowed for cars without driver option.',
+      });
+      this.selectedDeliveryLocation = null;
+      return;
+    }
+
     const token = this._authService.getToken();
 
     if (!token) {
@@ -544,7 +566,9 @@ export class CarsComponent implements OnInit, OnDestroy {
       pickupLocation:
         this.selectedCarLocation?.address || this.selectedCar.agent.location,
       dropoffLocation:
-        this.selectedDeliveryLocation?.address ||
+        // Only use delivery location if it's allowed, otherwise use pickup location
+        (this.isDeliverySelectionAllowed() &&
+          this.selectedDeliveryLocation?.address) ||
         this.selectedCarLocation?.address ||
         this.selectedCar.agent.location,
     };
@@ -633,7 +657,6 @@ export class CarsComponent implements OnInit, OnDestroy {
     }
 
     if (this.isSignatureEmpty(this.signatureData)) {
-      console.log('❌ Signature is empty');
       this._messageService.add({
         severity: 'warn',
         summary: 'Empty Signature',
@@ -642,7 +665,6 @@ export class CarsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    console.log('✅ Submitting signature to backend...');
     this.isSubmittingSignature = true;
 
     this._agreementService
@@ -737,8 +759,6 @@ export class CarsComponent implements OnInit, OnDestroy {
     if (!this.agreement) return;
 
     this.isDownloading = true;
-    console.log('Downloading agreement:', this.agreement);
-
     this._agreementService.downloadAgreement(this.agreement._id).subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
@@ -848,7 +868,6 @@ export class CarsComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Event handlers for the new components
   onPickupDateChangeFromComponent(date: Date | null) {
     this.pickupDate = date;
     this.onPickupDateChange();
