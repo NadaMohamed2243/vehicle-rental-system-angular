@@ -1,12 +1,23 @@
-<div class="p-6  ml-12 space-y-6  min-h-screen ">
+<div class=" space-y-6  min-h-screen ">
 
-  <!-- Header -->
-  <h1 class="text-2xl font-semibold text-blue-500">Overview</h1>
+   <!--Top Bar -->
+<div class="fixed top-0 left-0 w-full  bg-white shadow-sm  mb-5">
+  <div class="flex items-center justify-between flex-wrap gap-4 px-4 py-2">
+    <!-- Title -->
+    <h1 class="text-xl font-bold text-gray-800 ml-60">Overview</h1>
+
+    <div>
+      <app-user-header></app-user-header>
+    </div>
+  </div>
+</div>
+
+<div class="h-[85px]"></div>
 
   <!-- Summary Cards -->
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6 ">
 
-    <div class="bg-white rounded-xl p-4 shadow border-l-4 border-l-green-400">
+    <div class="bg-white rounded-xl p-4 shadow border-l-4 border-l-green-400 ">
      <div class="flex items-center gap-3 mb-2">
       <span class="bg-green-400 p-2 rounded-full w-10 h-10 flex items-center justify-center">
        <i class="pi pi-car text-white text-xl"></i>
@@ -21,7 +32,7 @@
       <span class="bg-pink-500 p-2 rounded-full w-10 h-10 flex items-center justify-center">
       <i class="pi pi-shopping-cart text-white text-xl"></i>
       </span>
-      <p class="text-sm text-gray-400">Total Orders</p>
+      <p class="text-sm text-gray-400">Total Bookings</p>
       </div>
       <h3 class="text-xl font-bold mt-2">{{totalOrders}}</h3>
     </div>
@@ -31,7 +42,7 @@
       <span class="bg-blue-500 p-2 rounded-full w-10 h-10 flex items-center justify-center">
        <i class="pi pi-clock text-white text-xl"></i>
       </span>
-      <p class="text-sm text-gray-400">Pending Orders</p>
+      <p class="text-sm text-gray-400">Pending Bookings</p>
       </div>
       <h3 class="text-xl font-bold mt-2">{{pendingOrders}}</h3>
     </div>
@@ -41,7 +52,7 @@
       <span class="bg-purple-500 p-2 rounded-full w-10 h-10 flex items-center justify-center">
        <i class="pi pi-calendar text-white text-xl"></i>
       </span>
-      <p class="text-sm text-gray-400">Completed Orders</p>
+      <p class="text-sm text-gray-400">Completed Bookings</p>
       </div>
       <h3 class="text-xl font-bold mt-2">{{completedOrders}}</h3>
     </div>
@@ -61,105 +72,70 @@
   <!-- Car Section -->
   <div class="grid grid-cols-1 xl:grid-cols-3 gap-6  ">
     <div class="bg-white p-4 rounded-xl shadow col-span-2">
-      <h3 class="text-lg font-bold mb-2">Top Renteling Cars</h3>
+      <h3 class="text-lg font-bold mb-2 text-[#0D274E] ">Top Renteling Cars</h3>
       <table class="min-w-full text-sm text-left text-gray-700 ">
     <thead class="uppercase text-xs text-gray-500 bg-gray-100 ">
       <tr>
-        <th class="px-6 py-3">Model</th>
+        <th class="px-6 py-3">Brand</th>
         <th>Times Rented</th>
         <th>Total Revenue</th>
         <th>Last Rented</th>
-        <th >Status</th>
       </tr>
     </thead>
-    <tbody>
-      <tr class="border-b border-gray-200 hover:bg-gray-50 transition">
-        <td class="px-6 py-4">BMW XM 2024</td>
-        <td class="px-6 py-4">42</td>
-        <td class="px-6 py-4">78,000 EGP</td>
-        <td class="px-6 py-4">12 May 2025</td>
-        <td class="px-4 py-2">
-              <span class="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">Available</span>
-        </td>
-      </tr>
-      <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 transition">
-        <td class="px-6 py-4 ">BMW X4 M40i</td>
-        <td class="px-6 py-4">38</td>
-        <td class="px-6 py-4">65,000 EGP</td>
-        <td class="px-6 py-4">10 May 2025</td>
-         <td class="px-4 py-2">
-              <span class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">Occupied</span>
-        </td>
-      </tr>
-      <tr class="border-b border-gray-200 hover:bg-gray-50 transition">
-        <td class="px-6 py-4">BMW XM 2024</td>
-        <td class="px-6 py-4">42</td>
-        <td class="px-6 py-4">78,000 EGP</td>
-        <td class="px-6 py-4">12 May 2025</td>
-         <td class="px-4 py-2">
-              <span class="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">Available</span>
-        </td>
-      </tr>
-      <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 transition">
-        <td class="px-6 py-4 ">BMW X4 M40i</td>
-        <td class="px-6 py-4">38</td>
-        <td class="px-6 py-4">65,000 EGP</td>
-        <td class="px-6 py-4">10 May 2025</td>
-         <td class="px-4 py-2">
-              <span class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">Occupied</span>
-        </td>
-      </tr>
-      <tr class="border-b border-gray-200 hover:bg-gray-50 transition">
-        <td class="px-6 py-4">BMW XM 2024</td>
-        <td class="px-6 py-4">42</td>
-        <td class="px-6 py-4">78,000 EGP</td>
-        <td class="px-6 py-4">12 May 2025</td>
-         <td class="px-4 py-2">
-              <span class="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">Available</span>
-        </td>
-      </tr>
+   <tbody>
+        <tr *ngFor="let item of topRentedCars" class="border-b border-gray-200 hover:bg-gray-50 transition">
+          <td class="px-6 py-4">
+            {{ item.car?.brand }}
+            <span *ngIf="item.car?.model">({{ item.car.model }})</span>
+          </td>
 
-    </tbody>
+          <td class="px-6 py-4">{{ item.count }}</td>
+          <td class="px-6 py-4">{{ item.revenue | number:'1.0-0' }} EGP</td>
+          <td class="px-6 py-4">{{ item.lastDate | date:'dd MMM y' }}</td>
+        </tr>
+      </tbody>
+
     </table>
     </div>
 
   <div class="bg-white p-4 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300">
-  <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
-  Recent Car Listings
+  <h3 class="text-xl font-bold text-[#0D274E]  mb-3 flex items-center gap-2">
+  Latest Car Listing
   </h3>
 
-  <img src="images/car3.png" class="rounded-lg mb-4 ml-12 " alt="Car" />
+      <img [src]="latestCar?.carPhotos?.[0] || 'images/car3.png'"
+          class="rounded-lg mb-4 mx-auto w-full max-w-[300px]" alt="Car" />
 
- <div class="flex items-center justify-between mb-3 text-lg">
-  <span class="text-[#0D274E] font-semibold">
-    $60 / hour
-  </span>
-  <div class="flex items-center gap-1 text-yellow-400">
-    <i class="pi pi-star-fill"></i>
-    <i class="pi pi-star-fill"></i>
-    <i class="pi pi-star-fill"></i>
-    <i class="pi pi-star-fill"></i>
-    <i class="pi pi-star"></i>
-  </div>
-</div>
+      
+            <h4 class="text-lg font-semibold text-[#0D274E]  mb-1">{{ latestCar?.brand }} {{ latestCar?.model }}  {{ latestCar?.licensePlate }}</h4>
 
+      <div class="flex items-center justify-between mb-3 text-lg">
+        <span class="text-[#0D274E] font-semibold">
+          {{ latestCar?.rentalRatePerDay ? ('EGP ' + latestCar.rentalRatePerDay + ' / day') : ' 120 EGP' }}
+        </span>
+        <div class="flex items-center gap-1 text-yellow-400">
+          <i class="pi pi-star-fill" *ngFor="let i of [1,2,3,4]"></i>
+          <i class="pi pi-star"></i>
+        </div>
+      </div>
 
+      <div class="grid grid-cols-2 gap-3 text-sm">
+        <div *ngIf="latestCar?.fuel_type" class="bg-[#0D274E] text-white px-3 py-2 rounded-lg text-center font-medium">
+          {{ latestCar.fuel_type }}
+        </div>
+        <div *ngIf="latestCar?.transmission" class="bg-[#0D274E] text-white px-3 py-2 rounded-lg text-center font-medium">
+          {{ latestCar.transmission }} 
+        </div>
+         <div *ngIf="latestCar?.seats" class="bg-[#0D274E] text-white px-3 py-2 rounded-lg text-center font-medium">
+          {{ latestCar.seats }} Seats
+        </div>
+        <div *ngIf="latestCar?.type" class="bg-[#0D274E] text-white px-3 py-2 rounded-lg text-center font-medium">
+          {{ latestCar.type }} 
+        </div>
+      
 
+      </div>
 
-  <div class="grid grid-cols-2 gap-3 text-sm">
-    <div class="bg-[#0D274E] text-white px-3 py-2 rounded-lg text-center font-medium hover:scale-105 transition-transform duration-200">
-      Hybrid Car
-    </div>
-    <div class="bg-[#0D274E] text-white px-3 py-2 rounded-lg text-center font-medium hover:scale-105 transition-transform duration-200">
-      653 HP
-    </div>
-    <div class="bg-[#0D274E] text-white px-3 py-2 rounded-lg text-center font-medium hover:scale-105 transition-transform duration-200">
-      Smart AC
-    </div>
-    <div class="bg-[#0D274E] text-white px-3 py-2 rounded-lg text-center font-medium hover:scale-105 transition-transform duration-200">
-      Smart Control
-    </div>
-  </div>
 
 
 

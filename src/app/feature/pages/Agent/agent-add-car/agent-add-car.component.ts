@@ -14,6 +14,8 @@ import { Observable } from 'rxjs';
 
 import { AdmincarsService } from '../../../../core/services/admincars.service';
 import { HttpClient } from '@angular/common/http';
+import { UserHeaderComponent } from '../../user-header/user-header.component';
+
 
 @Component({
   selector: 'app-agent-add-car',
@@ -28,7 +30,8 @@ import { HttpClient } from '@angular/common/http';
     FloatLabelModule,
     FileUploadModule,
     CalendarModule,
-    DropdownModule
+    DropdownModule,
+    UserHeaderComponent
   ],
   templateUrl: './agent-add-car.component.html',
   styleUrls: ['./agent-add-car.component.css']
@@ -43,7 +46,8 @@ export class AgentAddCarComponent implements OnInit {
 
   imagePreview: string | null = null;
   additionalImagesPreviews: string[] = [];
-  documentsPreviews: string[] = [];
+   documentsPreviews: string[] = [];
+
 
   carId = '';
   transmissionOptions = [
@@ -62,6 +66,62 @@ availabilityOptions = [
   { label: 'Available', value: 'Available' },
   { label: 'Rented', value: 'Rented' }
 ];
+
+categoryOptions = [
+  { label: 'Wedding', value: 'widding' },
+  { label: 'Day Use', value: 'Day Use' },
+  { label: 'Trip', value: 'Trip' },
+  { label: 'Business', value: 'business' },
+  { label: 'Airport Pickup', value: 'Airport Pickup' },
+  { label: 'Economy', value: 'Economy' },
+  { label: 'Other', value: 'other' }
+];
+
+seatOptions = Array.from({ length: 7 }, (_, i) => {
+  const seat = i + 2;
+  return { label: `${seat} Seats`, value: seat };
+});
+
+colorOptions = [
+  { label: 'White', value: 'White' },
+  { label: 'Black', value: 'Black' },
+  { label: 'Gray', value: 'Gray' },
+  { label: 'Silver', value: 'Silver' },
+  { label: 'Red', value: 'Red' },
+  { label: 'Blue', value: 'Blue' },
+  { label: 'Green', value: 'Green' },
+  { label: 'Yellow', value: 'Yellow' },
+  { label: 'Other', value: 'Other' }
+];
+
+yearOptions = Array.from({ length: 11 }, (_, i) => {
+  const year = 2015 + i;
+  return { label: `${year}`, value: year };
+});
+
+brandsOptions = [
+  { label: 'Ferrari', value: 'Ferrari' },
+  { label: 'BMW', value: 'BMW' },
+  { label: 'Mercedes', value: 'Mercedes' },
+  { label: 'Honda', value: 'Honda' },
+  { label: 'Nissan', value: 'Nissan' },
+  { label: 'Toyota', value: 'Toyota' },
+  { label: 'Test', value: 'Test' },
+  { label: 'After Ava Test', value: 'afteravatest' },
+];
+
+typeOptions = [
+  { label: 'Sport', value: 'sport' },
+  { label: 'SUV', value: 'SUV' },
+  { label: 'Sedan', value: 'Sedan' },
+  { label: 'Hatchback', value: 'hatchback' },
+  { label: 'Convertible', value: 'convertible' },
+  { label: 'Pickup', value: 'pickup' },
+  { label: 'Test', value: 'test' },
+];
+
+
+
 
   constructor(
     private fb: FormBuilder,
@@ -103,6 +163,7 @@ availabilityOptions = [
       lastMaintenanceDate: null,
       nextMaintenanceDue: null,
       availabilityStatus: ['', Validators.required],
+      allowedCategories: ['', Validators.required],
       conditionNotes: ''
     });
   }
@@ -131,30 +192,58 @@ availabilityOptions = [
   }
 
   // ---------- file handlers ----------
-  onImageSelected(e: any) {
-    const file = e.files?.[0];
-    if (!file) return;
-    this.mainImage = file;
-    const rd = new FileReader();
-    rd.onload = () => (this.imagePreview = rd.result as string);
-    rd.readAsDataURL(file);
+ onImageSelected(event: Event): void {
+  const file = (event.target as HTMLInputElement)?.files?.[0];
+  if (file) {
+    this.mainImage = file; 
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = reader.result as string;
+    };
+    reader.readAsDataURL(file);
   }
+}
 
- onAdditionalImagesSelected(e: any) {
-  const files = Array.from(e.files as File[]);
-  files.forEach(f => {
-    this.additionalImages.push(f);
-    const rd = new FileReader();
-    rd.onload = () => this.additionalImagesPreviews.push(rd.result as string);
-    rd.readAsDataURL(f);
+
+ onAdditionalImagesSelected(event: Event) {
+  const files = (event.target as HTMLInputElement)?.files;
+  if (files) {
+    Array.from(files).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.additionalImagesPreviews.push(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+}
+
+// ---------- documents ----------
+
+onDocumentsSelected(event: Event) {
+  const input = event.target as HTMLInputElement;
+  const files = input.files;
+  if (!files) return;
+
+  this.documentsPreviews = [];
+
+  Array.from(files).forEach(file => {
+    if (file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.documentsPreviews.push(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   });
+  console.log('Documents selected:', this.documentsPreviews);
 }
 
 
-  onDocumentsSelected(e:any){
-  const files:File[] = Array.from(e.files || e.target?.files || []);
-  files.forEach(f => this.documents.push(f));
+removeDocument(preview: string) {
+  this.documentsPreviews = this.documentsPreviews.filter(p => p !== preview);
 }
+
 
 
   removeAdditionalImage(url: string) {
@@ -167,7 +256,10 @@ availabilityOptions = [
 
   // ---------- submit ----------
   submitForm(): void {
-    if (this.carForm.invalid) return;
+    if (this.carForm.invalid) {
+    this.carForm.markAllAsTouched(); 
+    return;
+  }
 
     //Build FormData
     const fd = new FormData();

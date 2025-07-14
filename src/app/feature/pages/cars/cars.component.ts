@@ -116,6 +116,7 @@ export class CarsComponent implements OnInit, OnDestroy {
   filtration: string | null = null;
   type: string | null = null;
   brand: string | null = null;
+  category: string | null = null;
 
   // Map related properties
   userLocation: Location | null = null;
@@ -224,6 +225,7 @@ export class CarsComponent implements OnInit, OnDestroy {
             this.filtration = params['filtration'] || null;
             this.type = params['type'] || null;
             this.brand = params['brand'] || null;
+            this.category = params['category'] || null;
 
             // 🟨 Restore booking data from query params if present
             const pickupDateParam = params['pickupDate'];
@@ -323,6 +325,8 @@ export class CarsComponent implements OnInit, OnDestroy {
       return this._carService.getCarsByType(this.type);
     } else if (this.brand) {
       return this._carService.getCarsByBrand(this.brand);
+    } else if (this.category) {
+      return this._carService.getCarsByCategory(this.category);
     } else if (this.filtration === 'most-popular') {
       return this._carService.getMostPopularCars();
     } else if (this.filtration === 'NearBy') {
@@ -586,7 +590,11 @@ export class CarsComponent implements OnInit, OnDestroy {
         error: (error) => {
           this.isBooking = false;
           console.error('Booking error:', error);
-          let errorMessage = typeof error.error === 'string' ? error.error : error.error?.error || 'Failed to book the vehicle. Please try again.';
+          let errorMessage =
+            typeof error.error === 'string'
+              ? error.error
+              : error.error?.error ||
+                'Failed to book the vehicle. Please try again.';
           this._messageService.add({
             severity: 'error',
             summary: 'Booking Error',

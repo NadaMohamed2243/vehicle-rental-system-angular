@@ -10,13 +10,16 @@ import { ButtonModule } from 'primeng/button';
 // import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
+import { UserHeaderComponent } from '../../user-header/user-header.component';
+import { FormsModule } from '@angular/forms';
+
 
 
 
 
 @Component({
   selector: 'app-booking',
-  imports: [TabViewModule, TableModule, CommonModule,ButtonModule , ConfirmDialogModule , ToastModule],
+  imports: [TabViewModule, TableModule, CommonModule,ButtonModule , ConfirmDialogModule , ToastModule,UserHeaderComponent,FormsModule],
   templateUrl: './booking.component.html',
   styleUrl: './booking.component.css',
   providers: [ConfirmationService, MessageService]
@@ -30,6 +33,9 @@ export class BookingComponent implements OnInit {
   allOrders: Orders[] = [];
   pendingOrders: Orders[] = [];
   cancelledOrders: Orders[] = [];
+  bookingSearchTerm: string = '';
+
+   
 
   ngOnInit(): void {
     this.loadOrders();
@@ -70,7 +76,25 @@ export class BookingComponent implements OnInit {
   }
 
 
-  
+   filteredBookings() {
+      if (!this.bookingSearchTerm) return this.allOrders;
+
+      const term = this.bookingSearchTerm.toLowerCase();
+
+      return this.allOrders.filter(order => {
+        const car = typeof order.carId === 'object' && order.carId !== null
+          ? order.carId as { brand?: string, model?: string, licensePlate?: string }
+          : {};
+
+        return (
+          order.billingName?.toLowerCase().includes(term) ||
+          order.billingPhone?.toLowerCase().includes(term) ||
+          car.brand?.toLowerCase().includes(term) ||
+          car.model?.toLowerCase().includes(term) ||
+          car.licensePlate?.toLowerCase().includes(term)
+        );
+      });
+    }
 
 
 }

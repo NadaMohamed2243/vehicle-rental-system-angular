@@ -221,4 +221,34 @@ export class CarService {
 
     return this.http.get<Cars[]>(`${environment.apiUrl}/search`, { params });
   }
+
+  // Get popular car categories
+  getPopularCategories(): Observable<{ category: string; count: number }[]> {
+    return this.getCars().pipe(
+      map((cars) => {
+        const categoryCounts: { [key: string]: number } = {};
+
+        cars.forEach((car) => {
+          if (car.category) {
+            if (categoryCounts[car.category]) {
+              categoryCounts[car.category]++;
+            } else {
+              categoryCounts[car.category] = 1;
+            }
+          }
+        });
+
+        return Object.entries(categoryCounts)
+          .map(([category, count]) => ({ category, count }))
+          .sort((a, b) => b.count - a.count);
+      })
+    );
+  }
+
+  // Get cars by category
+  getCarsByCategory(category: string): Observable<Cars[]> {
+    return this.getCars().pipe(
+      map((cars) => cars.filter((car) => car.category === category))
+    );
+  }
 }

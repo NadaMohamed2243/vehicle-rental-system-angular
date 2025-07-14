@@ -1,251 +1,112 @@
-<h1 class="text-center text-3xl font-bold">Agents</h1>
+<!--Top Bar -->
+<div class="fixed top-0 left-0 w-full  bg-white shadow-sm  mb-5">
+  <div class="flex items-center justify-between flex-wrap gap-4 px-4 py-2">
+    <!-- Title -->
+    <h1 class="text-xl font-bold text-gray-800 ml-60">Car provider</h1>
 
-<div class="px-5 ml-12 m-2 border border-gray-200 rounded-lg bg-white shadow-sm p-4">
-  <p-tabView>
-    <!-- Pending Agents -->
-    <p-tabPanel header="Pending Agents">
+    <!-- Search Box -->
+    <div class="relative w-full sm:w-1/3">
+      <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+        <i class="pi pi-search"></i>
+      </span>
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        placeholder="Search..."
+        class="pl-10 pr-3 py-1.5 text-sm text-gray-700 placeholder-gray-400 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 bg-white w-full"
+        style="height: 34px;"
+      />
+    </div>
+
+    <div>
+      <app-user-header></app-user-header>
+    </div>
+  </div>
+</div>
+
+<div class="h-[85px]"></div>
+
+
+<div class="px-2 sm:px-5 border border-gray-200 rounded-lg bg-white shadow-sm p-4 overflow-x-auto">
+  <p-tabView [scrollable]="true" [(activeIndex)]="activeTabIndex">
+    <p-tabPanel *ngFor="let tab of statusTabs" [header]="tab.label">
       <div class="overflow-x-auto">
-           <p-table 
-          [value]="pendingAgents"
-          stripedRows
-          class="w-full min-w-[800px] "
+        <p-table
+          [value]=" getFilteredAgents()"
           [paginator]="true"
           [rows]="5"
-        
+          stripedRows
+          class="w-full text-sm"
         >
           <ng-template pTemplate="header">
             <tr>
-              <th>ID</th>
-              <th>Company</th>
-              <th>Location</th>
-              <th>Phone</th>
-              <th>Document</th>
-              <th>Actions</th>
+              <th class="text-center">ID</th>
+              <th class="text-center">Car Provider</th>
+              <th class="text-center">Location</th>
+              <th class="text-center">Phone</th>
+              <th class="text-center w-[400px]  whitespace-nowrap">Actions</th>
             </tr>
           </ng-template>
-          <ng-template pTemplate="body" let-agent>
+
+          <ng-template pTemplate="body" let-agent let-i="rowIndex">
             <tr>
-              <td>{{ agent._id }}</td>
-              <td>{{ agent.company_name }}</td>
-              <td>{{ agent.location }}</td>
-              <td>{{ agent.phone_number }}</td>
-              <td>
-                <p-button icon="pi pi-eye"
-                    severity="info"
-                    styleClass="p-button-sm text-[10px] px-1 py-0 rounded-sm"
-                    variant="outlined"
-                    (click)="openDocument(agent.ID_document)">
-                  </p-button>
+              <td class="text-center">{{ i + 1 }}</td>
+              <td class="text-center">{{ agent.company_name }}</td>
+              <td class="text-center">{{ agent.location }}</td>
+              <td class="text-center">{{ agent.phone_number }}</td>
+              <td class="text-center align-middle">
+                <div class="inline-flex flex-wrap justify-center gap-1">
+                  <button
+                    *ngIf="tab.key === 'pending'"
+                    (click)="approveAgent(agent._id)"
+                    class="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white text-[10px] px-2 py-[6px] rounded hover:cursor-pointer"
+                  >
+                    <i class="pi pi-check text-[12px]"></i> Approve
+                  </button>
+
+                  <button
+                    (click)="rejectAgent(agent._id)"
+                    class="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white text-[10px] px-2 py-[6px] rounded hover:cursor-pointer"
+                  >
+                    <i class="pi pi-times text-[12px]"></i> Reject
+                  </button>
+
+                  <button
+                    (click)="banAgent(agent._id)"
+                    class="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600 text-white text-[10px] px-2 py-[6px] rounded hover:cursor-pointer"
+                  >
+                    <i class="pi pi-ban text-[12px]"></i> Ban
+                  </button>
+
+                  <button
+                    (click)="suspendAgent(agent._id)"
+                    class="flex items-center gap-1 bg-purple-500 hover:bg-purple-600 text-white text-[10px] px-2 py-[6px] rounded hover:cursor-pointer"
+                  >
+                    <i class="pi pi-pause text-[12px]"></i> Suspend
+                  </button>
+
+                  <button
+                    (click)="showAgentDetails(agent)"
+                    class="flex items-center gap-1 border border-blue-300 text-blue-500 hover:bg-blue-100 text-[10px] px-2 py-[6px] rounded hover:cursor-pointer"
+                  >
+                    <i class="pi pi-eye text-[12px]  text-blue-500"></i> View
+                  </button>
+                </div>
               </td>
-              <td class="flex gap-1">
-                <p-button icon="pi pi-check" severity="info"
-                  styleClass="p-button-sm text-[10px] px-1 py-0 rounded-sm"
-                  (click)="approveAgent(agent._id)" />
-
-                <p-button icon="pi pi-times" severity="danger"
-                  styleClass="p-button-sm text-[10px] px-1 py-0 rounded-sm"
-                  (click)="rejectAgent(agent._id)" />
-
-                <p-button icon="pi pi-ban" severity="success"
-                  styleClass="p-button-sm text-[10px] px-1 py-0 rounded-sm"
-                  (click)="banAgent(agent._id)" />
-
-                <p-button icon="pi pi-pause" severity="help"
-                  styleClass="p-button-sm text-[10px] px-1 py-0 rounded-sm"
-                  (click)="suspendAgent(agent._id)" />
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
-      </div>
-    </p-tabPanel>
-
-    <!-- Approved Agents -->
-    <p-tabPanel header="Approved Agents">
-      <div class="overflow-x-auto">
-           <p-table 
-          [value]="approvedAgents"
-          stripedRows
-          class="w-full min-w-[800px] "
-          [paginator]="true"
-          [rows]="5"
-        
-        >
-          <ng-template pTemplate="header">
-            <tr>
-              <th>ID</th>
-              <th>Company</th>
-              <th>Location</th>
-              <th>Phone</th>
-              <th>Opening Hours</th>
-              <th>Actions</th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-agent>
-            <tr>
-              <td>{{ agent._id }}</td>
-              <td>{{ agent.company_name }}</td>
-              <td>{{ agent.location }}</td>
-              <td>{{ agent.phone_number }}</td>
-              <td>{{ agent.opening_hours }}</td>
-              <td class="flex gap-2">
-                 <p-button icon="pi pi-eye"
-                    severity="info"
-                    styleClass="p-button-sm text-[10px] px-1 py-0 rounded-sm"
-                    variant="outlined"
-                    (click)="showAgentDetails(agent)">
-                  </p-button>
-
-                  <p-button icon="pi pi-times" severity="danger"
-                    styleClass="p-button-sm text-[10px] px-1 py-0 rounded-sm"
-                    (click)="rejectAgent(agent._id)" />
-
-                  <p-button icon="pi pi-ban" severity="success"
-                    styleClass="p-button-sm text-[10px] px-1 py-0 rounded-sm"
-                    (click)="banAgent(agent._id)" />
-
-                  <p-button icon="pi pi-pause" severity="help"
-                    styleClass="p-button-sm text-[10px] px-1 py-0 rounded-sm"
-                    (click)="suspendAgent(agent._id)" />
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
-      </div>
-    </p-tabPanel>
-
-    <!-- Rejected Agents -->
-    <p-tabPanel header="Rejected Agents">
-      <div class="overflow-x-auto">
-           <p-table 
-          [value]="rejectedAgents"
-          stripedRows
-          class="w-full min-w-[800px] "
-          [paginator]="true"
-          [rows]="5"
-        
-        >
-          <ng-template pTemplate="header">
-            <tr>
-              <th>ID</th>
-              <th>Company</th>
-              <th>Location</th>
-              <th>Phone</th>
-              <th>Actions</th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-agent>
-            <tr>
-              <td>{{ agent._id }}</td>
-              <td>{{ agent.company_name }}</td>
-              <td>{{ agent.location }}</td>
-              <td>{{ agent.phone_number }}</td>
-              <td class="flex gap-2">
-                <p-button icon="pi pi-eye"
-                    severity="info"
-                    styleClass="p-button-sm text-[10px] px-1 py-0 rounded-sm"
-                    variant="outlined"
-                    (click)="showAgentDetails(agent)">
-                  </p-button>
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
-      </div>
-    </p-tabPanel>
-
-    <!-- Banned Agents -->
-    <p-tabPanel header="Banned Agents">
-      <div class="overflow-x-auto">
-           <p-table 
-          [value]="bannedAgents"
-          stripedRows
-          class="w-full min-w-[800px] "
-          [paginator]="true"
-          [rows]="5"
-        
-        >
-          <ng-template pTemplate="header">
-            <tr>
-              <th>ID</th>
-              <th>Company</th>
-              <th>Location</th>
-              <th>Phone</th>
-              <th>Actions</th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-agent>
-            <tr>
-              <td>{{ agent._id }}</td>
-              <td>{{ agent.company_name }}</td>
-              <td>{{ agent.location }}</td>
-              <td>{{ agent.phone_number }}</td>
-              <td class="flex gap-2">
-                  <p-button icon="pi pi-eye"
-                    severity="info"
-                    styleClass="p-button-sm text-[10px] px-1 py-0 rounded-sm"
-                    variant="outlined"
-                    (click)="showAgentDetails(agent)">
-                  </p-button>              
-                </td>
-            </tr>
-          </ng-template>
-        </p-table>
-      </div>
-    </p-tabPanel>
-
-    <!-- Suspended Agents -->
-    <p-tabPanel header="Suspended Agents">
-      <div class="overflow-x-auto">
-          <p-table 
-          [value]="suspendedAgents"
-          stripedRows
-          class="w-full min-w-[800px] "
-          [paginator]="true"
-          [rows]="5"
-        
-        >
-          <ng-template pTemplate="header">
-            <tr>
-              <th>ID</th>
-              <th>Agent</th>
-              <th>Location</th>
-              <th>Phone</th>
-              <th>Actions</th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-agent>
-            <tr>
-              <td>{{ agent._id }}</td>
-              <td>{{ agent.company_name }}</td>
-              <td>{{ agent.location }}</td>
-              <td>{{ agent.phone_number }}</td>
-              <td class="flex gap-2">
-                  <p-button icon="pi pi-eye"
-                    severity="info"
-                    styleClass="p-button-sm text-[10px] px-1 py-0 rounded-sm"
-                    variant="outlined"
-                    (click)="showAgentDetails(agent)">
-                  </p-button>              
-                </td>
             </tr>
           </ng-template>
         </p-table>
       </div>
     </p-tabPanel>
   </p-tabView>
+</div>
 
-  <!-- Document Dialog -->
-  <p-dialog header="Agent Document" [(visible)]="displayDocumentDialog" [modal]="true" [dismissableMask]="true" [style]="{ width: '40vw' }" [closable]="true">
-    <img [src]="selectedDocumentUrl" alt="ID Document" class="w-full h-auto rounded-lg" />
-  </p-dialog>
-
-  <!-- Agent Details Dialog -->
-  <p-dialog header="Agent Details" [(visible)]="displayAgentDialog" [modal]="true" [style]="{ width: '500px' }" [closable]="true">
+<!-- Dialogs -->
+<p-dialog header="Car Provider Details" [(visible)]="displayAgentDialog" [modal]="true" [style]="{ width: '500px' }">
     <div *ngIf="selectedAgent" class="p-4 space-y-3 text-gray-800">
       <div class="flex items-center gap-2">
         <i class="pi pi-building text-blue-500"></i>
-        <span><strong>Agent:</strong> {{ selectedAgent.company_name }}</span>
+        <span><strong>Car Provider:</strong> {{ selectedAgent.company_name }}</span>
       </div>
       <div class="flex items-center gap-2">
         <i class="pi pi-map-marker text-red-500"></i>
@@ -274,5 +135,5 @@
         <img [src]="_AgentService.getDocumentUrl(selectedAgent.ID_document)" alt="ID Document" class="w-full max-h-[250px] object-cover rounded-md border shadow" />
       </div>
     </div>
-  </p-dialog>
-</div>
+</p-dialog>
+

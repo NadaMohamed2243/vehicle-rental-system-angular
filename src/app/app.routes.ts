@@ -12,7 +12,7 @@ import { PendingResetPasswordComponent } from './core/pages/pending-reset-passwo
 
 import { DashboardComponent } from './feature/pages/Admin/dashboard/dashboard.component';
 import { AcceptUserComponent } from './feature/pages/Admin/accept-user/accept-user.component';
-import { CarCardsComponent } from './feature/pages/Admin/car-cards/car-cards.component';
+import { CarCardsComponent } from './feature/pages/Admin/car-cards/cars-list.component';
 import { OverviewComponent } from './feature/pages/Admin/overview/overview.component';
 import { AcceptAgentComponent } from './feature/pages/Admin/accept-agent/accept-agent.component';
 import { BookingComponent } from './feature/pages/Admin/booking/booking.component';
@@ -79,7 +79,7 @@ export const routes: Routes = [
       { path: 'booking', component: BookingComponent },
       { path: 'accept-user', component: AcceptUserComponent },
       { path: 'accept-agent', component: AcceptAgentComponent },
-      { path: 'car-cards', component: CarCardsComponent },
+      { path: 'cars-list', component: CarCardsComponent },
     ],
   },
 
