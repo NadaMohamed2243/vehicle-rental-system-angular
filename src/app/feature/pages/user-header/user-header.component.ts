@@ -1,59 +1,67 @@
 import { Component, OnInit } from '@angular/core';
-import { AvatarModule } from 'primeng/avatar';
-import { AvatarGroupModule } from 'primeng/avatargroup';
-import { Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { ClientauthService } from '../../../core/services/clientauth.service';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
+import { RouterLinkActive } from '@angular/router';
+import { AvatarModule } from 'primeng/avatar';
+import { RippleModule } from 'primeng/ripple';
 
 @Component({
   selector: 'app-user-header',
+  imports: [AvatarModule , CommonModule, RouterLink, RouterLinkActive, RippleModule],
   templateUrl: './user-header.component.html',
-  styleUrls: ['./user-header.component.css'],
-  standalone: true,
-  imports: [AvatarModule, AvatarGroupModule , CommonModule]
+  styleUrls: ['./user-header.component.css']
 })
 export class UserHeaderComponent implements OnInit {
-   constructor(private router: Router) {}
-
   user = {
-    name: '',
-    role: '',
+    name: 'Guest',
+    role: 'guest',
     avatarUrl: ''
   };
 
-  defaultAvatar = 'https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png';
-  pageTitle = '';
+defaultAvatar = 'https://primefaces.org/cdn/primeng/images/avatar/amyelsner.png';
+
+  constructor(private authService: ClientauthService) {}
 
   ngOnInit(): void {
-    // Simulate get from localStorage or auth service
-    // const name = localStorage.getItem('name');
-    // const role = localStorage.getItem('role');
-    const avatar = localStorage.getItem('avatar');
+  const token = this.authService.getToken();
 
-    this.user = {
-      name: 'Admin1',
-      role: 'admin',
-      avatarUrl: avatar || ''
-    };
+  if (token) {
+    const decoded = this.decodeToken(token);
+    const role = decoded?.role || 'user';
 
-     // Watch Route Changes
-  //   this.router.events.pipe(
-  //     filter(event => event instanceof NavigationEnd)
-  //   ).subscribe(() => {
-  //     const currentUrl = this.router.url;
+    if (role === 'admin') {
+      this.user.name = 'Admin1';
+      this.user.role = 'admin';
+    } else if (role === 'agent') {
+      this.user.name = 'Provider';
+      this.user.role = 'provider';
+    } else {
+      this.user.name = decoded?.name || 'User';
+      this.user.role = role;
+    }
 
-  //     if (currentUrl.includes('dashboard')) {
-  //       this.pageTitle = 'Dashboard';
-  //     } else if (currentUrl.includes('cars')) {
-  //       this.pageTitle = 'Cars Management';
-  //     } else if (currentUrl.includes('profile')) {
-  //       this.pageTitle = 'Profile';
-  //     } else {
-  //       this.pageTitle = 'Vehicle Rental System';
-  //     }
-  //   });
+    //  this.user.avatarUrl = decoded?.avatar
+    //   ? `http://localhost:5000/${decoded.avatar.replace(/\\/g, '/')}`
+    //   : this.defaultAvatar;
   }
+}
 
-
-  
+  private decodeToken(token: string): any {
+    try {
+      const payload = token.split('.')[1];
+      const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      return JSON.parse(jsonPayload);
+    } catch (e) {
+      console.error('Failed to decode token:', e);
+      return null;
+    }
+  }
 }
