@@ -61,10 +61,15 @@ import { Cars } from '../../../../core/interfaces/cars';
 
         @if (selectedCar?.with_driver) {
         <div class="mt-6 mb-3 flex justify-between items-center">
-          <span class="text-xs font-bold">WITH DRIVER</span>
+          <div class="flex flex-col">
+            <span class="text-xs font-bold">WITH DRIVER</span>
+            <span class="text-xs text-gray-500"
+              >Required for delivery service</span
+            >
+          </div>
           <p-toggleswitch
             [(ngModel)]="withDriver"
-            (ngModelChange)="withDriverChange.emit($event)"
+            (ngModelChange)="onWithDriverChange($event)"
           />
         </div>
         }
@@ -132,5 +137,9 @@ export class BookingDetailsComponent {
   onDropoffDateChange() {
     this.dropoffDateChange.emit(this.dropoffDate);
     this.dropoffDateValidation.emit();
+  }
+
+  onWithDriverChange(value: boolean) {
+    this.withDriverChange.emit(value);
   }
 }

@@ -58,7 +58,7 @@
                             <p-tabpanel value="0">
                                 @if (selectedCar?.agent?.location) {
                                 <app-map [carLocation]="selectedCarLocation" [userLocation]="userLocation || undefined"
-                                    [enableDeliverySelection]="isDeliverySelectionAllowed()"
+                                    [enableDeliverySelection]="canUseDeliveryLocation()"
                                     (deliveryLocationSelected)="onDeliveryLocationSelected($event)">
                                 </app-map>
                                 } @else {
@@ -72,9 +72,31 @@
                                     <div class="flex items-center">
                                         <i class="pi pi-info-circle text-yellow-600 mr-2"></i>
                                         <p class="text-sm text-yellow-800">
-                                            <strong>Note:</strong> Delivery location selection is only available for
-                                            cars with driver option.
+                                            <strong>Note:</strong> This car doesn't support delivery service.
                                             You'll need to pick up and return the car at the agent's location.
+                                        </p>
+                                    </div>
+                                </div>
+                                }
+
+                                @if (selectedCar?.with_driver && !withDriver) {
+                                <div class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                    <div class="flex items-center">
+                                        <i class="pi pi-info-circle text-blue-600 mr-2"></i>
+                                        <p class="text-sm text-blue-800">
+                                            <strong>Tip:</strong> This car supports delivery service.
+                                            Enable "With Driver" option below to select a custom delivery location.
+                                        </p>
+                                    </div>
+                                </div>
+                                }
+
+                                @if (selectedCar?.with_driver && withDriver && !selectedDeliveryLocation) {
+                                <div class="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                                    <div class="flex items-center">
+                                        <i class="pi pi-check-circle text-green-600 mr-2"></i>
+                                        <p class="text-sm text-green-800">
+                                            <strong>Ready:</strong> Click on the map to select your delivery location.
                                         </p>
                                     </div>
                                 </div>

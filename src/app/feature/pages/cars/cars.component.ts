@@ -417,6 +417,28 @@ export class CarsComponent implements OnInit, OnDestroy {
     return !!this.selectedCar?.with_driver;
   }
 
+  canUseDeliveryLocation(): boolean {
+    return this.isDeliverySelectionAllowed() && this.withDriver;
+  }
+
+  onWithDriverChangeFromComponent(withDriver: boolean) {
+    this.withDriver = withDriver;
+
+    if (!withDriver && this.selectedDeliveryLocation) {
+      this.selectedDeliveryLocation = null;
+      this._messageService.add({
+        severity: 'info',
+        summary: 'Delivery Location Cleared',
+        detail:
+          'Delivery location has been cleared since driver option was disabled.',
+      });
+    }
+
+    setTimeout(() => {
+      // Small delay to ensure the change is processed
+    }, 0);
+  }
+
   private formatDateForAPI(date: Date): string {
     return date.toISOString();
   }
@@ -534,12 +556,12 @@ export class CarsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.selectedDeliveryLocation && !this.isDeliverySelectionAllowed()) {
+    if (this.selectedDeliveryLocation && !this.canUseDeliveryLocation()) {
       this._messageService.add({
         severity: 'warn',
-        summary: 'Invalid Delivery Location',
+        summary: 'Invalid Delivery Setup',
         detail:
-          'Delivery location is not allowed for cars without driver option.',
+          'Delivery location can only be used when both car supports driver option and "with driver" is selected.',
       });
       this.selectedDeliveryLocation = null;
       return;
@@ -566,8 +588,7 @@ export class CarsComponent implements OnInit, OnDestroy {
       pickupLocation:
         this.selectedCarLocation?.address || this.selectedCar.agent.location,
       dropoffLocation:
-        // Only use delivery location if it's allowed, otherwise use pickup location
-        (this.isDeliverySelectionAllowed() &&
+        (this.canUseDeliveryLocation() &&
           this.selectedDeliveryLocation?.address) ||
         this.selectedCarLocation?.address ||
         this.selectedCar.agent.location,
@@ -876,9 +897,5 @@ export class CarsComponent implements OnInit, OnDestroy {
   onDropoffDateChangeFromComponent(date: Date | null) {
     this.dropoffDate = date;
     this.onDropoffDateChange();
-  }
-
-  onWithDriverChangeFromComponent(withDriver: boolean) {
-    this.withDriver = withDriver;
   }
 }

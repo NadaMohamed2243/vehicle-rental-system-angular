@@ -300,6 +300,16 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   onDeliveryLocationSelected(location: Location) {
+    if (!this.isDeliverySelectionAllowed()) {
+      this._messageService.add({
+        severity: 'warn',
+        summary: 'Delivery Not Available',
+        detail:
+          'Delivery location selection is only available for cars with driver option.',
+      });
+      return;
+    }
+
     this.selectedDeliveryLocation = location;
     console.log('Delivery location selected:', location);
   }
@@ -466,6 +476,10 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   isDeliverySelectionAllowed(): boolean {
-    return this.selectedCar?.with_driver || false;
+    return !!this.selectedCar?.with_driver;
+  }
+
+  canUseDeliveryLocation(): boolean {
+    return this.isDeliverySelectionAllowed() && this.withDriver;
   }
 }
