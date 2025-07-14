@@ -20,7 +20,7 @@
     "TITLE2": "Rent a car",
     "TITLE3": "in Easy Steps",
     "DESCRIPTION": "Get a car whenever you need it with "
- 
+
   },
   "SEARCH": {
     "LOC": "Location",
@@ -95,6 +95,82 @@
     "QUICK":"Quick Contact",
     "QUICK_LINK":"QUICK LINKS",
     "COPYRIGHT": "© 2025 Meshwark. All rights reserved."
+  },
+  "REGISTER":{
+    "JOIN":"Join Us",
+    "DES":"Choose your role to get started with a personalized car rental experience",
+    "CLIENT_TITLE":"I'm a Client",
+    "CLIENT_DES":"Looking to rent cars quickly and easily.",
+    "CLIENT_OP1":"Browse a wide variety of cars",
+    "CLIENT_OP2":"Easy booking and payment",
+    "CLIENT_BTN":"Register as Client",
+    "OWNER_TITLE":"I'm a Car Owner",
+    "OWNER_DES":"Want to list cars for rent and earn money.",
+    "OWNER_OP1":"Easily list your cars for rent",
+    "OWNER_OP2":"Reach more customers and grow",
+    "OWNER_BTN":"Register as Owner",
+    "INFO_1":"Secure • Verified • Trusted",
+    "INFO_2":"Already have an account?",
+    "LOGIN":"Login"
+  },
+  "REGISTER_PAGE": {
+    "TITLE": "Register",
+    "FIRST_NAME": "First Name",
+    "LAST_NAME": "Last Name",
+    "NAME_ERROR1":"Name is required.",
+    "NAME_ERROR2": "Name must be at least 3 characters long",
+    "NAME_ERROR3": "Name must not exceed 0 characters",
+    "PHONE": "Phone Number",
+    "PHONE_ERROR1": "Phone number is required.",
+    "PHONE_ERROR2": "Enter a valid Egyptian phone number contains 11 number (starts with 010,011, 012, or 015).",
+    "EMAIL": "Email Address",
+    "EMAIL_ERROR1": "Email is required.",
+    "EMAIL_ERROR2": "Invalid email format.",
+    "PASSWORD": "Password",
+    "PASSWORD_ERROR1": "Password is required.",
+    "PASSWORD_ERROR2": "Password must be at least 6 characters long.",
+    "CONFIRM_PASSWORD": "Confirm Password",
+    "CONFIRM_PASSWORD_ERROR1": "Confirm Password is required.",
+    "CONFIRM_PASSWORD_ERROR2": "Passwords do not match.",
+    "LOCATION": "Location",
+    "LOCATION2":"Select Closest Location",
+    "LOCATION_ERROR1": "Location is required.",
+    "DRIVER_LICENSE": "Driver's License (Photo)",
+    "DRIVER_LICENSE_IMAGE": "Choose Image",
+    "DRIVER_LICENSE_ERROR1": "Driver's license is required.",
+    "PREVIEW": "Preview",
+    "LOADING":"Registering...",
+    "REGISTER_BTN": "Register",
+    "GOOGLE":"Register with Google",
+    "CHANGE_ROLE":"Want to change your role?",
+    "CHANGE_ROLE_BTN":"Go back to role selection.",
+
+    "LOGIN":"Login",
+    "LOGIN_LOADING":"Logging in...",
+    "FORGET_PASS":"Forgot password?",
+    "GOOGLE_LOGIN":"Login with Google",
+    "ACCOUNT":"Don't have an account?",
+
+    "AGENT_NAME": "Name",
+
+    "WORKING_HOURS": "Working Hours",
+    "WORKING_HOURS_ERROR": "Please specify at least one working day.",
+
+    "DAY": "Day",
+    "OPEN": "Open",
+    "CLOSED": "Closed",
+    "FROM": "From",
+    "TO": "To",
+
+    "ID_DOCUMENT": "ID Document (Photo)",
+    "CHOOSE_IMAGE": "Choose Image",
+    "ID_DOCUMENT_ERROR": "ID document is required.",
+
+    "ROLE_QUESTION": "Want to change your role?",
+    "ROLE_SELECTION_LINK": "Go back to role selection."
+
+
+
   },
   "COMMON": {
     "LOADING": "Loading...",

@@ -4,10 +4,11 @@ import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angula
 import { CustomValidatorService } from '../../services/validators/custom-validator.service';
 import { Router, RouterLink } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule,RouterLink],
+  imports: [ReactiveFormsModule,RouterLink,TranslateModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
