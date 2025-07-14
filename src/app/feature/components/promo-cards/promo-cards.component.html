@@ -22,13 +22,12 @@
     </div>
 
     <!-- Content -->
-    <h2 class="text-3xl font-bold mb-2 z-10 relative">LET'S RENT <br /> OUR CAR</h2>
-    <p class="mb-4 text-sm z-10 relative">Discover the freedom of the open road with our affordable and reliable rental
-      options. Drive your way, your style.</p>
+    <h2 class="text-3xl font-bold mb-2 z-10 relative">{{"LANDING_PROMO.TITLE1_1"|translate}} <br /> {{ "LANDING_PROMO.TITLE1_2"|translate }}</h2>
+    <p class="mb-4 text-sm z-10 relative">{{ "LANDING_PROMO.DESCRIPTION1"|translate }}</p>
 
     <a [routerLink]="['/cars']" routerLinkActive="active"
       class="mt-6 inline-flex items-center px-5 py-3 text-sm font-medium text-white bg-light-blue rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition z-10 relative">
-      Our Cars
+      {{ "LANDING_PROMO.BTN1"|translate }}
       <svg class="rtl:rotate-180 w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
           d="M1 5h12m0 0L9 1m4 4L9 9" />
@@ -60,12 +59,11 @@
 
     <!-- Text Section -->
     <div class="md:w-full lg:w-1/2 z-10 relative">
-      <h2 class="text-3xl font-bold mb-2">SALE 30% OFF</h2>
-      <p class="mb-4 text-sm">Take advantage of our limited-time offer and enjoy 30% off your next car rental. Book now
-        and save big on your journey.</p>
+      <h2 class="text-3xl font-bold mb-2">{{"LANDING_PROMO.TITLE2"|translate}}</h2>
+      <p class="mb-4 text-sm">{{ "LANDING_PROMO.DESCRIPTION2"|translate }}</p>
       <a [routerLink]="['/cars']" routerLinkActive="active"
         class="mt-6 inline-flex items-center px-5 py-3 text-sm font-medium text-white bg-light-blue rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition">
-        BOOK A CAR
+        {{ "LANDING_PROMO.BTN2"|translate }}
         <svg class="rtl:rotate-180 w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M1 5h12m0 0L9 1m4 4L9 9" />
