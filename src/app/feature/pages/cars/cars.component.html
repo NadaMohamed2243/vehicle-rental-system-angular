@@ -9,7 +9,7 @@
             <p class="mt-4 text-dark-blue text-lg font-medium">Loading cars...</p>
         </div>
         } @else {
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 p-4 m-5">
+        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 p-4 m-5">
             <p-button (click)="visible2 = true" icon="pi pi-bars" class="md:hidden" />
             @for (car of filteredCars; track car._id) {
             <app-card [carDetails]="car" fromWho="car" (click)="showCarDetails(car)"></app-card>
