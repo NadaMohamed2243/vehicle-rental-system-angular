@@ -69,6 +69,27 @@ export class ClientService {
       }
     );
   }
+   // Unban client
+  unbanClient(id: string): Observable<any> {
+    return this.http.patch(
+      `${this.baseUrl}/unban/client/${id}`,
+      {},
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+  }
+
+  // Unsuspend client
+  unsuspendClient(id: string): Observable<any> {
+    return this.http.patch(
+      `${this.baseUrl}/unsuspend/client/${id}`,
+      {},
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+  }
 
   getClientProfile() {
     const token = localStorage.getItem('token');

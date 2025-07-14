@@ -38,6 +38,7 @@
             <th>ID</th>
             <th>Brand</th>
             <th>Model</th>
+            <th>Car Provider Name</th>
             <th>Type</th>
             <th>Plate</th>
             <th>Status</th>
@@ -50,13 +51,14 @@
             <td>{{ i + 1 }}</td>
             <td>{{ car.brand }}</td>
             <td>{{ car.model }}</td>
+            <td>{{ car.agent?.company_name}} </td>
             <td>{{ car.type }}</td>
             <td>{{ car.licensePlate }}</td>
-            <td>{{ car.availabilityStatus || car.approval_status }}</td>
+            <td>{{ car.availabilityStatus || car.approval_status }} Now</td>
             <td class="text-center">
               <div class="flex flex-wrap justify-center gap-1">
 
-                <button *ngIf="tab.key === 'pending'" (click)="approveCar(car._id)"  class="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white text-[10px] px-2 py-[6px] rounded hover:cursor-pointer">
+                <button *ngIf="tab.key === 'pending' || tab.key==='rejected'" (click)="approveCar(car._id)"  class="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white text-[10px] px-2 py-[6px] rounded hover:cursor-pointer">
                    <i class="pi pi-check text-[12px]"></i>Approve
                 </button>
                 <button

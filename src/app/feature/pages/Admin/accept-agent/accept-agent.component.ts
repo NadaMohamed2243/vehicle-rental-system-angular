@@ -53,13 +53,15 @@ export class AcceptAgentComponent implements OnInit {
     this.selectedTabKey = this.statusTabs[event.index].key;
   }
 
-  loadAgents(): void {
-    this._AgentService.getAllAgents().subscribe((agents: Agent[]) => {
-      this.statusTabs.forEach(tab => {
-        this.agentsMap[tab.key] = agents.filter(agent => agent.verification_status === tab.key);
-      });
+ loadAgents(): void {
+  this.statusTabs.forEach(tab => {
+    this._AgentService.getAgentsByStatus(tab.key).subscribe((agents: Agent[]) => {
+       console.log(`Loaded ${tab.key} agents:`, agents);
+      this.agentsMap[tab.key] = agents;
     });
-  }
+  });
+}
+
 
   getFilteredAgents(): Agent[] {
     const term = this.searchTerm.toLowerCase();
@@ -81,9 +83,14 @@ export class AcceptAgentComponent implements OnInit {
   banAgent(id: string): void {
     this._AgentService.banAgent(id).subscribe(() => this.loadAgents());
   }
-
+  unbanAgent(id: string): void {
+    this._AgentService.unbanAgent(id).subscribe(() => this.loadAgents());
+  }
   suspendAgent(id: string): void {
     this._AgentService.suspendAgent(id).subscribe(() => this.loadAgents());
+  }
+  unsuspendAgent(id: string): void {
+    this._AgentService.unsuspendAgent(id).subscribe(() => this.loadAgents());
   }
 
   openDocument(documentPath: string): void {

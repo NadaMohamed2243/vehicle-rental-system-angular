@@ -69,6 +69,12 @@ export class AcceptUserComponent implements OnInit {
   case 'suspend':
   this._ClientService.suspendClient(clientId).subscribe(() => this.loadClients());
   break;
+  case 'unsuspend':
+  this._ClientService.unsuspendClient(clientId).subscribe(() => this.loadClients());
+  break;
+  case 'unban':
+  this._ClientService.unbanClient(clientId).subscribe(() => this.loadClients());
+  break;
   }
   }
 
@@ -86,3 +92,4 @@ export class AcceptUserComponent implements OnInit {
     ) || [];
   }
 }
+

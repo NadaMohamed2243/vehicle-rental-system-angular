@@ -28,9 +28,9 @@
 
 
 <div class="px-2 sm:px-5 border border-gray-200 rounded-lg bg-white shadow-sm p-4 overflow-x-auto">
-  
+
   <div class="flex flex-col sm:flex-row justify-between items-center gap-2 ">
-   
+
       <!-- Tabs -->
     <p-tabView
       [(activeIndex)]="activeTabIndex"
@@ -42,7 +42,7 @@
     </p-tabView>
 
 
-  
+
   </div>
 
   <div class="overflow-x-auto">
@@ -60,9 +60,9 @@
           <th class="text-center whitespace-nowrap">Phone</th>
           <th class="text-center whitespace-nowrap">City</th>
           <th class="text-center whitespace-nowrap">License</th>
+          <th  *ngIf="selectedTabKey ==='suspended'" class="text-center whitespace-nowrap">Suspended Date</th>
           <th
             class="text-center whitespace-nowrap w-[400px]"
-            *ngIf="selectedTabKey === 'pending' || selectedTabKey === 'approved'"
           >
             Actions
           </th>
@@ -83,13 +83,15 @@
               (click)="openLicenseDialog(client.driver_license)"
             />
           </td>
+          <td *ngIf="selectedTabKey === 'suspended'" class="text-center">
+            {{ client.suspended_until | date: 'short' }}
+          </td>
           <td
             class="text-center align-middle"
-            *ngIf="selectedTabKey === 'pending' || selectedTabKey === 'approved'"
           >
             <div class="inline-flex flex-wrap justify-center gap-1">
               <button
-                *ngIf="selectedTabKey === 'pending'"
+                *ngIf="selectedTabKey === 'pending' || selectedTabKey === 'rejected'"
                 (click)="handleAction('approve', client._id)"
                 class="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white text-[10px] px-2 py-[6px] rounded hover:cursor-pointer"
               >
@@ -97,6 +99,7 @@
               </button>
 
               <button
+                *ngIf="selectedTabKey === 'pending' || selectedTabKey === 'approved'"
                 (click)="handleAction('reject', client._id)"
                 class="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white text-[10px] px-2 py-[6px] rounded hover:cursor-pointer"
               >
@@ -104,6 +107,7 @@
               </button>
 
               <button
+                *ngIf="selectedTabKey === 'approved' || selectedTabKey === 'rejected'"
                 (click)="handleAction('ban', client._id)"
                 class="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600 text-white text-[10px] px-2 py-[6px] rounded hover:cursor-pointer"
               >
@@ -111,11 +115,26 @@
               </button>
 
               <button
+                *ngIf="selectedTabKey === 'approved'"
                 (click)="handleAction('suspend', client._id)"
                 class="flex items-center gap-1 bg-purple-500 hover:bg-purple-600 text-white text-[10px] px-2 py-[6px] rounded hover:cursor-pointer"
               >
                 <i class="pi pi-pause text-[12px]"></i> Suspend
               </button>
+              <button
+                  *ngIf="selectedTabKey === 'banned'"
+                    (click)="handleAction('unban', client._id)"
+                    class="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600 text-white text-[10px] px-2 py-[6px] rounded hover:cursor-pointer"
+                    >
+                    <i class="pi pi-unlock text-[12px]"></i> Unban
+                  </button>
+                  <button
+                  *ngIf="selectedTabKey === 'suspended'"
+                  (click)="handleAction('unsuspend', client._id)"
+                  class="flex items-center gap-1 bg-green-400 hover:bg-green-600 text-white text-[10px] px-2 py-[6px] rounded hover:cursor-pointer"
+                  >
+                  <i class="pi pi-play text-[12px] text-green-500"></i> Unsuspend
+                </button>
             </div>
           </td>
         </tr>

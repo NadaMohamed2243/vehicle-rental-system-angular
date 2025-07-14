@@ -34,8 +34,13 @@ export class BookingComponent implements OnInit {
   pendingOrders: Orders[] = [];
   cancelledOrders: Orders[] = [];
   bookingSearchTerm: string = '';
+  paidOrders: Orders[] = [];
+  completedOrders: Orders[] = [];
+  upcomingOrders: Orders[] = [];
+  ongoingOrders: Orders[] = [];
+  overdueOrders: Orders[] = [];
 
-   
+
 
   ngOnInit(): void {
     this.loadOrders();
@@ -46,6 +51,21 @@ export class BookingComponent implements OnInit {
       this.allOrders = res;
       this.pendingOrders = res.filter(order => order.status === 'pending');
       this.cancelledOrders = res.filter(order => order.status === 'cancelled');
+      this.paidOrders = res.filter(order => order.status === 'paid');
+      this.completedOrders = res.filter(order => order.status === 'completed');
+
+      const now = new Date();
+      this.upcomingOrders = res.filter(order => new Date(order.startDate) > now);
+      this.ongoingOrders = res.filter(order =>{
+        const start = new Date(order.startDate);
+  const end = new Date(order.endDate);
+  return start <= now && end >= now && !['completed', 'cancelled',
+  'pending'
+  ].includes(order.status);
+    });
+      this.overdueOrders = res.filter(order =>
+        new Date(order.endDate) < now && order.status !== 'completed' && order.status !== 'cancelled'
+      );
     });
   }
 

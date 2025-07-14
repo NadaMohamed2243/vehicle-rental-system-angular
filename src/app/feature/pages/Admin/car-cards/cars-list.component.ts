@@ -41,8 +41,8 @@ export class CarCardsComponent implements OnInit {
     { label: 'Pending', key: 'pending' },
     { label: 'Approved', key: 'approved' },
     { label: 'Rejected', key: 'rejected' },
-    { label: 'Available', key: 'available' },
-    { label: 'Rented', key: 'rented' },
+    { label: 'Available Now', key: 'available' },
+    { label: 'Rented Now', key: 'rented' },
     // { label: 'Under Maintenance', key: 'maintenance' }
   ];
 

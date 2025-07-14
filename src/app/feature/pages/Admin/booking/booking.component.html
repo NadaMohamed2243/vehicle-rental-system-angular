@@ -54,7 +54,7 @@
               <th>End</th>
               <th>Cost</th>
               <th>Status</th>
-              <th>Actions</th>
+              <!-- <th>Actions</th> -->
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-order>
@@ -86,8 +86,8 @@
                 </span>
               </td>
 
-             <td>
-              <div class="flex gap-1">
+             <!-- <td> -->
+              <!-- <div class="flex gap-1"> -->
              <!-- Cancel Button -->
               <!-- <p-button
                 label="Cancel"
@@ -98,15 +98,15 @@
               </p-button> -->
 
               <!-- Delete Button -->
-              <button
+              <!-- <button
                   (click)="confirmDelete(order._id)"
                   [disabled]="order.status === 'paid'"
                   class="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white text-[10px] px-2 py-[6px] rounded hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <i class="pi pi-trash text-[12px]"></i>Delete
-                </button>
-              </div>
-            </td>
+                </button> -->
+              <!-- </div> -->
+            <!-- </td> -->
 
             </tr>
           </ng-template>
@@ -114,8 +114,41 @@
       </div>
     </p-tabPanel>
 
-
-
+       <!-- Paid -->
+<p-tabPanel header="Paid Bookings">
+  <div class="overflow-x-auto">
+    <p-table [value]="paidOrders" stripedRows class="w-full min-w-[800px]" [paginator]="true" [rows]="5">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Customer</th>
+          <th>Phone</th>
+          <th>Car</th>
+          <th>Image</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Cost</th>
+          <th>Status</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-order>
+        <tr>
+          <td>{{ order.billingName }}</td>
+          <td>{{ order.billingPhone }}</td>
+          <td>{{ order.carId.brand }} {{ order.carId.model }} ({{ order.carId.licensePlate }})</td>
+          <td>
+            <img [src]="order.carId?.mainPhoto || order.carId?.carPhotos?.[0]" alt="Car Image" class="w-20 h-12 object-cover rounded" />
+          </td>
+          <td>{{ order.startDate | date: 'yyyy-MM-dd' }}</td>
+          <td>{{ order.endDate | date: 'yyyy-MM-dd' }}</td>
+          <td>EGP {{ order.totalCost }}</td>
+          <td>
+            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">Paid</span>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</p-tabPanel>
 
     <!-- Cancelled Orders -->
     <p-tabPanel header="Cancelled Bookings">
@@ -163,6 +196,82 @@
         </p-table>
       </div>
     </p-tabPanel>
+
+    <p-tabPanel header="Upcoming Bookings">
+      <div class="overflow-x-auto">
+    <p-table [value]="upcomingOrders" stripedRows class="w-full min-w-[800px]" [paginator]="true" [rows]="5">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Customer</th>
+          <th>Car</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Status</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-order>
+        <tr>
+          <td>{{ order.billingName }}</td>
+          <td>{{ order.carId.brand }} {{ order.carId.model }}</td>
+          <td>{{ order.startDate | date: 'yyyy-MM-dd' }}</td>
+          <td>{{ order.endDate | date: 'yyyy-MM-dd' }}</td>
+          <td><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">{{ order.status }}</span></td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</p-tabPanel>
+<p-tabPanel header="Ongoing Bookings">
+  <div class="overflow-x-auto">
+    <p-table [value]="ongoingOrders" stripedRows class="w-full min-w-[800px]" [paginator]="true" [rows]="5">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Customer</th>
+          <th>Car</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Status</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-order>
+        <tr>
+          <td>{{ order.billingName }}</td>
+          <td>{{ order.carId.brand }} {{ order.carId.model }}</td>
+          <td>{{ order.startDate | date: 'yyyy-MM-dd' }}</td>
+          <td>{{ order.endDate | date: 'yyyy-MM-dd' }}</td>
+          <td>
+            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">In Progress</span>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</p-tabPanel>
+
+<p-tabPanel header="Completed Bookings">
+  <div class="overflow-x-auto">
+    <p-table [value]="completedOrders" stripedRows class="w-full min-w-[800px]" [paginator]="true" [rows]="5">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Customer</th>
+          <th>Car</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Cost</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-order>
+        <tr>
+          <td>{{ order.billingName }}</td>
+          <td>{{ order.carId.brand }} {{ order.carId.model }} ({{ order.carId.licensePlate }})</td>
+          <td>{{ order.startDate | date: 'yyyy-MM-dd' }}</td>
+          <td>{{ order.endDate | date: 'yyyy-MM-dd' }}</td>
+          <td>EGP {{ order.totalCost }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</p-tabPanel>
 
   </p-tabView>
 </div>

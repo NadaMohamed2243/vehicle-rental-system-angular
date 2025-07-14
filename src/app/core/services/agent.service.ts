@@ -8,7 +8,8 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class AgentService {
-  private apiUrl = environment.apiUrl;
+  private apiURL = `${environment.apiUrl}/auth`;
+  private baseUrl = `${environment.apiUrl}/admin`;
 
   constructor(private http: HttpClient) {}
 
@@ -20,44 +21,49 @@ export class AgentService {
   }
 
   getAllAgents(): Observable<Agent[]> {
-    return this.http.get<Agent[]>(`${this.apiUrl}/admin/agents`, {
+    return this.http.get<Agent[]>(`${this.baseUrl}/agents`, {
       headers: this.getAuthHeaders(),
     });
   }
+  getAgentsByStatus(status: string): Observable<Agent[]> {
+  return this.http.get<Agent[]>(`${this.baseUrl}/agents?status=${status}`, {
+    headers: this.getAuthHeaders()
+  });
+}
 
-  getPendingAgents(): Observable<Agent[]> {
-    return this.http.get<Agent[]>(`${this.apiUrl}/agents?status=pending`, {
-      headers: this.getAuthHeaders(),
-    });
-  }
+  // getPendingAgents(): Observable<Agent[]> {
+  //   return this.http.get<Agent[]>(`${this.baseUrl}/agents?status=pending`, {
+  //     headers: this.getAuthHeaders(),
+  //   });
+  // }
 
-  getApprovedAgents(): Observable<Agent[]> {
-    return this.http.get<Agent[]>(`${this.apiUrl}/agents?status=approved`, {
-      headers: this.getAuthHeaders(),
-    });
-  }
+  // getApprovedAgents(): Observable<Agent[]> {
+  //   return this.http.get<Agent[]>(`${this.baseUrl}/agents?status=approved`, {
+  //     headers: this.getAuthHeaders(),
+  //   });
+  // }
 
-  getRejectedAgents(): Observable<Agent[]> {
-    return this.http.get<Agent[]>(`${this.apiUrl}/agents?status=rejected`, {
-      headers: this.getAuthHeaders(),
-    });
-  }
+  // getRejectedAgents(): Observable<Agent[]> {
+  //   return this.http.get<Agent[]>(`${this.apiURL}/agents?status=rejected`, {
+  //     headers: this.getAuthHeaders(),
+  //   });
+  // }
 
-  getBannedAgents(): Observable<Agent[]> {
-    return this.http.get<Agent[]>(`${this.apiUrl}/agents?status=banned`, {
-      headers: this.getAuthHeaders(),
-    });
-  }
+  // getBannedAgents(): Observable<Agent[]> {
+  //   return this.http.get<Agent[]>(`${this.baseUrl}/agents?status=banned`, {
+  //     headers: this.getAuthHeaders(),
+  //   });
+  // }
 
-  getSuspendedAgents(): Observable<Agent[]> {
-    return this.http.get<Agent[]>(`${this.apiUrl}/agents?status=suspended`, {
-      headers: this.getAuthHeaders(),
-    });
-  }
+  // getSuspendedAgents(): Observable<Agent[]> {
+  //   return this.http.get<Agent[]>(`${this.baseUrl}/agents?status=suspended`, {
+  //     headers: this.getAuthHeaders(),
+  //   });
+  // }
 
   approveAgent(id: string): Observable<any> {
     return this.http.patch(
-      `${this.apiUrl}/approve/agent/${id}`,
+      `${this.baseUrl}/approve/agent/${id}`,
       {},
       {
         headers: this.getAuthHeaders(),
@@ -67,7 +73,7 @@ export class AgentService {
 
   rejectAgent(id: string): Observable<any> {
     return this.http.patch(
-      `${this.apiUrl}/reject/agent/${id}`,
+      `${this.baseUrl}/reject/agent/${id}`,
       {},
       {
         headers: this.getAuthHeaders(),
@@ -77,7 +83,7 @@ export class AgentService {
 
   banAgent(id: string): Observable<any> {
     return this.http.patch(
-      `${this.apiUrl}/ban/agent/${id}`,
+      `${this.baseUrl}/ban/agent/${id}`,
       {},
       {
         headers: this.getAuthHeaders(),
@@ -87,16 +93,34 @@ export class AgentService {
 
   suspendAgent(id: string): Observable<any> {
     return this.http.patch(
-      `${this.apiUrl}/suspend/agent/${id}`,
+      `${this.baseUrl}/suspend/agent/${id}`,
       {},
       {
         headers: this.getAuthHeaders(),
       }
     );
   }
+    // Unban agent
+  unbanAgent(id: string): Observable<any> {
+    return this.http.patch(
+      `${this.baseUrl}/unban/agent/${id}`,
+      {},
+      { headers: this.getAuthHeaders() }
+    );
+  }
+
+  // Unsuspend agent
+  unsuspendAgent(id: string): Observable<any> {
+    return this.http.patch(
+      `${this.baseUrl}/unsuspend/agent/${id}`,
+      {},
+      { headers: this.getAuthHeaders() }
+    );
+  }
 
   getDocumentUrl(path: string): string {
     const formattedPath = path.replace(/\\/g, '/');
-    return `https://lucky-growth-production.up.railway.app/${formattedPath}`;
+    return `${environment.baseUrl}/${formattedPath}`;
   }
 }
+
