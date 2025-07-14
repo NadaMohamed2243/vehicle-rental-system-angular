@@ -1,64 +1,117 @@
 <section
-    class="sticky left-0 top-0 z-20 flex h-screen flex-col justify-between overflow-hidden border-r-[1.5px] border-[#e8e8e8] pb-5 pt-28 max-md:hidden transition-all duration-300 ease-in-out"
-    [class.w-fit]="!isExpanded" [class.w-64]="isExpanded">
+  class="sticky left-0 top-0 z-20 flex h-screen flex-col justify-between overflow-hidden border-r-[1.5px] border-[#e8e8e8] pb-5 pt-28 max-md:hidden transition-all duration-300 ease-in-out"
+  [class.w-fit]="!isExpanded"
+  [class.w-64]="isExpanded"
+>
+  <!-- Toggle Button -->
+  <div class="px-6 mb-4">
+    <button
+      (click)="toggleSidebar()"
+      class="w-full flex items-center justify-center p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+      [class.justify-start]="isExpanded"
+      [class.justify-center]="!isExpanded"
+    >
+      <i class="pi pi-bars text-gray-600" style="font-size: 1.2rem;"></i>
+      @if (isExpanded) {
+      <span class="ml-3 text-gray-700 font-medium">Menu</span>
+      }
+    </button>
+  </div>
 
-    <!-- Toggle Button -->
-    <div class="px-6 mb-4">
-        <button (click)="toggleSidebar()"
-            class="w-full flex items-center justify-center p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
-            [class.justify-start]="isExpanded" [class.justify-center]="!isExpanded">
-            <i class="pi pi-bars text-gray-600" style="font-size: 1.2rem;"></i>
-            @if (isExpanded) {
-            <span class="ml-3 text-gray-700 font-medium">Menu</span>
-            }
-        </button>
-    </div>
+  <!-- Navigation Links -->
+  <div class="flex flex-col w-full flex-1 gap-6 px-6">
+    @for (link of links; track link.img) {
+    <a
+      [routerLink]="link.route"
+      routerLinkActive="active"
+      class="nav-link rounded-full transition-all duration-300 flex items-center overflow-hidden px-4"
+      [style.background-color]="rla.isActive ? '#007efc' : 'transparent'"
+      [style.padding]="'12px'"
+      [class.justify-center]="!isExpanded"
+      [class.justify-start]="isExpanded"
+      [class.w-12]="!isExpanded"
+      [class.w-full]="isExpanded"
+      #rla="routerLinkActive"
+    >
+      <i
+        class="pi pi-{{link.img}}"
+        [style.color]="rla.isActive ? 'white' : '#d2d2d2'"
+        [style.transform]="rla.isActive ? 'scale(1.1)' : 'scale(1)'"
+        style="font-size: 1.3rem; transition: all 0.3s ease; flex-shrink: 0;"
+      ></i>
 
-    <!-- Navigation Links -->
-    <div class="flex flex-col w-full flex-1 gap-6 px-6">
-        @for (link of links; track link.img) {
-        <a [routerLink]="link.route" routerLinkActive="active"
-            class="nav-link rounded-full transition-all duration-300 flex items-center overflow-hidden"
-            [style.background-color]="rla.isActive ? '#007efc' : 'transparent'"
-            [style.padding]="rla.isActive ? '12px' : '12px'" [class.justify-center]="!isExpanded"
-            [class.justify-start]="isExpanded" [class.w-12]="!isExpanded" [class.w-full]="isExpanded"
-            #rla="routerLinkActive">
-
-            <i class="pi pi-{{link.img}}" [style.color]="rla.isActive ? 'white' : '#d2d2d2'"
-                [style.transform]="rla.isActive ? 'scale(1.1)' : 'scale(1)'"
-                style="font-size: 1.3rem; transition: all 0.3s ease; flex-shrink: 0;"></i>
-
-            @if (isExpanded) {
-            <span class="ml-4 font-medium text-sm whitespace-nowrap transition-all duration-300"
-                [style.color]="rla.isActive ? 'white' : '#4a5568'">
-                {{ link.label }}
-            </span>
-            }
-        </a>
-        }
-        <!-- logout icon -->
-        <a routerLinkActive="active" class="nav-link rounded-full p-3 transition-all duration-300 hover:cursor-pointer"
-            [style.background-color]="rla.isActive ? '#007efc' : 'transparent'"
-            [style.padding]="rla.isActive ? '12px' : '12px'" #rla="routerLinkActive" (click)="logout()">
-            <i class="pi pi-sign-out text-xl" [style.color]="rla.isActive ? 'white' : '#d2d2d2'"
-                [style.transform]="rla.isActive ? 'scale(1.1)' : 'scale(1)'"
-                style="font-size: 1.3rem; transition: all 0.3s ease; flex-shrink: 0;"></i>
-            @if (isExpanded) {
-            <span class="ml-4 font-medium text-sm whitespace-nowrap transition-all duration-300"
-                [style.color]="rla.isActive ? 'white' : '#4a5568'">
-                Logout
-            </span>
-            }
-        </a>
-    </div>
-
-    <!-- Footer -->
-    @if (isExpanded) {
-    <div class="px-6 mt-4">
-        <div class="border-t border-gray-200 pt-4">
-            <p class="text-xs text-gray-500 text-center">Meshwark v1.0</p>
-        </div>
-    </div>
+      @if (isExpanded) {
+      <span
+        class="ml-4 font-medium text-sm whitespace-nowrap transition-all duration-300"
+        [style.color]="rla.isActive ? 'white' : '#4a5568'"
+      >
+        {{ link.label }}
+      </span>
+      }
+    </a>
     }
 
+    <!-- Language Toggle Button -->
+    <button
+      (click)="toggleLanguage()"
+      class="nav-link rounded-full transition-all duration-300 flex items-center overflow-hidden px-4"
+      [style.background-color]="'#007efc'"
+      [style.padding]="'12px'"
+      [class.justify-center]="!isExpanded"
+      [class.justify-start]="isExpanded"
+      [class.w-12]="!isExpanded"
+      [class.w-full]="isExpanded"
+    >
+      <i
+        class="pi pi-globe"
+        style="color: white; font-size: 1.3rem; flex-shrink: 0;"
+        *ngIf="!isExpanded"
+      ></i>
+
+      @if (isExpanded) {
+      <span class="ml-4 font-medium text-sm whitespace-nowrap transition-all duration-300 text-white">
+        {{ (currentLang$ | async) === 'en' ? 'العربية' : 'English' }}
+      </span>
+      }
+    </button>
+
+    <!-- Logout Button -->
+    <a
+      routerLinkActive="active"
+      class="nav-link rounded-full transition-all duration-300 flex items-center overflow-hidden px-4 hover:cursor-pointer"
+      [style.background-color]="rla.isActive ? '#007efc' : 'transparent'"
+      [style.padding]="'12px'"
+      [class.justify-center]="!isExpanded"
+      [class.justify-start]="isExpanded"
+      [class.w-12]="!isExpanded"
+      [class.w-full]="isExpanded"
+      #rla="routerLinkActive"
+      (click)="logout()"
+    >
+      <i
+        class="pi pi-sign-out text-xl"
+        [style.color]="rla.isActive ? 'white' : '#d2d2d2'"
+        [style.transform]="rla.isActive ? 'scale(1.1)' : 'scale(1)'"
+        style="font-size: 1.3rem; transition: all 0.3s ease; flex-shrink: 0;"
+      ></i>
+
+      @if (isExpanded) {
+      <span
+        class="ml-4 font-medium text-sm whitespace-nowrap transition-all duration-300"
+        [style.color]="rla.isActive ? 'white' : '#4a5568'"
+      >
+        Logout
+      </span>
+      }
+    </a>
+  </div>
+
+  <!-- Footer -->
+  @if (isExpanded) {
+  <div class="px-6 mt-4">
+    <div class="border-t border-gray-200 pt-4">
+      <p class="text-xs text-gray-500 text-center">Meshwark v1.0</p>
+    </div>
+  </div>
+  }
 </section>

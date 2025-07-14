@@ -4,10 +4,11 @@ import { CardCarouselComponent } from '../../../shared/components/ui/card-carous
 import { Cars } from '../../../core/interfaces/cars';
 import { CarService } from '../../../core/services/car.service';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-featured-cars',
-  imports: [CardCarouselComponent, CommonModule],
+  imports: [CardCarouselComponent, CommonModule, TranslateModule],
   templateUrl: './featured-cars.component.html',
   styleUrls: ['./featured-cars.component.css'],
 })

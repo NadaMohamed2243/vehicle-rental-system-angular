@@ -4,10 +4,12 @@ import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { links } from '../../../constants/navLinks';
 import { AuthService } from '../../../../core/services/auth.service';
+import { TranslateModule } from '@ngx-translate/core';
+import { LanguageService } from '../../../../core/services/language.service';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [RouterLink, RouterLinkActive, CommonModule],
+  imports: [RouterLink, RouterLinkActive, CommonModule,TranslateModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css',
 })
@@ -15,9 +17,13 @@ export class SidebarComponent implements OnInit {
   links = links;
   isExpanded = false;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private languageService: LanguageService) {}
+
+    currentLang$: any;
 
   ngOnInit() {
+        this.currentLang$ = this.languageService.currentLang$;
+
     if (isPlatformBrowser(this.platformId)) {
       const savedState = localStorage.getItem('sidebarExpanded');
       this.isExpanded = savedState === 'true';
@@ -39,5 +45,9 @@ export class SidebarComponent implements OnInit {
     this._clientAuth.clear();
     this._auth.removeToken();
     this._router.navigate(['/landing']);
+  }
+
+  toggleLanguage() {
+    this.languageService.toggleLanguage();
   }
 }
