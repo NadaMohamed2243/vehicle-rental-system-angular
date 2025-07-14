@@ -11,4 +11,9 @@ import { AgentSidebarComponent } from '../agent-sidebar/agent-sidebar.component'
 })
 export class AgentDashboardComponent {
 
+   sidebarExpanded = true;
+  // Method to handle sidebar toggle from the sidebar component to make it responsive and show components accoding to the sidebar state
+  toggleSidebar(expanded: boolean) {
+    this.sidebarExpanded = expanded;
+}
 }

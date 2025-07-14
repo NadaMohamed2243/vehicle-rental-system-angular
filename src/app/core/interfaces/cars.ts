@@ -33,6 +33,7 @@ export interface Cars {
   category: string;
   createdAt: string
   updatedAt: string
+  allowedCategories: 'widding' | 'Day Use' | 'Trip' | 'business' | 'Airport Pickup' | 'Economy' | 'other';
   __v: number
 }
 
