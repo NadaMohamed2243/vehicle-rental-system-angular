@@ -38,7 +38,7 @@ export class AgentBookingComponent implements OnInit {
   }
 
   loadOrders() {
-    this._OrdersService.getAllOrdersAdmin().subscribe((res: Orders[]) => {
+    this._OrdersService.getAllOrdersAgent().subscribe((res: Orders[]) => {
       this.allOrders = res;
       this.pendingOrders = res.filter(order => order.status === 'pending');
       this.cancelledOrders = res.filter(order => order.status === 'cancelled');
