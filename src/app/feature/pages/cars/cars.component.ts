@@ -43,6 +43,11 @@ import { AgreementService } from '../../../core/services/agreement.service';
 import { SafeUrlPipe } from '../../../shared/pipes/safe-url.pipe';
 import { DialogModule } from 'primeng/dialog';
 import { SignatureCanvasComponent } from '../../../shared/components/ui/signature-canvas/signature-canvas.component';
+import { BookingDetailsComponent } from '../../components/ui/booking-details/booking-details.component';
+import { BookingActionComponent } from '../../components/ui/booking-action/booking-action.component';
+import { VehicleInfoComponent } from '../../components/ui/vehicle-info/vehicle-info.component';
+import { BookingHistoryComponent } from '../../components/ui/booking-history/booking-history.component';
+import { AgreementModalComponent } from '../../components/ui/agreement-modal/agreement-modal.component';
 
 @Component({
   selector: 'app-cars',
@@ -68,6 +73,11 @@ import { SignatureCanvasComponent } from '../../../shared/components/ui/signatur
     SafeUrlPipe,
     DialogModule,
     SignatureCanvasComponent,
+    BookingDetailsComponent,
+    BookingActionComponent,
+    VehicleInfoComponent,
+    BookingHistoryComponent,
+    AgreementModalComponent,
   ],
   templateUrl: './cars.component.html',
   styleUrls: ['./cars.component.css'],
@@ -106,6 +116,7 @@ export class CarsComponent implements OnInit, OnDestroy {
   filtration: string | null = null;
   type: string | null = null;
   brand: string | null = null;
+  category: string | null = null;
 
   // Map related properties
   userLocation: Location | null = null;
@@ -206,35 +217,6 @@ export class CarsComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  // private loadInitialData(): void {
-  //   this.subscriptions.add(
-  //     this._route.queryParams
-  //       .pipe(
-  //         switchMap((params) => {
-  //           this.filtration = params['filtration'] || null;
-  //           this.type = params['type'] || null;
-  //           this.brand = params['brand'] || null;
-  //           return this.loadCars();
-  //         })
-  //       )
-  //       .subscribe({
-  //         next: (cars) => {
-  //           this.cars = cars;
-  //           this.filteredCars = [...this.cars];
-  //           this.isLoading = false;
-  //           this.errorMessage = null;
-  //         },
-  //         error: (err) => {
-  //           console.error('Error loading cars:', err);
-  //           this.isLoading = false;
-  //           this.errorMessage = 'Failed to load cars. Please try again later.';
-  //           this.cars = [];
-  //           this.filteredCars = [];
-  //         },
-  //       })
-  //   );
-  // }
-
   private loadInitialData(): void {
     this.subscriptions.add(
       this._route.queryParams
@@ -243,6 +225,7 @@ export class CarsComponent implements OnInit, OnDestroy {
             this.filtration = params['filtration'] || null;
             this.type = params['type'] || null;
             this.brand = params['brand'] || null;
+            this.category = params['category'] || null;
 
             // 🟨 Restore booking data from query params if present
             const pickupDateParam = params['pickupDate'];
@@ -342,6 +325,8 @@ export class CarsComponent implements OnInit, OnDestroy {
       return this._carService.getCarsByType(this.type);
     } else if (this.brand) {
       return this._carService.getCarsByBrand(this.brand);
+    } else if (this.category) {
+      return this._carService.getCarsByCategory(this.category);
     } else if (this.filtration === 'most-popular') {
       return this._carService.getMostPopularCars();
     } else if (this.filtration === 'NearBy') {
@@ -444,10 +429,13 @@ export class CarsComponent implements OnInit, OnDestroy {
 
   onPickupDateChange(): void {
     if (this.pickupDate) {
+      // Set minimum dropoff date to be at least 1 hour after pickup
+      // This allows same-day bookings with different times
       this.minDropoffDate = new Date(
         this.pickupDate.getTime() + 60 * 60 * 1000
       );
 
+      // If dropoff is already selected and is now invalid, clear it
       if (this.dropoffDate && this.dropoffDate <= this.pickupDate) {
         this.dropoffDate = null;
       }
@@ -462,8 +450,8 @@ export class CarsComponent implements OnInit, OnDestroy {
     ) {
       this._messageService.add({
         severity: 'warn',
-        summary: 'Invalid Date',
-        detail: 'Drop-off date must be after pickup date',
+        summary: 'Invalid Time',
+        detail: 'Drop-off time must be at least 1 hour after pickup time',
       });
       this.dropoffDate = null;
     }
@@ -476,25 +464,30 @@ export class CarsComponent implements OnInit, OnDestroy {
       this._messageService.add({
         severity: 'warn',
         summary: 'Missing Information',
-        detail: 'Please select both pickup and drop-off dates',
+        detail: 'Please select both pickup and drop-off dates and times',
       });
       return false;
     }
 
-    if (this.pickupDate < now) {
+    // Check if pickup date is in the past (including time)
+    if (this.pickupDate <= now) {
       this._messageService.add({
         severity: 'warn',
         summary: 'Invalid Date',
-        detail: 'Pickup date cannot be in the past',
+        detail: 'Pickup date and time must be in the future',
       });
       return false;
     }
 
-    if (this.dropoffDate <= this.pickupDate) {
+    // Check if dropoff is at least 1 hour after pickup (allows same day)
+    const minimumDropoffTime = new Date(
+      this.pickupDate.getTime() + 60 * 60 * 1000
+    );
+    if (this.dropoffDate < minimumDropoffTime) {
       this._messageService.add({
         severity: 'warn',
-        summary: 'Invalid Date',
-        detail: 'Drop-off date must be after pickup date',
+        summary: 'Invalid Time',
+        detail: 'Drop-off time must be at least 1 hour after pickup time',
       });
       return false;
     }
@@ -508,7 +501,12 @@ export class CarsComponent implements OnInit, OnDestroy {
     }
 
     const now = new Date();
-    return this.pickupDate >= now && this.dropoffDate > this.pickupDate;
+    const minimumDropoffTime = new Date(
+      this.pickupDate.getTime() + 60 * 60 * 1000
+    );
+
+    // Pickup must be in future and dropoff must be at least 1 hour after pickup
+    return this.pickupDate > now && this.dropoffDate >= minimumDropoffTime;
   }
 
   bookVehicle(): void {
@@ -592,7 +590,11 @@ export class CarsComponent implements OnInit, OnDestroy {
         error: (error) => {
           this.isBooking = false;
           console.error('Booking error:', error);
-          let errorMessage = typeof error.error === 'string' ? error.error : error.error?.error || 'Failed to book the vehicle. Please try again.';
+          let errorMessage =
+            typeof error.error === 'string'
+              ? error.error
+              : error.error?.error ||
+                'Failed to book the vehicle. Please try again.';
           this._messageService.add({
             severity: 'error',
             summary: 'Booking Error',
@@ -844,5 +846,20 @@ export class CarsComponent implements OnInit, OnDestroy {
       this.showAgreementModal = false;
       this.proceedToPayment();
     }
+  }
+
+  // Event handlers for the new components
+  onPickupDateChangeFromComponent(date: Date | null) {
+    this.pickupDate = date;
+    this.onPickupDateChange();
+  }
+
+  onDropoffDateChangeFromComponent(date: Date | null) {
+    this.dropoffDate = date;
+    this.onDropoffDateChange();
+  }
+
+  onWithDriverChangeFromComponent(withDriver: boolean) {
+    this.withDriver = withDriver;
   }
 }

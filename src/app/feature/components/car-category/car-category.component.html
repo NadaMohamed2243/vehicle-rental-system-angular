@@ -1,0 +1,51 @@
+<div class="py-20 bg-white">
+  <!-- Section Header with fade-in -->
+  <div class="text-center max-w-2xl mx-auto mb-10 px-4 animate-fade-in">
+    <h1 class="text-3xl sm:text-4xl font-bold text-dark-blue mb-4">
+      What's Your Purpose?
+    </h1>
+    <p class="text-dark-blue text-lg sm:text-xl leading-relaxed">
+      Whether it's a wedding, a business trip, or a quick escape — choose what suits your journey.
+    </p>
+  </div>
+
+  <!-- Loading State -->
+  @if (isLoading) {
+    <div class="flex flex-col items-center justify-center py-20 animate-pulse">
+      <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+      <p class="text-dark-blue text-lg font-medium">Loading categories...</p>
+    </div>
+  } @else {
+    @if (categories.length !== 0) {
+      <!-- Category Grid with animations -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-6 sm:px-10 lg:px-20">
+        @for (item of categories; track $index) {
+          <div
+            (click)="viewCarsFromCategory(item.category)"
+            class="relative group overflow-hidden rounded-2xl shadow-md border border-gray-200 cursor-pointer transition-transform duration-300 hover:scale-[1.03] hover:shadow-xl animate-fade-up"
+            [style.animationDelay]="($index * 100) + 'ms'"
+          >
+
+            <!-- Image with zoom effect -->
+            <div class="overflow-hidden">
+              <img [src]="getCarCategoryImage(item.category)" alt="{{item.category}} image"
+                   class="w-full h-44 sm:h-56 md:h-64 object-cover transition-transform duration-500 group-hover:scale-110" />
+            </div>
+
+            <!-- Info Footer -->
+            <div class="bg-white text-dark-blue px-4 py-1 text-center transition-all duration-300 group-hover:bg-gray-50">
+              <h3 class="text-lg font-semibold truncate transition-transform group-hover:translate-x-1">
+                {{ item.category }}
+              </h3>
+              <p class="text-sm text-gray-500 transition-transform group-hover:translate-x-1">
+                {{ item.count }} {{ item.count === 1 ? 'car' : 'cars' }}
+              </p>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <p class="text-center text-gray-500 text-lg mt-12 animate-fade-in">No categories available at the moment.</p>
+    }
+  }
+</div>

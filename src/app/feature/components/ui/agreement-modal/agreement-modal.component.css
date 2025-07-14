@@ -1,0 +1,50 @@
+.agreement-container {
+  max-width: 100%;
+}
+
+.signature-pad-container {
+  position: relative;
+  min-height: 200px;
+}
+
+.signature-section {
+  margin-top: 1rem;
+}
+
+.post-signing-section {
+  animation: slideIn 0.3s ease-in-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.document-actions button {
+  transition: all 0.2s ease;
+}
+
+.document-actions button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .agreement-container {
+    padding: 0.5rem;
+  }
+
+  .signature-pad-container {
+    min-height: 150px;
+  }
+
+  .grid-cols-1.md\:grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,78 @@
+.nav-link:hover:not(.active) {
+  background-color: rgba(0, 126, 252, 0.1) !important;
+  transition: all 0.3s ease !important;
+}
+
+.nav-link:hover:not(.active) i {
+  color: #007efc !important;
+}
+
+.nav-link:hover:not(.active) span {
+  color: #007efc !important;
+}
+
+.nav-link.active {
+  background-color: #007efc !important;
+  box-shadow: 0 2px 8px rgba(0, 126, 252, 0.3);
+}
+
+.nav-link.active i,
+.nav-link.active span {
+  color: white !important;
+}
+
+/* Smooth transitions for width changes */
+section {
+  transition: width 0.3s ease-in-out;
+}
+
+/* Ensure text doesn't break layout during transition */
+.nav-link span {
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+
+/* Button hover effects */
+button:hover {
+  background-color: rgba(0, 126, 252, 0.05) !important;
+}
+
+button:hover i {
+  color: #007efc !important;
+}
+
+button:hover span {
+  color: #007efc !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  section.w-64 {
+    width: 12rem; /* Smaller expanded width on smaller screens */
+  }
+}
+
+/* Animation for icons */
+.nav-link i {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-link:hover i {
+  transform: scale(1.05);
+}
+
+.nav-link.active i {
+  transform: scale(1.1);
+}
+
+/* Ensure proper alignment */
+.nav-link {
+  min-height: 48px;
+  position: relative;
+  text-decoration: none;
+}
+
+/* Add subtle shadow when expanded */
+section.w-64 {
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+}
