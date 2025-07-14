@@ -1,253 +1,352 @@
-<h1 class="text-center text-3xl font-bold">{{ formTitle }}</h1>
-
-<div class="flex flex-col md:flex-row gap-4 p-4 ml-12 ">
-
-  <div class="flex-1">
-    <div class="border border-gray-200 rounded-lg p-6 bg-white shadow-sm">
-      <h3 class="text-lg font-medium mb-4">Car Specifications</h3>
-      <hr class=" mb-4 text-gray-300"/>
-      <form [formGroup]="carForm" (ngSubmit)="submitForm()" class="space-y-4">
-
-
-
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Brand -->
-          <div>
-          <p-floatLabel variant="on">
-            <input id="brand" pInputText formControlName="brand" class="w-full" />
-            <label for="brand">Brand</label>
-          </p-floatLabel>
-          </div>
-          <!-- Model -->
-        <div >
-          <p-floatLabel variant="on">
-            <input id="model" pInputText formControlName="model" class="w-full" />
-            <label for="model">Model</label>
-          </p-floatLabel>
-        </div>
-        </div>
-
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Year -->
-        <div>
-          <p-floatLabel variant="on">
-            <input id="year" pInputText formControlName="year" class="w-full" />
-            <label for="year">Year</label>
-          </p-floatLabel>
-        </div>
-         <!-- License Plate -->
-         <div>
-          <p-floatLabel variant="on">
-            <input id="licensePlate" pInputText formControlName="licensePlate" class="w-full" />
-            <label for="licensePlate">License Plate</label>
-          </p-floatLabel>
-        </div>
-        </div>
-
-
-
-        <!-- Type and Seats -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <p-floatLabel variant="on">
-              <input id="type" pInputText formControlName="type" class="w-full" />
-              <label for="type">Type</label>
-            </p-floatLabel>
-          </div>
-          <div>
-            <p-floatLabel variant="on">
-              <input id="seats" pInputText formControlName="seats" class="w-full" />
-              <label for="seats">Seats</label>
-            </p-floatLabel>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-           <!-- Color -->
-        <div>
-          <p-floatLabel variant="on">
-            <input id="color" pInputText formControlName="color" class="w-full" />
-            <label for="color">Color</label>
-          </p-floatLabel>
-        </div>
-
-        <!-- Odometer -->
-        <div>
-          <p-floatLabel variant="on">
-            <input id="odometerReading" pInputText formControlName="odometerReading" class="w-full" />
-            <label for="odometerReading">Odometer (km)</label>
-          </p-floatLabel>
-        </div>
-        </div>
-
-        <!-- Rental Rates -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <!-- Daily Rate -->
-          <div>
-            <p-floatLabel variant="on">
-              <input id="totalPricePerDay" pInputText type="number" formControlName="totalPricePerDay" class="w-full" />
-              <label for="totalPricePerDay">Price Per Day(EGP)</label>
-            </p-floatLabel>
-          </div>
-          <!-- Hourly Rate -->
-          <div>
-            <p-floatLabel variant="on">
-              <input id="totalPricePerHour" pInputText type="number" formControlName="totalPricePerHour" class="w-full" />
-              <label for="totalPricePerHour">Price Per Hour (EGP)</label>
-            </p-floatLabel>
-          </div>
-        </div>
-         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Fuel Type -->
-        <div class="w-full">
-          <label for="fuel_type" class="ml-2 block text-[13px] font-medium text-gray-700 ">Fuel Type</label>
-          <p-dropdown
-            inputId="fuel_type"
-            [options]="fuelTypeOptions"
-            formControlName="fuel_type"
-            [autoDisplayFirst]="false"
-            dataKey="value"
-            class="w-full transition duration-200 hover:shadow-lg hover:border-blue-500 hover:ring-1 hover:ring-blue-400 rounded-md"
-            placeholder="Select Fuel Type"
-          ></p-dropdown>
-        </div>
-         <!-- Transmission -->
-       <div class="w-full">
-          <label for="transmission" class=" ml-2 block text-[13px] font-medium text-gray-700 ">Transmission</label>
-          <p-dropdown
-            inputId="transmission"
-            [options]="transmissionOptions"
-            formControlName="transmission"
-            [autoDisplayFirst]="false"
-            class="w-full transition duration-200 hover:shadow-lg hover:border-blue-500 hover:ring-1 hover:ring-blue-400 rounded-md">
-          </p-dropdown>
-        </div>
-        </div>
-
-        <!-- Rental Rates with Calendar Selection -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <p-floatLabel variant="on">
-              <p-calendar formControlName="lastMaintenanceDate"
-                        inputId="lastMaintenanceDate"
-                        [showIcon]="true"
-                        dateFormat="dd/mm/yy"
-                        [showButtonBar]="true"
-                        class="w-full"></p-calendar>
-              <label for="lastMaintenanceDate">last Maintenance Date</label>
-            </p-floatLabel>
-          </div>
-          <div>
-            <p-floatLabel variant="on">
-              <p-calendar formControlName="nextMaintenanceDue"
-                        inputId="nextMaintenanceDue"
-                        [showIcon]="true"
-                        dateFormat="dd/mm/yy"
-                        [showButtonBar]="true"
-                        class="w-full"></p-calendar>
-              <label for="nextMaintenanceDue">next Maintenance Date</label>
-            </p-floatLabel>
-          </div>
-        </div>
-
-        <!-- Location and Availability -->
-        <!-- <div class="grid grid-cols-1 md:grid-cols-2 gap-4"> -->
-          <!-- <div>
-            <p-floatLabel variant="on">
-              <input id="location" pInputText formControlName="location" class="w-full" />
-              <label for="location">Location</label>
-            </p-floatLabel>
-          </div> -->
-          <div>
-           <label for="availabilityStatus" class="ml-2 block text-[13px] font-medium text-gray-700">
-    Availability Status
-  </label>
-  <p-dropdown
-    inputId="availabilityStatus"
-    [options]="availabilityOptions"
-    formControlName="availabilityStatus"
-    [autoDisplayFirst]="false"
-    class="w-full transition duration-200 hover:shadow-lg hover:border-blue-500 hover:ring-1 hover:ring-blue-400 rounded-md">
-  </p-dropdown>
-          </div>
-        <!-- </div> -->
-
-
-        <!-- Notes -->
-        <div class="grid grid-cols-1 gap-4">
-          <p-floatLabel variant="on">
-            <textarea id="conditionNotes" pInputTextarea formControlName="conditionNotes" rows="3" class="w-full shadow-sm border border-gray-200 rounded"></textarea>
-            <label for="conditionNotes">Notes</label>
-          </p-floatLabel>
-        </div>
-
-        <!-- Save Button -->
-        <div class="pt-4">
-          <button pButton type="submit" label="Save" class="w-full"></button>
-        </div>
-      </form>
+<!-- Search + Header -->
+<div class="fixed top-0 left-0 w-full bg-white shadow-sm z-10">
+  <div class="flex items-center justify-between gap-4 px-4 py-2">
+    <h1 class="text-xl font-bold text-gray-800 ml-60">{{ formTitle }}</h1>
+    <div>
+      <app-user-header></app-user-header>
     </div>
   </div>
-
-  <!-- upload photos-->
-  <div class="flex-1">
-    <div class="border border-gray-200 rounded-lg p-6 bg-white shadow-sm">
-      <h3 class="text-lg font-medium mb-4">Upload Car Images and Documents</h3>
-      <hr class="p-4 text-gray-300"/>
-
-      <div class="grid grid-cols-1 gap-2 mb-6">
-        <label class="text-sm font-medium text-gray-700">Main Image</label>
-        <p-fileUpload mode="basic" chooseLabel="Choose File" accept="image/*"
-                     (onSelect)="onImageSelected($event)" class="w-full">
-        </p-fileUpload>
-      </div>
-
-      <div *ngIf="imagePreview" class="mb-6">
-        <h4 class="text-sm font-medium text-gray-700 mb-2">Preview</h4>
-        <img [src]="imagePreview" class="w-full h-48 object-contain border border-gray-300 rounded-lg" />
-      </div>
-
-      <div class="grid grid-cols-1 gap-2">
-        <label class="text-sm font-medium text-gray-700">Additional Images</label>
-        <p-fileUpload mode="basic" chooseLabel="Choose Files" accept="image/*" multiple="true"
-                     (onSelect)="onAdditionalImagesSelected($event)" class="w-full"></p-fileUpload>
-      </div>
-
-     <div *ngIf="additionalImagesPreviews.length" class="mt-4">
-      <h4 class="text-sm font-medium text-gray-700 mb-2">Additional Images Preview</h4>
-      <div class="grid grid-cols-3 gap-2">
-        <div *ngFor="let preview of additionalImagesPreviews" class="relative">
-          <i
-            class="pi pi-times absolute top-1 right-1 text-gray-600 cursor-pointer p-1 hover:text-red-500"
-            (click)="removeAdditionalImage(preview)">
-          </i>
-
-          <img [src]="preview" class="w-full h-24 object-cover border border-gray-300 rounded" />
-        </div>
-      </div>
-    </div>
-
-
-
-
-      <!-- Upload Documents -->
-    <div class="grid grid-cols-1 gap-2 mt-8">
-      <label class="text-sm font-medium text-gray-700">Upload Documents</label>
-      <p-fileUpload mode="basic" chooseLabel="Choose Files" accept=".pdf,.doc,.docx,image/*"
-                  multiple="true"
-                  (onSelect)="onDocumentsSelected($event)" class="w-full">
-      </p-fileUpload>
-    </div>
-
-    </div>
-
-
-
-
-  </div>
-
-
 </div>
 
+<div class="h-[80px]"></div>
+
+<!-- Single Form Wrapper -->
+<form [formGroup]="carForm" (ngSubmit)="submitForm()">
+  <div class="flex flex-col md:flex-row gap-4 py-4">
+    <!-- Car Specifications Section -->
+    <div class="flex-1">
+      <div class="border border-gray-200 rounded-lg p-6 bg-white shadow-sm">
+        <h3 class="text-lg font-medium mb-4">Car Specifications</h3>
+        <hr class="mb-4 text-gray-300"/>
+        <div class="space-y-4">
+          <!-- Brand & Model -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <p-dropdown
+                inputId="brand"
+                [options]="brandsOptions"
+                formControlName="brand"
+                placeholder="Select Brand"
+                [autoDisplayFirst]="false"
+                class="w-full transition duration-200 hover:shadow-lg hover:border-blue-500 hover:ring-1 hover:ring-blue-400 rounded-md">
+              </p-dropdown>
+              <div *ngIf="carForm.get('brand')?.touched && carForm.get('brand')?.invalid" class="text-red-500 text-sm">
+                <small *ngIf="carForm.get('brand')?.errors?.['required']">Brand is required</small>
+              </div>
+            </div>
+
+            <div>
+              <p-floatLabel variant="on">
+                <input id="model" pInputText formControlName="model" class="w-full"/>
+                <label for="model">Model</label>
+              </p-floatLabel>
+              <div *ngIf="carForm.get('model')?.touched && carForm.get('model')?.invalid" class="text-red-500 text-sm">
+                <small *ngIf="carForm.get('model')?.errors?.['required']">Model is required</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Year & License Plate -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <p-dropdown
+                inputId="year"
+                [options]="yearOptions"
+                formControlName="year"
+                placeholder="Select Year"
+                [autoDisplayFirst]="false"
+                class="w-full transition duration-200 hover:shadow-lg hover:border-blue-500 hover:ring-1 hover:ring-blue-400 rounded-md">
+              </p-dropdown>
+              <div *ngIf="carForm.get('year')?.touched && carForm.get('year')?.invalid" class="text-red-500 text-sm">
+                <small *ngIf="carForm.get('year')?.errors?.['required']">Year is required</small>
+              </div>
+            </div>
+
+            <div>
+              <p-floatLabel variant="on">
+                <input id="licensePlate" pInputText formControlName="licensePlate" class="w-full"/>
+                <label for="licensePlate">License Plate</label>
+              </p-floatLabel>
+              <div *ngIf="carForm.get('licensePlate')?.touched && carForm.get('licensePlate')?.invalid" class="text-red-500 text-sm">
+                <small *ngIf="carForm.get('licensePlate')?.errors?.['required']">License Plate is required</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Type & Seats -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <p-dropdown
+                inputId="type"
+                [options]="typeOptions"
+                formControlName="type"
+                placeholder="Select Type"
+                [autoDisplayFirst]="false"
+                class="w-full transition duration-200 hover:shadow-lg hover:border-blue-500 hover:ring-1 hover:ring-blue-400 rounded-md">
+              </p-dropdown>
+              <div *ngIf="carForm.get('type')?.touched && carForm.get('type')?.invalid" class="text-red-500 text-sm">
+                <small *ngIf="carForm.get('type')?.errors?.['required']">Type is required</small>
+              </div>
+            </div>
+
+            <div>
+              <p-dropdown
+                inputId="seats"
+                [options]="seatOptions"
+                formControlName="seats"
+                placeholder="Select Number of Seats"
+                [autoDisplayFirst]="false"
+                class="w-full transition duration-200 hover:shadow-lg hover:border-blue-500 hover:ring-1 hover:ring-blue-400 rounded-md">
+              </p-dropdown>
+              <div *ngIf="carForm.get('seats')?.touched && carForm.get('seats')?.invalid" class="text-red-500 text-sm">
+                <small *ngIf="carForm.get('seats')?.errors?.['required']">Seats is required</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Color & Odometer -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <p-dropdown
+                inputId="color"
+                [options]="colorOptions"
+                formControlName="color"
+                placeholder="Select Color"
+                [autoDisplayFirst]="false"
+                class="w-full transition duration-200 hover:shadow-lg hover:border-blue-500 hover:ring-1 hover:ring-blue-400 rounded-md">
+              </p-dropdown>
+              <div *ngIf="carForm.get('color')?.touched && carForm.get('color')?.invalid" class="text-red-500 text-sm">
+                <small *ngIf="carForm.get('color')?.errors?.['required']">Color is required</small>
+              </div>
+            </div>
+
+            <div>
+              <p-floatLabel variant="on">
+                <input id="odometerReading" pInputText formControlName="odometerReading" class="w-full"/>
+                <label for="odometerReading">Odometer (km)</label>
+              </p-floatLabel>
+              <div *ngIf="carForm.get('odometerReading')?.touched && carForm.get('odometerReading')?.invalid" class="text-red-500 text-sm">
+                <small *ngIf="carForm.get('odometerReading')?.errors?.['required']">Odometer is required</small>
+                <small *ngIf="carForm.get('odometerReading')?.errors?.['min']">Odometer cannot be negative</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rental Rates -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <p-floatLabel variant="on">
+                <input id="totalPricePerDay" pInputText type="number" formControlName="totalPricePerDay" class="w-full"/>
+                <label for="totalPricePerDay">Price Per Day(EGP)</label>
+              </p-floatLabel>
+              <div *ngIf="carForm.get('totalPricePerDay')?.touched && carForm.get('totalPricePerDay')?.invalid" class="text-red-500 text-sm">
+                <small *ngIf="carForm.get('totalPricePerDay')?.errors?.['required']">Price Per Day is required</small>
+                <small *ngIf="carForm.get('totalPricePerDay')?.errors?.['min']">Price cannot be negative</small>
+              </div>
+            </div>
+
+            <div>
+              <p-floatLabel variant="on">
+                <input id="totalPricePerHour" pInputText type="number" formControlName="totalPricePerHour" class="w-full"/>
+                <label for="totalPricePerHour">Price Per Hour (EGP)</label>
+              </p-floatLabel>
+              <div *ngIf="carForm.get('totalPricePerHour')?.touched && carForm.get('totalPricePerHour')?.invalid" class="text-red-500 text-sm">
+                <small *ngIf="carForm.get('totalPricePerHour')?.errors?.['required']">Price Per Hour is required</small>
+                <small *ngIf="carForm.get('totalPricePerHour')?.errors?.['min']">Price cannot be negative</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fuel Type & Transmission -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <p-dropdown
+                inputId="fuel_type"
+                [options]="fuelTypeOptions"
+                formControlName="fuel_type"
+                [autoDisplayFirst]="false"
+                dataKey="value"
+                class="w-full transition duration-200 hover:shadow-lg hover:border-blue-500 hover:ring-1 hover:ring-blue-400 rounded-md"
+                placeholder="Select Fuel Type">
+              </p-dropdown>
+              <div *ngIf="carForm.get('fuel_type')?.touched && carForm.get('fuel_type')?.invalid" class="text-red-500 text-sm">
+                <small *ngIf="carForm.get('fuel_type')?.errors?.['required']">Fuel Type is required</small>
+              </div>
+            </div>
+
+            <div>
+              <p-dropdown
+                inputId="transmission"
+                [options]="transmissionOptions"
+                formControlName="transmission"
+                placeholder="Select Transmission"
+                [autoDisplayFirst]="false"
+                class="w-full transition duration-200 hover:shadow-lg hover:border-blue-500 hover:ring-1 hover:ring-blue-400 rounded-md">
+              </p-dropdown>
+              <div *ngIf="carForm.get('transmission')?.touched && carForm.get('transmission')?.invalid" class="text-red-500 text-sm">
+                <small *ngIf="carForm.get('transmission')?.errors?.['required']">Transmission is required</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Maintenance Dates -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <p-floatLabel variant="on">
+                <p-calendar formControlName="lastMaintenanceDate"
+                          inputId="lastMaintenanceDate"
+                          [showIcon]="true"
+                          dateFormat="dd/mm/yy"
+                          [showButtonBar]="true"
+                          class="w-full"></p-calendar>
+                <label for="lastMaintenanceDate">Last Maintenance Date</label>
+              </p-floatLabel>
+            </div>
+            <div>
+              <p-floatLabel variant="on">
+                <p-calendar formControlName="nextMaintenanceDue"
+                          inputId="nextMaintenanceDue"
+                          [showIcon]="true"
+                          dateFormat="dd/mm/yy"
+                          [showButtonBar]="true"
+                          class="w-full"></p-calendar>
+                <label for="nextMaintenanceDue">Next Maintenance Date</label>
+              </p-floatLabel>
+            </div>
+          </div>
+
+          <!-- Availability & Category -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <p-dropdown
+                inputId="availabilityStatus"
+                [options]="availabilityOptions"
+                formControlName="availabilityStatus"
+                placeholder="Select a Status"
+                [autoDisplayFirst]="false"
+                class="w-full transition duration-200 hover:shadow-lg hover:border-blue-500 hover:ring-1 hover:ring-blue-400 rounded-md">
+              </p-dropdown>
+              <div *ngIf="carForm.get('availabilityStatus')?.touched && carForm.get('availabilityStatus')?.invalid" class="text-red-500 text-sm">
+                <small *ngIf="carForm.get('availabilityStatus')?.errors?.['required']">Availability Status is required</small>
+              </div>
+            </div>
+
+            <div>
+              <p-dropdown
+                [options]="categoryOptions"
+                formControlName="allowedCategories"
+                placeholder="Select a Category"
+                optionLabel="label"
+                inputId="allowedCategories"
+                class="w-full transition duration-200 hover:shadow-lg hover:border-blue-500 hover:ring-1 hover:ring-blue-400 rounded-md">
+              </p-dropdown>
+              <div *ngIf="carForm.get('allowedCategories')?.touched && carForm.get('allowedCategories')?.invalid" class="text-red-500 text-sm">
+                <small *ngIf="carForm.get('allowedCategories')?.errors?.['required']">Category is required</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div class="grid grid-cols-1 gap-4">
+            <p-floatLabel variant="on">
+              <textarea id="conditionNotes" pInputTextarea formControlName="conditionNotes" rows="3" class="w-full shadow-sm border border-gray-200 rounded"></textarea>
+              <label for="conditionNotes">Notes</label>
+            </p-floatLabel>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload Photos & Documents Section -->
+    <div class="flex-1">
+      <div class="border border-gray-200 rounded-lg p-6 bg-white shadow-sm">
+        <h3 class="text-lg font-medium mb-4">Upload Car Images and Documents</h3>
+        <hr class="p-4 text-gray-300"/>
+
+        <!-- Main Image Upload Box (Clickable) -->
+        <div class="border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 p-8 text-center cursor-pointer hover:border-blue-500 transition"
+            (click)="mainImageInput?.click()">
+            <i class="pi pi-cloud-upload text-3xl text-gray-500"></i>
+          <p class="text-sm text-gray-500">Click to upload Main Image</p>
+
+          <!-- Hidden Native File Input -->
+          <input type="file" accept="image/*" hidden #mainImageInput (change)="onImageSelected($event)">
+        </div>
+
+
+        <!-- Main Image Preview -->
+        <div *ngIf="imagePreview" class="mb-6">
+          <h4 class="text-sm font-medium text-gray-700 mb-2">Preview</h4>
+          <img [src]="imagePreview" class="w-full h-48 object-contain border border-gray-300 rounded-lg"/>
+        </div>
+
+       <!-- Additional Images Upload -->
+        <div class="grid grid-cols-1 gap-2 mt-6">
+          <div
+            class="border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 p-8 text-center cursor-pointer hover:border-blue-500 transition"
+            (click)="additionalInput?.click()"
+          >
+            <i class="pi pi-cloud-upload text-3xl text-gray-500"></i>
+            <p class="text-sm text-gray-500">Click to upload Additional Images</p>
+            <input type="file" accept="image/*" multiple hidden #additionalInput (change)="onAdditionalImagesSelected($event)" />
+          </div>
+        </div>
+
+
+        <!-- Additional Images Preview -->
+        <div *ngIf="additionalImagesPreviews.length" class="mt-4">
+          <h4 class="text-sm font-medium text-gray-700 mb-2">Additional Images Preview</h4>
+          <div class="grid grid-cols-3 gap-2">
+            <div *ngFor="let preview of additionalImagesPreviews" class="relative">
+              <i class="pi pi-times absolute top-1 right-1 text-gray-600 cursor-pointer p-1 hover:text-red-500"
+                (click)="removeAdditionalImage(preview)">
+              </i>
+              <img [src]="preview" class="w-full h-24 object-cover border border-gray-300 rounded"/>
+            </div>
+          </div>
+        </div>
+
+       <!-- Documents Upload -->
+          <div class="grid grid-cols-1 gap-2 mt-8">
+            <div
+              class="border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 p-8 text-center cursor-pointer hover:border-blue-500 transition"
+              (click)="docsInput?.click()"
+            >
+              <i class="pi pi-cloud-upload text-3xl text-gray-500"></i>
+            <p class="text-sm text-gray-500">Click to upload Documents</p>
+            <input
+              type="file"
+              accept=".pdf,.doc,.docx,image/*"
+              multiple
+              hidden
+              #docsInput
+              (change)="onDocumentsSelected($event)"
+            />
+           </div>
+          </div>
+
+
+          <!-- Documents Image Preview -->
+<div *ngIf="documentsPreviews.length" class="mt-4">
+  <h4 class="text-sm font-medium text-gray-700 mb-2">Documents Preview</h4>
+  <div class="grid grid-cols-3 gap-2">
+    <div *ngFor="let preview of documentsPreviews" class="relative">
+      <i
+        class="pi pi-times absolute top-1 right-1 text-gray-600 cursor-pointer p-1 hover:text-red-500"
+        (click)="removeDocument(preview)">
+      </i>
+      <img [src]="preview" class="w-full h-24 object-cover border border-gray-300 rounded" />
+    </div>
+  </div>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Save Button (Outside the flex container but inside the form) -->
+  <div class="pt-3">
+    <button pButton type="submit" label="Save" class="w-full mb-5"></button>
+  </div>
+</form>
