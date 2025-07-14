@@ -48,6 +48,7 @@ import { BookingActionComponent } from '../../components/ui/booking-action/booki
 import { VehicleInfoComponent } from '../../components/ui/vehicle-info/vehicle-info.component';
 import { BookingHistoryComponent } from '../../components/ui/booking-history/booking-history.component';
 import { AgreementModalComponent } from '../../components/ui/agreement-modal/agreement-modal.component';
+import { LanguageService } from '../../../core/services/language.service';
 
 @Component({
   selector: 'app-cars',
@@ -158,6 +159,7 @@ export class CarsComponent implements OnInit, OnDestroy {
   private _messageService = inject(MessageService);
   private _authService = inject(AuthService);
   private _agreementService = inject(AgreementService);
+  private _languageService = inject(LanguageService);
   private subscriptions = new Subscription();
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
@@ -542,6 +544,13 @@ export class CarsComponent implements OnInit, OnDestroy {
     return this.pickupDate > now && this.dropoffDate >= minimumDropoffTime;
   }
 
+  private getCurrentLanguage(): string {
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem('language') || 'en';
+    }
+    return 'en';
+  }
+
   bookVehicle(): void {
     if (!this.selectedCar) {
       this._messageService.add({
@@ -608,8 +617,10 @@ export class CarsComponent implements OnInit, OnDestroy {
               detail: `Booking ID: ${response.booking._id}. Please sign the agreement to proceed to payment.`,
             });
 
+            const currentLanguage = this.getCurrentLanguage();
+
             this._agreementService
-              .generateAgreement(response.booking._id)
+              .generateAgreement(response.booking._id, currentLanguage)
               .subscribe({
                 next: (res) => {
                   this.agreement = res.agreement;
@@ -652,7 +663,6 @@ export class CarsComponent implements OnInit, OnDestroy {
 
   onSignatureChange(signature: string) {
     if (signature && signature.length > 100) {
-      console.log('Signature preview:', signature.substring(0, 50) + '...');
       this.signatureData = signature;
     } else {
       this.signatureData = '';
@@ -688,8 +698,10 @@ export class CarsComponent implements OnInit, OnDestroy {
 
     this.isSubmittingSignature = true;
 
+    const currentLanguage = this.getCurrentLanguage();
+
     this._agreementService
-      .signAgreement(this.agreement.id, this.signatureData)
+      .signAgreement(this.agreement.id, this.signatureData, currentLanguage)
       .subscribe({
         next: (res) => {
           this.agreement = res.agreement;
@@ -778,6 +790,7 @@ export class CarsComponent implements OnInit, OnDestroy {
 
   downloadAgreement() {
     if (!this.agreement) return;
+    console.log('Downloading agreement:', this.agreement);
 
     this.isDownloading = true;
     this._agreementService.downloadAgreement(this.agreement._id).subscribe({

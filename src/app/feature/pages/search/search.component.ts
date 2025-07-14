@@ -406,7 +406,16 @@ export class SearchComponent implements OnInit, OnDestroy {
     return this.pickupDate >= now && this.dropoffDate > this.pickupDate;
   }
 
+  private getCurrentLanguage(): string {
+    if (typeof window !== 'undefined' && localStorage) {
+      return localStorage.getItem('language') || 'en';
+    }
+    return 'en';
+  }
+
   bookVehicle(): void {
+    const currentLanguage = this.getCurrentLanguage();
+
     localStorage.setItem(
       'pendingBooking',
       JSON.stringify({
@@ -415,64 +424,11 @@ export class SearchComponent implements OnInit, OnDestroy {
         pickupDate: this.pickupDate?.toISOString(),
         dropoffDate: this.dropoffDate?.toISOString(),
         location: this.selectedCarLocation?.address || '',
+        language: currentLanguage,
       })
     );
 
     this._router.navigate(['/register']);
-
-    // this.isBooking = true;
-
-    // const bookingData: BookingRequest = {
-    //   carId: this.selectedCar._id,
-    //   startDate: this.formatDateForAPI(this.pickupDate!),
-    //   endDate: this.formatDateForAPI(this.dropoffDate!),
-    //   totalCost: this.calculateTotalCost(),
-    //   pickupLocation:
-    //     this.selectedCarLocation?.address || this.selectedCar.agent.location,
-    //   dropoffLocation:
-    //     this.selectedDeliveryLocation?.address ||
-    //     this.selectedCarLocation?.address ||
-    //     this.selectedCar.agent.location,
-    // };
-
-    // this.subscriptions.add(
-    //   this._bookingService.bookAndPay(bookingData).subscribe({
-    //     next: (response) => {
-    //       this.isBooking = false;
-
-    //       if (response.booking && response.iframeUrl) {
-    //         this._messageService.add({
-    //           severity: 'success',
-    //           summary: 'Booking Created Successfully',
-    //           detail: `Booking ID: ${response.booking._id}. Redirecting to payment...`,
-    //         });
-
-    //         setTimeout(() => {
-    //           window.location.href = response.iframeUrl;
-    //         }, 2000);
-    //       } else {
-    //         this._messageService.add({
-    //           severity: 'error',
-    //           summary: 'Booking Failed',
-    //           detail: 'Invalid response from server',
-    //         });
-    //       }
-    //     },
-    //     error: (error) => {
-    //       this.isBooking = false;
-    //       console.error('Booking error:', error);
-    //       let errorMessage = 'Failed to book the vehicle. Please try again.';
-    //       if (error.error?.message) {
-    //         errorMessage = error.error.message;
-    //       }
-    //       this._messageService.add({
-    //         severity: 'error',
-    //         summary: 'Booking Error',
-    //         detail: errorMessage,
-    //       });
-    //     },
-    //   })
-    // );
   }
 
   isDeliverySelectionAllowed(): boolean {

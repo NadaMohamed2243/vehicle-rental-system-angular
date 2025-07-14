@@ -22,11 +22,12 @@ export class AgreementService {
   private apiUrl = `${environment.apiUrl}/agreements`;
 
   generateAgreement(
-    bookingId: string
+    bookingId: string,
+    language: string = 'en'
   ): Observable<{ message: string; agreement: Agreement }> {
     return this.http.post<{ message: string; agreement: Agreement }>(
       `${this.apiUrl}/generate/${bookingId}`,
-      {}
+      { language }
     );
   }
 
@@ -36,13 +37,14 @@ export class AgreementService {
 
   signAgreement(
     agreementId: string,
-    signature: string
+    signature: string,
+    language: string = 'en'
   ): Observable<{ message: string; agreement: Agreement }> {
     console.log('signn', signature);
 
     return this.http.put<{ message: string; agreement: Agreement }>(
       `${this.apiUrl}/sign/${agreementId}`,
-      { signature }
+      { signature, language }
     );
   }
 

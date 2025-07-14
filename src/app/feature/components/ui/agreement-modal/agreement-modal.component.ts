@@ -11,6 +11,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { SafeUrlPipe } from '../../../../shared/pipes/safe-url.pipe';
 import { SignatureCanvasComponent } from '../../../../shared/components/ui/signature-canvas/signature-canvas.component';
+import { LanguageService } from '../../../../core/services/language.service';
 
 @Component({
   selector: 'app-agreement-modal',
@@ -45,7 +46,10 @@ export class AgreementModalComponent {
   @Output() downloadAgreement = new EventEmitter<void>();
   @Output() proceedToPayment = new EventEmitter<void>();
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private languageService: LanguageService
+  ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
@@ -79,5 +83,17 @@ export class AgreementModalComponent {
 
   onProceedToPayment() {
     this.proceedToPayment.emit();
+  }
+
+  getCurrentLanguage(): string {
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem('language') || 'en';
+    }
+    return 'en';
+  }
+
+  getLanguageLabel(): string {
+    const currentLang = this.getCurrentLanguage();
+    return currentLang === 'ar' ? 'Arabic' : 'English';
   }
 }
