@@ -38,8 +38,9 @@ ngOnInit(): void {
   this.loadAgentCarStats();
   this.loadAgentBookingStats();
   this.loadCars();
+   this.loadAllBookings();
   this.loadAllCars();     
-  this.loadAllBookings();
+ 
 }
 loadAgentBookingStats(): void {
   this.adminCarsService.getAgentBookings().subscribe(bookings => {
@@ -82,9 +83,9 @@ loadAgentCarStats(): void {
 }
 
 loadAllBookings(): void {
-  this.adminCarsService.getAllBookings().subscribe(bookings => {
+  this.adminCarsService.getAgentBookings().subscribe(bookings => {
     this.bookings = bookings.filter(b => b.status === 'paid');
-    
+    // this.bookings = bookings;
     console.log('Bookings:', this.bookings);
 
     if (this.cars.length) {
