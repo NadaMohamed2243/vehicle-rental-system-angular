@@ -3,11 +3,13 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { ClientauthService } from '../../services/clientauth.service';
 import { AuthService } from '../../services/auth.service';
+import { TranslateModule } from '@ngx-translate/core';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterOutlet],
+  imports: [CommonModule, RouterLink, RouterOutlet, TranslateModule],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
@@ -18,10 +20,15 @@ export class NavbarComponent {
   page_name='Home';
   role: string | null = null;
   _router = inject(Router)
-  constructor(@Inject(PLATFORM_ID) private platformId: Object,private authService: ClientauthService,private logoutService:AuthService) {}
+
+  constructor(@Inject(PLATFORM_ID) private platformId: Object,private authService: ClientauthService,private logoutService:AuthService, private languageService: LanguageService) {}
+
+  currentLang$: any;
+
   ngOnInit(): void {
     this.isLoggedIn = this.authService.isLoggedIn();
     this.role = this.authService.getRole();
+    this.currentLang$ = this.languageService.currentLang$;
   }
   logout(): void {
     this.logoutService.removeToken();
@@ -94,5 +101,9 @@ export class NavbarComponent {
       }, 100);
     }
   }
-}
+  }
+
+  toggleLanguage() {
+    this.languageService.toggleLanguage();
+  }
 }

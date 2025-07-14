@@ -8,10 +8,11 @@ import {
 } from '@angular/forms';
 import { AuthapiService } from '../../services/authapi.service';
 import { ClientauthService } from '../../services/clientauth.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, TranslateModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
