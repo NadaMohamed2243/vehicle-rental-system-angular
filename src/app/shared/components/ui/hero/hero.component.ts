@@ -5,11 +5,12 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import * as THREE from 'three';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-hero',
   standalone: true,
-  imports: [CommonModule ,ReactiveFormsModule],
+  imports: [CommonModule ,ReactiveFormsModule , TranslateModule],
   templateUrl: './hero.component.html',
   styleUrls: ['./hero.component.css'],
 

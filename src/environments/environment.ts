@@ -4,9 +4,7 @@
 //   baseUrl: 'http://localhost:5000'
 // };
 export const environment = {
-  production: false,
+  production: true,
   apiUrl: 'https://lucky-growth-production.up.railway.app/api',
-  // apiUrl: 'http://localhost:5000/api',
-  baseUrl: 'https://lucky-growth-production.up.railway.app'
+  baseUrl: 'https://lucky-growth-production.up.railway.app',
 };
-

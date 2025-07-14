@@ -4,10 +4,10 @@
   <div class="container mx-auto px-4 flex flex-col items-center justify-between flex-grow z-10 py-5">
     <div class="w-full max-w-4xl text-center mb-7  mt-5">
       <h1 class="text-4xl md:text-6xl font-bold mb-4 leading-tight text-gray-800">
-        Find, Book, and<br>
-        <span class="text-blue-600">Rent a car</span> in Easy Steps
+        {{"LANDING_BANNER.TITLE" | translate}}<br>
+        <span class="text-blue-600">{{"LANDING_BANNER.TITLE2" | translate}}</span> {{ "LANDING_BANNER.TITLE3" | translate }}
       </h1>
-      <p class="text-lg md:text-xl text-gray-600">Get a car whenever you need it with <span class="font-bold text-blue-600">Meshwark</span></p>
+      <p class="text-lg md:text-xl text-gray-600">{{"LANDING_BANNER.DESCRIPTION" | translate}} <span class="font-bold text-blue-600">{{"NAV.TITLE" | translate}}</span></p>
     </div>
 
     <div class="relative w-full max-w-4xl h-70 md:h-[300px] mb-5 md:mb-5">
@@ -68,14 +68,14 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
 
       <div>
-        <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+        <label for="location" class="block text-sm font-medium text-gray-700 mb-1">{{"SEARCH.LOC" | translate}}</label>
         <div class="relative">
           <select
             formControlName="location"
             id="location"
             class="w-full p-3 pr-10 border border-gray-300 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none"
           >
-            <option value="" disabled>Select Closest location</option>
+            <option value="" disabled>{{"SEARCH.LOC_PLACEHOLDER" | translate}}</option>
             @for (loc of locations; track loc.value) {
               <option [value]="loc.value">{{ loc.label }}</option>
             }
@@ -89,7 +89,7 @@
       </div>
 
       <div>
-        <label for="pickup-date" class="block text-sm font-medium text-gray-700 mb-1">Pickup Date</label>
+        <label for="pickup-date" class="block text-sm font-medium text-gray-700 mb-1">{{"SEARCH.PICKUP" | translate}}</label>
         <div class="relative">
           <input
             type="date"
@@ -106,7 +106,7 @@
       </div>
 
       <div>
-        <label for="return-date" class="block text-sm font-medium text-gray-700 mb-1">Return Date</label>
+        <label for="return-date" class="block text-sm font-medium text-gray-700 mb-1">{{"SEARCH.RETURN" | translate}}</label>
         <div class="relative">
           <input
             type="date"
@@ -127,8 +127,7 @@
           type="submit"
           class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200 shadow-md transform hover:scale-105"
         >
-          FIND CAR
-        </button>
+{{"SEARCH.BUTTON" | translate}}        </button>
       </div>
     </div>
   </form>

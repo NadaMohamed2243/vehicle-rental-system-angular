@@ -48,6 +48,7 @@ import { BookingActionComponent } from '../../components/ui/booking-action/booki
 import { VehicleInfoComponent } from '../../components/ui/vehicle-info/vehicle-info.component';
 import { BookingHistoryComponent } from '../../components/ui/booking-history/booking-history.component';
 import { AgreementModalComponent } from '../../components/ui/agreement-modal/agreement-modal.component';
+import { LanguageService } from '../../../core/services/language.service';
 
 @Component({
   selector: 'app-cars',
@@ -158,6 +159,7 @@ export class CarsComponent implements OnInit, OnDestroy {
   private _messageService = inject(MessageService);
   private _authService = inject(AuthService);
   private _agreementService = inject(AgreementService);
+  private _languageService = inject(LanguageService);
   private subscriptions = new Subscription();
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
@@ -243,7 +245,7 @@ export class CarsComponent implements OnInit, OnDestroy {
 
             if (locationParam) {
               this.selectedCarLocation = {
-                lat: 0, // Optional: default, update later if needed
+                lat: 0,
                 lng: 0,
                 address: locationParam,
               };
@@ -399,9 +401,44 @@ export class CarsComponent implements OnInit, OnDestroy {
     this.isFavorite = !this.isFavorite;
   }
 
-  onDeliveryLocationSelected(location: Location) {
+  onDeliveryLocationSelected(location: Location): void {
+    if (!this.isDeliverySelectionAllowed()) {
+      this._messageService.add({
+        severity: 'warn',
+        summary: 'Delivery Not Available',
+        detail:
+          'Delivery location selection is only available for cars with driver option.',
+      });
+      return;
+    }
+
     this.selectedDeliveryLocation = location;
-    console.log('Delivery location selected:', location);
+  }
+
+  isDeliverySelectionAllowed(): boolean {
+    return !!this.selectedCar?.with_driver;
+  }
+
+  canUseDeliveryLocation(): boolean {
+    return this.isDeliverySelectionAllowed() && this.withDriver;
+  }
+
+  onWithDriverChangeFromComponent(withDriver: boolean) {
+    this.withDriver = withDriver;
+
+    if (!withDriver && this.selectedDeliveryLocation) {
+      this.selectedDeliveryLocation = null;
+      this._messageService.add({
+        severity: 'info',
+        summary: 'Delivery Location Cleared',
+        detail:
+          'Delivery location has been cleared since driver option was disabled.',
+      });
+    }
+
+    setTimeout(() => {
+      // Small delay to ensure the change is processed
+    }, 0);
   }
 
   private formatDateForAPI(date: Date): string {
@@ -430,7 +467,6 @@ export class CarsComponent implements OnInit, OnDestroy {
   onPickupDateChange(): void {
     if (this.pickupDate) {
       // Set minimum dropoff date to be at least 1 hour after pickup
-      // This allows same-day bookings with different times
       this.minDropoffDate = new Date(
         this.pickupDate.getTime() + 60 * 60 * 1000
       );
@@ -469,7 +505,6 @@ export class CarsComponent implements OnInit, OnDestroy {
       return false;
     }
 
-    // Check if pickup date is in the past (including time)
     if (this.pickupDate <= now) {
       this._messageService.add({
         severity: 'warn',
@@ -479,7 +514,7 @@ export class CarsComponent implements OnInit, OnDestroy {
       return false;
     }
 
-    // Check if dropoff is at least 1 hour after pickup (allows same day)
+    // Check if dropoff is at least 1 hour after pickup
     const minimumDropoffTime = new Date(
       this.pickupDate.getTime() + 60 * 60 * 1000
     );
@@ -509,6 +544,13 @@ export class CarsComponent implements OnInit, OnDestroy {
     return this.pickupDate > now && this.dropoffDate >= minimumDropoffTime;
   }
 
+  private getCurrentLanguage(): string {
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem('language') || 'en';
+    }
+    return 'en';
+  }
+
   bookVehicle(): void {
     if (!this.selectedCar) {
       this._messageService.add({
@@ -520,6 +562,17 @@ export class CarsComponent implements OnInit, OnDestroy {
     }
 
     if (!this.validateDates()) {
+      return;
+    }
+
+    if (this.selectedDeliveryLocation && !this.canUseDeliveryLocation()) {
+      this._messageService.add({
+        severity: 'warn',
+        summary: 'Invalid Delivery Setup',
+        detail:
+          'Delivery location can only be used when both car supports driver option and "with driver" is selected.',
+      });
+      this.selectedDeliveryLocation = null;
       return;
     }
 
@@ -544,7 +597,8 @@ export class CarsComponent implements OnInit, OnDestroy {
       pickupLocation:
         this.selectedCarLocation?.address || this.selectedCar.agent.location,
       dropoffLocation:
-        this.selectedDeliveryLocation?.address ||
+        (this.canUseDeliveryLocation() &&
+          this.selectedDeliveryLocation?.address) ||
         this.selectedCarLocation?.address ||
         this.selectedCar.agent.location,
     };
@@ -563,8 +617,10 @@ export class CarsComponent implements OnInit, OnDestroy {
               detail: `Booking ID: ${response.booking._id}. Please sign the agreement to proceed to payment.`,
             });
 
+            const currentLanguage = this.getCurrentLanguage();
+
             this._agreementService
-              .generateAgreement(response.booking._id)
+              .generateAgreement(response.booking._id, currentLanguage)
               .subscribe({
                 next: (res) => {
                   this.agreement = res.agreement;
@@ -607,7 +663,6 @@ export class CarsComponent implements OnInit, OnDestroy {
 
   onSignatureChange(signature: string) {
     if (signature && signature.length > 100) {
-      console.log('Signature preview:', signature.substring(0, 50) + '...');
       this.signatureData = signature;
     } else {
       this.signatureData = '';
@@ -633,7 +688,6 @@ export class CarsComponent implements OnInit, OnDestroy {
     }
 
     if (this.isSignatureEmpty(this.signatureData)) {
-      console.log('❌ Signature is empty');
       this._messageService.add({
         severity: 'warn',
         summary: 'Empty Signature',
@@ -642,11 +696,12 @@ export class CarsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    console.log('✅ Submitting signature to backend...');
     this.isSubmittingSignature = true;
 
+    const currentLanguage = this.getCurrentLanguage();
+
     this._agreementService
-      .signAgreement(this.agreement.id, this.signatureData)
+      .signAgreement(this.agreement.id, this.signatureData, currentLanguage)
       .subscribe({
         next: (res) => {
           this.agreement = res.agreement;
@@ -735,10 +790,9 @@ export class CarsComponent implements OnInit, OnDestroy {
 
   downloadAgreement() {
     if (!this.agreement) return;
-
-    this.isDownloading = true;
     console.log('Downloading agreement:', this.agreement);
 
+    this.isDownloading = true;
     this._agreementService.downloadAgreement(this.agreement._id).subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
@@ -848,7 +902,6 @@ export class CarsComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Event handlers for the new components
   onPickupDateChangeFromComponent(date: Date | null) {
     this.pickupDate = date;
     this.onPickupDateChange();
@@ -857,9 +910,5 @@ export class CarsComponent implements OnInit, OnDestroy {
   onDropoffDateChangeFromComponent(date: Date | null) {
     this.dropoffDate = date;
     this.onDropoffDateChange();
-  }
-
-  onWithDriverChangeFromComponent(withDriver: boolean) {
-    this.withDriver = withDriver;
   }
 }

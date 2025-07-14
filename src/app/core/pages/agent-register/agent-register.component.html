@@ -18,7 +18,7 @@
         aria-hidden="true">
         <img src="/images/logo2.png" class="h-16 w-auto" alt="Meshwark Logo" />
       </div>
-      <h2 class="mt-3 text-center text-3xl font-bold tracking-tight text-gray-900">Register</h2>
+      <h2 class="mt-3 text-center text-3xl font-bold tracking-tight text-gray-900">{{"REGISTER_PAGE.TITLE"|translate}}</h2>
     </div>
 
     <div class="mt-7 sm:mx-auto sm:w-full sm:max-w-3xl">
@@ -26,23 +26,23 @@
         (ngSubmit)="onSubmit()">
         <!-- Company Name -->
         <div>
-          <label for="company_name" class="block text-sm font-medium text-gray-700">Company Name</label>
+          <label for="company_name" class="block text-sm font-medium text-gray-700">{{"REGISTER_PAGE.AGENT_NAME"|translate}}</label>
           <input type="text" name="company_name" id="name" formControlName="company_name"
             class="mt-2 block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-light-blue sm:text-sm">
           @if(agentRegisterForm.get('company_name')?.touched && agentRegisterForm.get('company_name')?.errors){
           @if(agentRegisterForm.get('company_name')?.getError('required')){
           <div class="rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
-            <p class="font-medium text-sm">Name is required.</p>
+            <p class="font-medium text-sm">{{"REGISTER_PAGE.NAME_ERROR1"|translate}}</p>
           </div>
           }
           @if(agentRegisterForm.get('company_name')?.getError('minlength')){
           <div class="rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
-            <p class="font-medium  text-sm">Name should be at least 3 characters long.</p>
+            <p class="font-medium  text-sm">{{"REGISTER_PAGE.NAME_ERROR2"|translate}}</p>
           </div>
           }
           @if(agentRegisterForm.get('company_name')?.getError('maxlength')){
           <div class=" rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
-            <p class="font-medium  text-sm">Name cannot exceed 50 characters.</p>
+            <p class="font-medium  text-sm">{{"REGISTER_PAGE.NAME_ERROR3"|translate}}</p>
           </div>
           }
           }
@@ -51,28 +51,28 @@
 
         <!-- Email -->
         <div>
-          <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+          <label for="email" class="block text-sm font-medium text-gray-700">{{"REGISTER_PAGE.EMAIL"|translate}}</label>
           <input type="email" name="email" id="email" autocomplete="email" formControlName="email"
             class="mt-2 block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-light-blue sm:text-sm">
           @if(agentRegisterForm.get('email')?.touched && agentRegisterForm.get('email')?.errors){
           @if(agentRegisterForm.get('email')?.getError('required')){
           <div class="rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
-            <p class="text-sm font-medium">Email is required.</p>
+            <p class="text-sm font-medium">{{"REGISTER_PAGE.EMAIL_ERROR1"|translate}}</p>
           </div>
           }
           @if(agentRegisterForm.get('email')?.getError('email')){
           <div class="rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
-            <p class="text-sm font-medium">Invalid email format.</p>
+            <p class="text-sm font-medium">{{"REGISTER_PAGE.EMAIL_ERROR2"|translate}}</p>
           </div>
           }
           }
         </div>
         <!-- Location -->
         <div>
-          <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
+          <label for="location" class="block text-sm font-medium text-gray-700">{{"REGISTER_PAGE.LOCATION"|translate}}</label>
           <select formControlName="location" name="location" id="location"
             class="mt-2 mb-0 block w-full rounded-md bg-white px-3 py-2  text-gray-800 outline outline-1 outline-gray-300 focus:outline-2 focus:outline-light-blue sm:text-sm">
-            <option value="" disabled selected>Select Closest location</option>
+            <option value="" disabled selected>{{"REGISTER_PAGE.LOCATION2"|translate}}</option>
             @for (loc of locations; track loc.value) {
             <option [value]="loc.value">{{ loc.label }}</option>
             }
@@ -80,7 +80,7 @@
           @if(agentRegisterForm.get('location')?.touched && agentRegisterForm.get('location')?.errors){
           @if(agentRegisterForm.get('location')?.getError('required')){
           <div class="rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
-            <p class="font-medium text-sm">Location is required.</p>
+            <p class="font-medium text-sm">{{"REGISTER_PAGE.LOCATION_ERROR1"|translate}}</p>
           </div>
           }
           }
@@ -88,19 +88,18 @@
 
         <!-- Phone -->
         <div>
-          <label for="phone_number" class="block text-sm font-medium text-gray-700">Phone</label>
+          <label for="phone_number" class="block text-sm font-medium text-gray-700">{{"REGISTER_PAGE.PHONE"|translate}}</label>
           <input type="tel" name="phone_number" id="phone_number" autocomplete="tel" formControlName="phone_number"
             class="mt-2 block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-light-blue sm:text-sm">
           @if(agentRegisterForm.get('phone_number')?.touched && agentRegisterForm.get('phone_number')?.errors){
           @if(agentRegisterForm.get('phone_number')?.getError('required')){
           <div class="rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
-            <p class="font-medium text-sm">phone_number is required.</p>
+            <p class="font-medium text-sm">{{"REGISTER_PAGE.PHONE_ERROR1"|translate}}</p>
           </div>
           }
           @if(agentRegisterForm.get('phone_number')?.getError('pattern')){
           <div class="rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
-            <p class="font-medium text-sm">Enter a valid Egyptian phone number contains 11 number (starts with 010,
-              011, 012, or 015).</p>
+            <p class="font-medium text-sm">{{"REGISTER_PAGE.PHONE_ERROR2"|translate}}</p>
           </div>
           }
           }
@@ -108,7 +107,7 @@
 
         <!-- Password -->
         <div>
-          <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+          <label for="password" class="block text-sm font-medium text-gray-700">{{"REGISTER_PAGE.PASSWORD"|translate}}</label>
           <input type="password" formControlName="password" name="password" id="password" autocomplete="new-password"
             required
             class="mt-2 block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-light-blue sm:text-sm">
@@ -116,12 +115,12 @@
           @if(agentRegisterForm.get('password')?.touched && agentRegisterForm.get('password')?.errors){
           @if(agentRegisterForm.get('password')?.getError('required')){
           <div class="rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
-            <p class="font-medium text-sm">Password is required.</p>
+            <p class="font-medium text-sm">{{"REGISTER_PAGE.PASSWORD_ERROR1"|translate}}</p>
           </div>
           }
           @if(agentRegisterForm.get('password')?.getError('minlength')){
           <div class="rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
-            <p class="font-medium text-sm">Password must be at least 6 characters long.</p>
+            <p class="font-medium text-sm">{{"REGISTER_PAGE.PASSWORD_ERROR2"|translate}}</p>
           </div>
           }
           }
@@ -129,21 +128,21 @@
 
         <!--Confirm Password-->
         <div>
-          <label for="repassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+          <label for="repassword" class="block text-sm font-medium text-gray-700">{{"REGISTER_PAGE.CONFIRM_PASSWORD"|translate}}</label>
           <input type="password" formControlName="cPassword" name="repassword" id="repassword"
             autocomplete="new-password" required
             class="mt-2 block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-light-blue sm:text-sm">
           @if(agentRegisterForm.get('cPassword')?.touched && agentRegisterForm.get('cPassword')?.errors){
           @if(agentRegisterForm.get('cPassword')?.getError('required')){
           <div class="rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
-            <p class="font-medium text-sm">Please confirm your password.</p>
+            <p class="font-medium text-sm">{{"REGISTER_PAGE.CONFIRM_PASSWORD_ERROR1"|translate}}</p>
           </div>
           }
           }
 
           @if(agentRegisterForm.errors?.['passwordsMismatch'] && agentRegisterForm.get('cPassword')?.touched){
           <div class="rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
-            <p class="font-medium text-sm">Passwords do not match.</p>
+            <p class="font-medium text-sm">{{"REGISTER_PAGE.CONFIRM_PASSWORD_ERROR2"|translate}}</p>
           </div>
           }
         </div>
@@ -151,17 +150,17 @@
 
         <!-- Working Hours Section -->
         <div class="sm:col-span-2">
-          <label class="block text-sm font-medium text-gray-700 mb-2">Working Hours</label>
+          <label class="block text-sm font-medium text-gray-700 mb-2">{{"REGISTER_PAGE.WORKING_HOURS" | translate}}</label>
 
           <!-- Days Selection Table -->
           <div class="overflow-x-auto ">
             <table class="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-[50px]">
               <thead class="bg-gray-100">
                 <tr>
-                  <th scope="col" class="px-3 py-3 text-left text-xs font-medium  text-gray-700 uppercase ">Day</th>
-                  <th scope="col" class="px-3 py-3 text-left text-xs font-medium  text-gray-700 uppercase">Open</th>
-                  <th scope="col" class="px-3 py-3 text-left text-xs font-medium  text-gray-700 uppercase">From</th>
-                  <th scope="col" class="px-3 py-3 text-left text-xs font-medium  text-gray-700 uppercase">To</th>
+                  <th scope="col" class="px-3 py-3 text-left text-xs font-medium  text-gray-700 uppercase ">{{"REGISTER_PAGE.DAY" | translate}}</th>
+                  <th scope="col" class="px-3 py-3 text-left text-xs font-medium  text-gray-700 uppercase">{{"REGISTER_PAGE.OPEN" | translate}}</th>
+                  <th scope="col" class="px-3 py-3 text-left text-xs font-medium  text-gray-700 uppercase">{{"REGISTER_PAGE.FROM" | translate}}</th>
+                  <th scope="col" class="px-3 py-3 text-left text-xs font-medium  text-gray-700 uppercase">{{"REGISTER_PAGE.TO" | translate}}</th>
                 </tr>
               </thead>
               <tbody class="bg-blue-50 divide-y divide-gray-200">
@@ -183,7 +182,7 @@
                       [class.text-green-600]="getDayControl(i, 'selected').value"
                       [class.bg-red-100]="!getDayControl(i, 'selected').value"
                       [class.text-red-600]="!getDayControl(i, 'selected').value">
-                      {{getDayControl(i, 'selected').value ? 'Open' : 'Closed'}}
+                      {{getDayControl(i, 'selected').value ? ('REGISTER_PAGE.OPEN' | translate) : ('REGISTER_PAGE.CLOSED' | translate)}}
                     </span>
                   </td>
                   <td class="px-3 py-4 whitespace-nowrap">
@@ -208,32 +207,33 @@
           @if(agentRegisterForm.get('working_hours')?.touched && agentRegisterForm.get('working_hours')?.errors){
           @if(agentRegisterForm.get('working_hours')?.getError('required')){
           <div class="mt-2 rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
-            <p class="font-medium text-sm">Please specify at least one working day.</p>
+            <p class="font-medium text-sm">{{"REGISTER_PAGE.WORKING_HOURS_ERROR" | translate}}</p>
           </div>
           }
           }
         </div>
         <!--ID_document-->
         <div class="sm:col-span-2">
-          <label for="document" class="text-sm font-medium me-4 text-gray-700">ID Document (Photo)</label>
+          <label for="document" class="text-sm font-medium me-4 text-gray-700">{{"REGISTER_PAGE.ID_DOCUMENT" | translate}}</label>
           <input type="file" formControlName="ID_document" name="ID_document" id="document" accept="image/*"
             (change)="onFileSelected($event)" class="hidden" />
           <label for="document"
             class="mt-2 inline-block cursor-pointer rounded-md bg-light-blue px-4 py-2 text-sm text-white hover:bg-blue-500">
 
-            Choose Image
+          {{"REGISTER_PAGE.CHOOSE_IMAGE" | translate}}
+
           </label>
           @if(agentRegisterForm.get('ID_document')?.touched && agentRegisterForm.get('ID_document')?.errors){
           @if(agentRegisterForm.get('ID_document')?.getError('required')){
           <div class="mt-2 rounded-md bg-red-50 py-2 px-3 border border-red-200 text-red-600">
-            <p class="font-medium text-sm">ID document is required.</p>
+            <p class="font-medium text-sm">{{"REGISTER_PAGE.ID_DOCUMENT_ERROR" | translate}}</p>
           </div>
           }
           }
 
           @if(licensePreview){
           <div class="mt-2">
-            <p class="text-sm text-gray-500 mb-2">Preview:</p>
+            <p class="text-sm text-gray-500 mb-2">{{"REGISTER_PAGE.PREVIEW" | translate}}:</p>
             <img [src]="licensePreview" alt="License Preview" class="w-125 h-70 rounded shadow">
           </div>
           }
@@ -245,18 +245,20 @@
             class="flex w-full justify-center items-center gap-2 cursor-pointer rounded-md bg-light-blue px-4 py-2 font-medium text-white shadow-sm hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 disabled:opacity-60">
             @if(loading) {
             <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-            <span>Registering...</span>
+            <span>{{"REGISTER_PAGE.LOADING" | translate}}</span>
             } @else {
-            <span>Register</span>
+            <span>{{"REGISTER_PAGE.REGISTER_BTN" | translate}}</span>
             }
           </button>
         </div>
       </form>
       <p class="mt-6 text-center text-sm/6 text-gray-500">
-        Want to change your role?
-        <a routerLink="/register" class="font-medium text-light-blue hover:text-blue-500">Go back to role selection.</a>
+  {{"REGISTER_PAGE.ROLE_QUESTION" | translate}}
+        <a routerLink="/register" class="font-medium text-light-blue hover:text-blue-500">{{"REGISTER_PAGE.ROLE_SELECTION_LINK" | translate}}</a>
       </p>
     </div>
+
+
   </div>
 </div>
 

@@ -27,15 +27,46 @@ export interface Location {
   selector: 'app-map',
   standalone: true,
   template: `
-    <div #mapContainer [id]="mapId" class="w-full h-[250px] rounded-lg"></div>
+    <div
+      #mapContainer
+      [id]="mapId"
+      class="w-full h-[250px] rounded-lg"
+      [class.cursor-not-allowed]="!enableDeliverySelection"
+      [class.opacity-75]="!enableDeliverySelection"
+      [class.cursor-pointer]="enableDeliverySelection"
+    ></div>
     <div class="mt-2 text-sm text-gray-600">
       @if (distance) {
       <p>Distance to car: {{ distance }} km</p>
-      } @if (selectedDeliveryLocation) {
-      <p>
-        Delivery location:
-        {{ selectedDeliveryLocation.address || 'Selected location' }}
-      </p>
+      } @if (!enableDeliverySelection) {
+      <div
+        class="flex items-center text-amber-600 bg-amber-50 p-2 rounded border border-amber-200 mt-2"
+      >
+        <i class="pi pi-info-circle mr-2"></i>
+        <span class="text-xs"
+          >Delivery selection requires both driver option and "with driver"
+          enabled</span
+        >
+      </div>
+      } @if (enableDeliverySelection && !selectedDeliveryLocation) {
+      <div
+        class="flex items-center text-blue-600 bg-blue-50 p-2 rounded border border-blue-200 mt-2"
+      >
+        <i class="pi pi-map-marker mr-2"></i>
+        <span class="text-xs"
+          >Click anywhere on the map to select delivery location</span
+        >
+      </div>
+      } @if (selectedDeliveryLocation && enableDeliverySelection) {
+      <div
+        class="flex items-center text-green-600 bg-green-50 p-2 rounded border border-green-200 mt-2"
+      >
+        <i class="pi pi-check-circle mr-2"></i>
+        <div class="text-xs">
+          <p class="font-medium">Delivery location selected:</p>
+          <p>{{ selectedDeliveryLocation.address || 'Selected location' }}</p>
+        </div>
+      </div>
       }
     </div>
   `,
@@ -51,7 +82,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
   mapContainerRef!: ElementRef<HTMLDivElement>;
 
   mapId = 'map-' + Math.random().toString(36).substring(2, 10);
-  private map: any;
+  map: any;
   private carMarker: any;
   private userMarker: any;
   private deliveryMarker: any;
@@ -72,6 +103,32 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
       this.destroyMap();
       if (isPlatformBrowser(this.platformId)) {
         setTimeout(() => this.loadLeaflet(), 0);
+      }
+    }
+
+    // Add handling for enableDeliverySelection changes
+    if (
+      changes['enableDeliverySelection'] &&
+      !changes['enableDeliverySelection'].firstChange
+    ) {
+      if (isPlatformBrowser(this.platformId) && this.map) {
+        // Remove existing delivery marker if delivery selection is disabled
+        if (
+          !changes['enableDeliverySelection'].currentValue &&
+          this.deliveryMarker
+        ) {
+          this.map.removeLayer(this.deliveryMarker);
+          this.deliveryMarker = null;
+          this.selectedDeliveryLocation = null;
+        }
+
+        // Update map click listeners
+        this.setupMapClickListener();
+
+        console.log(
+          'Delivery selection updated:',
+          changes['enableDeliverySelection'].currentValue
+        );
       }
     }
   }
@@ -127,7 +184,6 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
     const mapElement = this.mapContainerRef?.nativeElement;
     if (!mapElement) return;
 
-    // Defensive: Remove any previous map instance from this container
     mapElement.innerHTML = '';
 
     this.map = L.map(this.mapId).setView(
@@ -208,7 +264,13 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
   }
 
   private setupMapClickListener() {
+    if (!this.map) return;
+
+    // Remove existing click handlers
+    this.map.off('click');
+
     if (this.enableDeliverySelection) {
+      console.log('Setting up delivery selection click listener');
       this.map.on('click', (e: any) => {
         const location: Location = {
           lat: e.latlng.lat,
@@ -216,10 +278,22 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
         };
         this.setDeliveryLocation(location);
       });
+    } else {
+      console.log('Delivery selection disabled - no click listener');
+      this.map.on('click', (e: any) => {
+        console.log(
+          'Delivery selection requires both driver option and "with driver" enabled'
+        );
+      });
     }
   }
 
   private setDeliveryLocation(location: Location) {
+    if (!this.enableDeliverySelection) {
+      console.warn('Delivery selection is disabled');
+      return;
+    }
+
     if (this.deliveryMarker) {
       this.map.removeLayer(this.deliveryMarker);
     }
