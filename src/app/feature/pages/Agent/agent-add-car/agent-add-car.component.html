@@ -165,7 +165,6 @@
                 [options]="fuelTypeOptions"
                 formControlName="fuel_type"
                 [autoDisplayFirst]="false"
-                dataKey="value"
                 class="w-full transition duration-200 hover:shadow-lg hover:border-blue-500 hover:ring-1 hover:ring-blue-400 rounded-md"
                 placeholder="Select Fuel Type">
               </p-dropdown>
@@ -234,7 +233,7 @@
             <div>
               <p-dropdown
                 [options]="categoryOptions"
-                formControlName="allowedCategories"
+                formControlName="category"
                 placeholder="Select a Category"
                 optionLabel="label"
                 inputId="allowedCategories"
@@ -350,3 +349,4 @@
     <button pButton type="submit" label="Save" class="w-full mb-5"></button>
   </div>
 </form>
+

@@ -2,10 +2,11 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CarService } from '../../../core/services/car.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-car-brands',
-  imports: [CommonModule],
+  imports: [CommonModule , TranslateModule],
   templateUrl: './car-brands.component.html',
   styleUrls: ['./car-brands.component.css'],
 })

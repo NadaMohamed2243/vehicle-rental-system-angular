@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-booking-history',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,TranslateModule],
   template: `
     <div class="flex flex-col gap-3">
       @if (isLoadingBookingHistory) {
@@ -16,7 +17,7 @@ import { CommonModule } from '@angular/common';
       } @if (!isLoadingBookingHistory && carBookingHistory.length === 0) {
       <div class="text-center py-8">
         <i class="pi pi-calendar text-gray-400 text-4xl mb-2"></i>
-        <p class="text-gray-500">No booking history available for this car</p>
+        <p class="text-gray-500">{{ 'BOOKING_HISTORY.NO_HISTORY' | translate }}</p>
       </div>
       } @if (!isLoadingBookingHistory && carBookingHistory.length > 0) {
       <div class="space-y-3 max-h-[300px] overflow-y-auto">
@@ -34,7 +35,7 @@ import { CommonModule } from '@angular/common';
               [class.text-blue-700]="isFutureBooking(booking.startDate)"
               [class.text-gray-700]="!isFutureBooking(booking.startDate)"
             >
-              Booking #{{ booking._id.slice(-6) }}
+               {{ 'BOOKING_HISTORY.BOOKING' | translate }} #{{ booking._id.slice(-6) }}
             </span>
             <span
               class="text-xs px-2 py-1 rounded-full font-medium"
@@ -43,21 +44,25 @@ import { CommonModule } from '@angular/common';
               [class.bg-gray-100]="!isFutureBooking(booking.startDate)"
               [class.text-gray-800]="!isFutureBooking(booking.startDate)"
             >
-              {{ isFutureBooking(booking.startDate) ? 'Upcoming' : 'Past' }}
+              {{
+                    isFutureBooking(booking.startDate)
+                      ? ('BOOKING_HISTORY.UPCOMING' | translate)
+                      : ('BOOKING_HISTORY.PAST' | translate)
+              }}
             </span>
           </div>
 
           <div class="space-y-1 text-xs">
             <div class="flex items-center gap-2">
               <i class="pi pi-calendar text-green-500"></i>
-              <span class="text-gray-600">Start:</span>
+              <span class="text-gray-600">{{ 'BOOKING_HISTORY.START' | translate }}:</span>
               <span class="font-medium">{{
                 formatBookingDate(booking.startDate)
               }}</span>
             </div>
             <div class="flex items-center gap-2">
               <i class="pi pi-calendar text-red-500"></i>
-              <span class="text-gray-600">End:</span>
+              <span class="text-gray-600">{{ 'BOOKING_HISTORY.END' | translate }}:</span>
               <span class="font-medium">{{
                 formatBookingDate(booking.endDate)
               }}</span>

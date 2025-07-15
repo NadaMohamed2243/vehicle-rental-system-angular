@@ -239,4 +239,9 @@ getALLCarsAdmin(): Observable<Cars[]> {
     );
   }
 
+  updateAvailability(carId: string, status: 'Available' | 'Rented') {
+  return this.http.patch(`${environment.apiUrl}/cars/${carId}/availability`, { status });
+}
+
+
 }

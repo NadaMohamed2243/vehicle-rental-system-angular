@@ -32,6 +32,10 @@ import {
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../../core/services/auth.service';
 import { NavbarComponent } from '../../../core/layout/navbar/navbar.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { BookingDetailsComponent } from '../../components/ui/booking-details/booking-details.component';
+import { VehicleInfoComponent } from '../../components/ui/vehicle-info/vehicle-info.component';
+import { BookingHistoryComponent } from '../../components/ui/booking-history/booking-history.component';
 
 @Component({
   selector: 'app-cars',
@@ -55,6 +59,10 @@ import { NavbarComponent } from '../../../core/layout/navbar/navbar.component';
     MapComponent,
     ToastModule,
     NavbarComponent,
+    TranslateModule,
+    BookingDetailsComponent,
+    VehicleInfoComponent,
+    BookingHistoryComponent
   ],
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.css'],

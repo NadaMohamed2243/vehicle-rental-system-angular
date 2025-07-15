@@ -1,24 +1,24 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Cars } from '../../../../core/interfaces/cars';
-
+import { TranslateModule } from '@ngx-translate/core';
 @Component({
   selector: 'app-booking-action',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   template: `
     <div
       class="w-full h-[80px] bg-light-blue flex justify-between items-center rounded-lg"
     >
       <div class="ps-5">
-        <p class="text-xs text-white font-semibold">BOOK VEHICLE</p>
+        <p class="text-xs text-white font-semibold">{{ 'BOOKING_ACTION.BOOK_VEHICLE' | translate }}</p>
         <p class="text-sm text-white font-semibold">
           {{ selectedCar?.brand }} {{ selectedCar?.model }}
         </p>
       </div>
       <div>
-        <p class="text-xs text-white font-semibold">FREE BOOKING</p>
-        <p class="text-sm text-white font-semibold">10 minutes</p>
+        <p class="text-xs text-white font-semibold">{{ 'BOOKING_ACTION.FREE_BOOKING' | translate }}</p>
+        <p class="text-sm text-white font-semibold">{{ 'BOOKING_ACTION.FREE_BOOKING_TIME' | translate }}</p>
       </div>
       <div class="h-full">
         <button

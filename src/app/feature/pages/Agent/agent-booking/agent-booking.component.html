@@ -47,7 +47,7 @@
           <ng-template pTemplate="header">
             <tr>
               <th>Customer</th>
-              <!-- <th>Phone</th> -->
+              <th>Phone</th>
               <th>Car</th>
               <th>Image</th>
               <th>Start</th>
@@ -60,7 +60,7 @@
           <ng-template pTemplate="body" let-order>
             <tr>
               <td>{{ order.billingName }}</td>
-              <!-- <td>{{ order.billingPhone }}</td>   -->
+              <td>{{ order.billingPhone }}</td>
               <td>{{ order.carId.brand }} {{ order.carId.model }} ({{ order.carId.licensePlate }})</td>
               <td>
                 <img
@@ -79,7 +79,8 @@
                   [ngClass]="{
                     'bg-yellow-100 text-yellow-800': order.status === 'pending',
                     'bg-green-100 text-green-800': order.status === 'paid',
-                    'bg-red-100 text-red-800': order.status === 'cancelled'
+                    'bg-red-100 text-red-800': order.status === 'cancelled',
+                    'bg-gray-100 text-gray-800': order.status === 'failed',
                   }"
                 >
                   {{ order.status }}
@@ -88,6 +89,23 @@
 
              <td>
               <div class="flex gap-1">
+                    <!-- Cancel only -->
+        <button
+          *ngIf="order.status === 'pending'"
+          class="text-xs bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded"
+          (click)="cancelOrder(order)"
+        >
+          Cancel
+        </button>
+
+        <!-- Cancel + Refund -->
+        <button
+          *ngIf="order.status === 'paid'"
+          class="text-xs bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded"
+          (click)="cancelAndRefund(order)"
+        >
+          Cancel & Refund
+        </button>
              <!-- Cancel Button -->
               <!-- <p-button
                 label="Cancel"
@@ -107,6 +125,37 @@
     </p-tabPanel>
 
 
+    <p-tabPanel header="Paid Bookings">
+  <div class="overflow-x-auto">
+    <p-table
+      [value]="paidOrders"
+      stripedRows
+      class="w-full min-w-[800px]"
+      [paginator]="true"
+      [rows]="5">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Client</th>
+          <th>Car</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Status</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-order>
+        <tr>
+          <td>{{ order.billingName }}</td>
+          <td>{{ order.carId.brand }} {{ order.carId.model }}</td>
+          <td>{{ order.startDate | date: 'yyyy-MM-dd' }}</td>
+          <td>{{ order.endDate | date: 'yyyy-MM-dd' }}</td>
+          <td>
+            <span class="bg-green-200 text-green-800 px-2 py-1 rounded-full text-xs">{{ order.status }}</span>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</p-tabPanel>
 
 
     <!-- Cancelled Orders -->
@@ -155,6 +204,134 @@
         </p-table>
       </div>
     </p-tabPanel>
+    <!-- Ongoing Bookings -->
+<p-tabPanel header="Ongoing Bookings">
+  <p-table [value]="ongoingOrders" stripedRows class="w-full min-w-[800px]" [paginator]="true" [rows]="5">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Client</th>
+        <th>Car</th>
+        <th>Start</th>
+        <th>End</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-order>
+      <tr>
+        <td>{{ order.billingName }}</td>
+        <td>{{ order.carId.brand }} {{ order.carId.model }}</td>
+        <td>{{ order.startDate | date: 'yyyy-MM-dd' }}</td>
+        <td>{{ order.endDate | date: 'yyyy-MM-dd' }}</td>
+        <td><span  class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">Active</span></td>
+        <td>
+          <div class="flex flex-wrap gap-1">
+            <button
+          *ngIf="order.carId.availabilityStatus === 'Rented'"
+          (click)="returnAndComplete(order)"
+          class="text-xs bg-purple-600 hover:bg-purple-700 text-white px-2 py-1 rounded"
+          >
+            Return & Complete
+          </button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-tabPanel>
+<p-tabPanel header="Upcoming Bookings">
+  <div class="overflow-x-auto">
+    <p-table
+      [value]="upcomingOrders"
+      stripedRows
+      class="w-full min-w-[800px]"
+      [paginator]="true"
+      [rows]="5">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Client</th>
+          <th>Car</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-order>
+        <tr>
+          <td>{{ order.billingName }}</td>
+          <td>{{ order.carId.brand }} {{ order.carId.model }}</td>
+          <td>{{ order.startDate | date: 'yyyy-MM-dd' }}</td>
+          <td>{{ order.endDate | date: 'yyyy-MM-dd' }}</td>
+          <td>
+            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">{{ order.status }}</span>
+          </td>
+          <td>
+          <div class="flex flex-wrap gap-1">
+            <!-- Mark as Rented -->
+            <button
+              *ngIf="order.carId.availabilityStatus === 'Available'"
+              (click)="markAsRented(order)"
+              class="text-xs bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded"
+            >
+              Mark as Rented
+            </button>
+
+            <!-- Cancel Booking -->
+            <!-- Cancel only -->
+        <button
+          *ngIf="order.status !== 'paid'"
+          class="text-xs bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded"
+          (click)="cancelOrder(order)"
+        >
+          Cancel
+        </button>
+
+        <!-- Cancel + Refund -->
+        <button
+          *ngIf="order.status === 'paid'"
+          class="text-xs bg-orange-500 hover:bg-orange-600 text-white px-2 py-1 rounded"
+          (click)="cancelAndRefund(order)"
+        >
+          Cancel & Refund
+        </button>
+          </div>
+      </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</p-tabPanel>
+<p-tabPanel header="Completed Bookings">
+  <div class="overflow-x-auto">
+    <p-table
+      [value]="completedOrders"
+      stripedRows
+      class="w-full min-w-[800px]"
+      [paginator]="true"
+      [rows]="5">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Client</th>
+          <th>Car</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Status</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-order>
+        <tr>
+          <td>{{ order.billingName }}</td>
+          <td>{{ order.carId.brand }} {{ order.carId.model }}</td>
+          <td>{{ order.startDate | date: 'yyyy-MM-dd' }}</td>
+          <td>{{ order.endDate | date: 'yyyy-MM-dd' }}</td>
+          <td>EGP {{ order.totalCost }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</p-tabPanel>
+
 
   </p-tabView>
 </div>

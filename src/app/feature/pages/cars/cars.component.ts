@@ -49,6 +49,7 @@ import { VehicleInfoComponent } from '../../components/ui/vehicle-info/vehicle-i
 import { BookingHistoryComponent } from '../../components/ui/booking-history/booking-history.component';
 import { AgreementModalComponent } from '../../components/ui/agreement-modal/agreement-modal.component';
 import { LanguageService } from '../../../core/services/language.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-cars',
@@ -79,6 +80,7 @@ import { LanguageService } from '../../../core/services/language.service';
     VehicleInfoComponent,
     BookingHistoryComponent,
     AgreementModalComponent,
+    TranslateModule
   ],
   templateUrl: './cars.component.html',
   styleUrls: ['./cars.component.css'],

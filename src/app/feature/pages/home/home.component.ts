@@ -37,6 +37,7 @@ import { BookingDetailsComponent } from "../../components/ui/booking-details/boo
 import { BookingActionComponent } from "../../components/ui/booking-action/booking-action.component";
 import { VehicleInfoComponent } from "../../components/ui/vehicle-info/vehicle-info.component";
 import { BookingHistoryComponent } from "../../components/ui/booking-history/booking-history.component";
+import { CarCategoryComponent } from "../../components/car-category/car-category.component";
 
 @Component({
   selector: 'app-home',
@@ -69,8 +70,9 @@ import { BookingHistoryComponent } from "../../components/ui/booking-history/boo
     BookingDetailsComponent,
     BookingActionComponent,
     VehicleInfoComponent,
-    BookingHistoryComponent
-  ],
+    BookingHistoryComponent,
+    CarCategoryComponent
+],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   providers: [MessageService],

@@ -15,6 +15,7 @@ import { CheckboxFilterComponentComponent } from '../checkbox-filter-component/c
 import { RadioFilterComponentComponent } from '../radio-filter-component/radio-filter-component.component';
 import { FilterStateService } from '../../../../core/services/filter-state.service';
 import { CarService } from '../../../../core/services/car.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-filter',
@@ -34,6 +35,7 @@ import { CarService } from '../../../../core/services/car.service';
     PriceRangeFilterComponent,
     CheckboxFilterComponentComponent,
     RadioFilterComponentComponent,
+    TranslateModule
   ],
   templateUrl: './filter.component.html',
   styleUrl: './filter.component.css',

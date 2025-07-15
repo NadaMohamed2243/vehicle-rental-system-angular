@@ -5,10 +5,12 @@ import { CarService } from '../../../core/services/car.service';
 import { CardCarouselComponent } from '../../../shared/components/ui/card-carousel/card-carousel.component';
 import { CommonModule } from '@angular/common';
 import { get } from 'http';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-most-popular',
-  imports: [CardCarouselComponent, CommonModule],
+  imports: [CardCarouselComponent, CommonModule , TranslateModule],
+  standalone: true,
   templateUrl: './most-popular.component.html',
   styleUrl: './most-popular.component.css',
 })
