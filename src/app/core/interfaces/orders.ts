@@ -1,7 +1,9 @@
+import { Cars } from "./cars";
+
 export interface Orders {
   _id: string;
   clientId: string;
-  carId: string;
+  carId: Cars ;
   startDate: string;
   endDate: string;
   totalCost: number;

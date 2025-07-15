@@ -73,4 +73,17 @@ export class BookingService {
       `${environment.apiUrl}/payments/resume/${bookingId}`
     );
   }
+  completeBooking(id: string) {
+    return this.http.put(`${environment.apiUrl}/bookings/${id}/complete`, {});
+  }
+
+  markAsReturned(id: string) {
+    return this.http.put(`${environment.apiUrl}/bookings/${id}/return-car`, {});
+  }
+  returnAndComplete(bookingId: string) {
+  return this.http.patch(`${environment.apiUrl}/bookings/${bookingId}/return-complete`, {});
+}
+markAsRented(bookingId: string) {
+  return this.http.patch(`${environment.apiUrl}/bookings/${bookingId}/mark-rented`, {});
+}
 }

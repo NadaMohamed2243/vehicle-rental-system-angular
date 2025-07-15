@@ -14,7 +14,7 @@ export class AgentOverviewComponent {
 
    constructor(
       private adminCarsService: AdmincarsService,
-    ) {} 
+    ) {}
 
 totalCars: number = 0;
 availableCars: number = 0;
@@ -38,7 +38,7 @@ ngOnInit(): void {
   this.loadAgentCarStats();
   this.loadAgentBookingStats();
   this.loadCars();
-  this.loadAllCars();     
+  this.loadAllCars();
   this.loadAllBookings();
 }
 loadAgentBookingStats(): void {
@@ -60,7 +60,7 @@ loadAgentCarStats(): void {
     this.cars = res;
     this.pendingCars = res.filter(car => car.approval_status === 'pending');
     console.log(this.pendingCars);
-    this.pendingCarsCount = this.pendingCars.length; 
+    this.pendingCarsCount = this.pendingCars.length;
   });
 }
 
@@ -82,9 +82,9 @@ loadAgentCarStats(): void {
 }
 
 loadAllBookings(): void {
-  this.adminCarsService.getAllBookings().subscribe(bookings => {
+  this.adminCarsService.getAgentBookings().subscribe(bookings => {
     this.bookings = bookings.filter(b => b.status === 'paid');
-    
+
     console.log('Bookings:', this.bookings);
 
     if (this.cars.length) {

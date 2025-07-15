@@ -105,6 +105,32 @@ export class AgentCarCardsComponent implements OnInit {
     this.selectedCar = car;
     this.displayCarDialog = true;
   }
+  markAsAvailable(carId: string) {
+  this._AdmincarService.updateAvailability(carId, 'Available').subscribe({
+    next: () => {
+      this.messageService.add({ severity: 'success', summary: 'Car marked as Available' });
+      this.loadCars();
+      this.displayCarDialog = false;
+    },
+    error: () => {
+      this.messageService.add({ severity: 'error', summary: 'Failed to update status' });
+    }
+  });
+}
+
+markAsRented(carId: string) {
+  this._AdmincarService.updateAvailability(carId, 'Rented').subscribe({
+    next: () => {
+      this.messageService.add({ severity: 'success', summary: 'Car marked as Rented' });
+      this.loadCars();
+      this.displayCarDialog = false;
+    },
+    error: () => {
+      this.messageService.add({ severity: 'error', summary: 'Failed to update status' });
+    }
+  });
+}
+
 
 
 

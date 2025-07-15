@@ -68,10 +68,10 @@ availabilityOptions = [
 ];
 
 categoryOptions = [
-  { label: 'Wedding', value: 'widding' },
+  { label: 'Wedding', value: 'Wedding' },
   { label: 'Day Use', value: 'Day Use' },
   { label: 'Trip', value: 'Trip' },
-  { label: 'Business', value: 'business' },
+  { label: 'Business', value: 'Business' },
   { label: 'Airport Pickup', value: 'Airport Pickup' },
   { label: 'Economy', value: 'Economy' },
   { label: 'Other', value: 'other' }
@@ -163,7 +163,7 @@ typeOptions = [
       lastMaintenanceDate: null,
       nextMaintenanceDue: null,
       availabilityStatus: ['', Validators.required],
-      allowedCategories: ['', Validators.required],
+      category: ['', Validators.required],
       conditionNotes: ''
     });
   }
@@ -195,7 +195,7 @@ typeOptions = [
  onImageSelected(event: Event): void {
   const file = (event.target as HTMLInputElement)?.files?.[0];
   if (file) {
-    this.mainImage = file; 
+    this.mainImage = file;
     const reader = new FileReader();
     reader.onload = () => {
       this.imagePreview = reader.result as string;
@@ -257,7 +257,7 @@ removeDocument(preview: string) {
   // ---------- submit ----------
   submitForm(): void {
     if (this.carForm.invalid) {
-    this.carForm.markAllAsTouched(); 
+    this.carForm.markAllAsTouched();
     return;
   }
 
@@ -292,7 +292,11 @@ removeDocument(preview: string) {
       // ADD
       this.adminCarsService.addCar(fd).subscribe({
         next: done,
-        error: err => console.error('Error adding car:', err)
+        error: err => {console.error('Error adding car:', err)
+         console.error('Error adding car:', err);
+  if (err.error && err.error.errors) {
+    alert('Validation error: ' + err.error.errors.join(', '));
+  }}
       });
     }
   }
