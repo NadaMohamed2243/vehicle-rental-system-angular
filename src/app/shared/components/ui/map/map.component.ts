@@ -11,9 +11,10 @@ import {
   OnChanges,
   SimpleChanges,
   ElementRef,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 declare var L: any;
 
@@ -26,6 +27,7 @@ export interface Location {
 @Component({
   selector: 'app-map',
   standalone: true,
+  imports:[TranslateModule],
   template: `
     <div
       #mapContainer
@@ -37,25 +39,25 @@ export interface Location {
     ></div>
     <div class="mt-2 text-sm text-gray-600">
       @if (distance) {
-      <p>Distance to car: {{ distance }} km</p>
+      <p>{{ 'MAP.DISTANCE' | translate:{ distance: distance } }}</p>
       } @if (!enableDeliverySelection) {
       <div
         class="flex items-center text-amber-600 bg-amber-50 p-2 rounded border border-amber-200 mt-2"
       >
         <i class="pi pi-info-circle mr-2"></i>
-        <span class="text-xs"
-          >Delivery selection requires both driver option and "with driver"
-          enabled</span
-        >
+        <span class="text-xs">
+          {{ 'MAP.REQUIRES_DRIVER' | translate }}
+        </span>
+
       </div>
       } @if (enableDeliverySelection && !selectedDeliveryLocation) {
       <div
         class="flex items-center text-blue-600 bg-blue-50 p-2 rounded border border-blue-200 mt-2"
       >
         <i class="pi pi-map-marker mr-2"></i>
-        <span class="text-xs"
-          >Click anywhere on the map to select delivery location</span
-        >
+        <span class="text-xs">
+        {{ 'MAP.CLICK_TO_SELECT' | translate }}
+      </span>
       </div>
       } @if (selectedDeliveryLocation && enableDeliverySelection) {
       <div
@@ -63,8 +65,8 @@ export interface Location {
       >
         <i class="pi pi-check-circle mr-2"></i>
         <div class="text-xs">
-          <p class="font-medium">Delivery location selected:</p>
-          <p>{{ selectedDeliveryLocation.address || 'Selected location' }}</p>
+          <p class="font-medium">{{ 'MAP.SELECTED.TITLE' | translate }}</p>
+          <p>{{ selectedDeliveryLocation.address || ('MAP.SELECTED.DEFAULT' | translate) }}</p>
         </div>
       </div>
       }

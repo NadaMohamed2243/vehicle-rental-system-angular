@@ -6,10 +6,11 @@ import { WishlistService } from '../../../../core/services/wishlist.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { Observable, map, Subscription } from 'rxjs';
 import { CarService } from '../../../../core/services/car.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-card',
-  imports: [StarRatingComponent],
+  imports: [StarRatingComponent,TranslateModule],
   templateUrl: './card.component.html',
   styleUrl: './card.component.css',
 })

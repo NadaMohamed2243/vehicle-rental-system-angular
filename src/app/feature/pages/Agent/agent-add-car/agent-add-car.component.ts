@@ -77,6 +77,18 @@ categoryOptions = [
   { label: 'Other', value: 'other' }
 ];
 
+
+// categoryOptions = [
+//   { label: 'CATEGORY.WEDDING', value: 'widding' },
+//   { label: 'CATEGORY.DAY_USE', value: 'Day Use' },
+//   { label: 'CATEGORY.TRIP', value: 'Trip' },
+//   { label: 'CATEGORY.BUSINESS', value: 'business' },
+//   { label: 'CATEGORY.AIRPORT', value: 'Airport Pickup' },
+//   { label: 'CATEGORY.ECONOMY', value: 'Economy' },
+//   { label: 'CATEGORY.OTHER', value: 'other' }
+// ];
+
+
 seatOptions = Array.from({ length: 7 }, (_, i) => {
   const seat = i + 2;
   return { label: `${seat} Seats`, value: seat };

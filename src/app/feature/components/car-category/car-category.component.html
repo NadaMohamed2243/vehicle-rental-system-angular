@@ -2,10 +2,10 @@
   <!-- Section Header with fade-in -->
   <div class="text-center max-w-2xl mx-auto mb-10 px-4 animate-fade-in">
     <h1 class="text-3xl sm:text-4xl font-bold text-dark-blue mb-4">
-      What's Your Purpose?
+      {{ 'CAR_CATEGORIES.TITLE' | translate }}
     </h1>
     <p class="text-dark-blue text-lg sm:text-xl leading-relaxed">
-      Whether it's a wedding, a business trip, or a quick escape — choose what suits your journey.
+      {{ 'CAR_CATEGORIES.SUBTITLE' | translate }}
     </p>
   </div>
 
@@ -13,7 +13,7 @@
   @if (isLoading) {
     <div class="flex flex-col items-center justify-center py-20 animate-pulse">
       <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-      <p class="text-dark-blue text-lg font-medium">Loading categories...</p>
+      <p class="text-dark-blue text-lg font-medium">{{ 'CAR_CATEGORIES.LOADING' | translate }}</p>
     </div>
   } @else {
     @if (categories.length !== 0) {
@@ -38,14 +38,14 @@
                 {{ item.category }}
               </h3>
               <p class="text-sm text-gray-500 transition-transform group-hover:translate-x-1">
-                {{ item.count }} {{ item.count === 1 ? 'car' : 'cars' }}
+                {{ item.count }} {{ item.count === 1 ? ('CAR_CATEGORIES.CAR' | translate) : ('CAR_CATEGORIES.CARS' | translate)}}
               </p>
             </div>
           </div>
         }
       </div>
     } @else {
-      <p class="text-center text-gray-500 text-lg mt-12 animate-fade-in">No categories available at the moment.</p>
+      <p class="text-center text-gray-500 text-lg mt-12 animate-fade-in">{{ 'CAR_CATEGORIES.NO_CATEGORIES' | translate }}</p>
     }
   }
 </div>

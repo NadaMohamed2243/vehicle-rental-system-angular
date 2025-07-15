@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, OnChanges, SimpleChanges } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-star-rating',
-  imports: [],
+  imports: [TranslateModule],
   templateUrl: './star-rating.component.html',
   styleUrl: './star-rating.component.css'
 })

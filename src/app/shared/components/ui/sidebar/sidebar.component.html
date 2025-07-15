@@ -13,7 +13,7 @@
     >
       <i class="pi pi-bars text-gray-600" style="font-size: 1.2rem;"></i>
       @if (isExpanded) {
-      <span class="ml-3 text-gray-700 font-medium">Menu</span>
+      <span class="ml-3 mr-3 text-gray-700 font-medium">{{ 'SIDEBAR.MENU' | translate }}</span>
       }
     </button>
   </div>
@@ -42,10 +42,10 @@
 
       @if (isExpanded) {
       <span
-        class="ml-4 font-medium text-sm whitespace-nowrap transition-all duration-300"
+        class="ml-3 mr-3 font-medium text-sm whitespace-nowrap transition-all duration-300"
         [style.color]="rla.isActive ? 'white' : '#4a5568'"
       >
-        {{ link.label }}
+         {{ link.label | translate }}
       </span>
       }
     </a>
@@ -69,7 +69,7 @@
       ></i>
 
       @if (isExpanded) {
-      <span class="ml-4 font-medium text-sm whitespace-nowrap transition-all duration-300 text-white">
+      <span class="ml-3 mr-3 font-medium text-sm whitespace-nowrap transition-all duration-300 text-white">
         {{ (currentLang$ | async) === 'en' ? 'العربية' : 'English' }}
       </span>
       }
@@ -97,10 +97,10 @@
 
       @if (isExpanded) {
       <span
-        class="ml-4 font-medium text-sm whitespace-nowrap transition-all duration-300"
+        class="ml-3 mr-3 font-medium text-sm whitespace-nowrap transition-all duration-300"
         [style.color]="rla.isActive ? 'white' : '#4a5568'"
       >
-        Logout
+        {{ 'SIDEBAR.LOGOUT' | translate }}
       </span>
       }
     </a>
