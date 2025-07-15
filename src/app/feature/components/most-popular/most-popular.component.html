@@ -1,10 +1,10 @@
 <div class="py-8 bg-white">
   <div class="text-center max-w-2xl mx-auto mb-10">
     <h1 class="text-3xl md:text-4xl font-bold text-dark-blue mb-4">
-      Most Popular Cars
+      {{ 'MOST_POPULAR_CARS.TITLE' | translate }}
     </h1>
     <p class="text-dark-blue text-base md:text-lg">
-      Our most popular cars have very high ratings from our customers.
+      {{ 'MOST_POPULAR_CARS.SUBTITLE' | translate }}
     </p>
     <a class="mt-6 inline-flex items-center px-6 py-3 text-sm font-semibold rounded-lg transition duration-300
     text-white
@@ -15,7 +15,7 @@
     disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed disabled:hover:bg-gray-300"
       [class.opacity-60]="!cars.length" [class.pointer-events-none]="!cars.length"
       (click)="cars.length ? viewMostPopularCars() : null">
-      View All Most Popular Cars
+      {{ 'MOST_POPULAR_CARS.VIEW_ALL' | translate }}
       <svg class="w-4 h-4 ml-2 rtl:rotate-180 transition-transform duration-300" [class.opacity-0]="!cars.length"
         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -28,14 +28,14 @@
   @if(isLoading) {
   <div class="flex flex-col items-center justify-center py-10">
     <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-    <p class="mt-4 text-dark-blue text-lg font-medium">Loading most popular cars...</p>
+    <p class="mt-4 text-dark-blue text-lg font-medium">{{ 'MOST_POPULAR_CARS.LOADING' | translate }}</p>
   </div>
   } @else {
   @if(cars.length != 0){
   <app-card-carousel [carDetails]="cars" fromWho="home"></app-card-carousel>
   }
   @else{
-  <p class="text-center text-gray-500 text-lg mt-12 animate-fade-in">No Cars available at the moment.</p>
+  <p class="text-center text-gray-500 text-lg mt-12 animate-fade-in">{{ 'MOST_POPULAR_CARS.NO_CARS' | translate }}</p>
   }
   }
 </div>
