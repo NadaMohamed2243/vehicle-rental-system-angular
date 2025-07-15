@@ -1,9 +1,9 @@
 <div class="pt-5 px-5">
     <div class="font-bold flex items-center justify-between w-full min-w-[250px]">
-        <h3 class="text-lg whitespace-nowrap">Filter by:</h3>
+        <h3 class="text-lg whitespace-nowrap">{{ 'FILTER.FILTER_BY' | translate }}</h3>
         <button class="text-[#d2d2d2] text-sm whitespace-nowrap flex items-center gap-1 cursor-pointer"
             (click)="resetAll()">
-            Reset all
+            {{ 'FILTER.RESET_ALL' | translate }}
             <i class="pi pi-times text-sm"></i>
         </button>
     </div>
@@ -11,12 +11,12 @@
     <div class="mt-6">
         <p-iconfield>
             <p-inputicon styleClass="pi pi-search" />
-            <input type="text" pInputText placeholder="Search" class="w-full" [(ngModel)]="searchText"
+            <input type="text" pInputText [placeholder]="'FILTER.SEARCH' | translate" class="w-full" [(ngModel)]="searchText"
                 (ngModelChange)="onSearchChange()" />
         </p-iconfield>
     </div>
     <div class="mt-6 mb-3 flex justify-between items-center">
-        <span class="text-sm font-bold">AVAILABLE NOW ONLY</span>
+        <span class="text-sm font-bold">{{ 'FILTER.AVAILABLE_NOW' | translate }}</span>
         <p-toggleswitch [(ngModel)]="availableNow" (ngModelChange)="onAvailabilityChange()" />
     </div>
 </div>
@@ -25,7 +25,7 @@
     <p-accordion [value]="['0']" [multiple]="true">
         <p-accordion-panel value="0">
             <p-accordion-header>
-                <p class="text-sm font-bold">PRICE RANGE / HOUR</p>
+                <p class="text-sm font-bold">{{ 'FILTER.PRICE_RANGE' | translate }}</p>
             </p-accordion-header>
             <p-accordion-content>
                 <app-price-range-filter (priceChange)="onPriceRangeChange($event)">
@@ -34,7 +34,7 @@
         </p-accordion-panel>
         <p-accordion-panel value="1">
             <p-accordion-header>
-                <p class="text-sm font-bold">CAR BRAND</p>
+                <p class="text-sm font-bold">{{ 'FILTER.CAR_BRAND' | translate }}</p>
             </p-accordion-header>
             <p-accordion-content>
                 <app-checkbox-filter-component [items]="brands" [selectedItems]="selectedBrands"
@@ -43,7 +43,7 @@
         </p-accordion-panel>
         <p-accordion-panel value="2">
             <p-accordion-header>
-                <p class="text-sm font-bold">BODYSTYLE</p>
+                <p class="text-sm font-bold">{{ 'FILTER.BODYSTYLE' | translate }}</p>
             </p-accordion-header>
             <p-accordion-content>
                 <app-checkbox-filter-component [items]="carBodyTypes" [selectedItems]="selectedBodyTypes"
@@ -52,7 +52,7 @@
         </p-accordion-panel>
         <p-accordion-panel value="3">
             <p-accordion-header>
-                <p class="text-sm font-bold">TRANSMISSION</p>
+                <p class="text-sm font-bold">{{ 'FILTER.TRANSMISSION' | translate }}</p>
             </p-accordion-header>
             <p-accordion-content>
                 <app-radio-filter-component [items]="transmissionTypes" [selectedItem]="selectedTransmissionType"
@@ -61,7 +61,7 @@
         </p-accordion-panel>
         <p-accordion-panel value="4">
             <p-accordion-header>
-                <p class="text-sm font-bold">FUEL TYPE</p>
+                <p class="text-sm font-bold">{{ 'FILTER.FUEL_TYPE' | translate }}</p>
             </p-accordion-header>
             <p-accordion-content>
                 <app-checkbox-filter-component [items]="fuelTypes" [selectedItems]="selectedFuelTypes"

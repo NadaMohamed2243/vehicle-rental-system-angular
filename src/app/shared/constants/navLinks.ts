@@ -1,33 +1,33 @@
 interface NavLink {
   img: string;
   route: string;
-  label: string; // Add label property
+  label: string; // translation key
 }
 
 export const links: NavLink[] = [
   {
     img: 'home',
     route: '/home',
-    label: 'Home',
+    label: 'SIDEBAR.HOME',
   },
   {
     img: 'car',
     route: '/cars',
-    label: 'Cars',
+    label: 'SIDEBAR.CARS',
   },
   {
     img: 'heart',
     route: '/favourites',
-    label: 'Favourites',
+    label: 'SIDEBAR.FAVOURITES',
   },
   {
     img: 'history',
     route: '/history',
-    label: 'History',
+    label: 'SIDEBAR.HISTORY',
   },
   {
     img: 'user',
     route: '/profile',
-    label: 'Profile',
+    label: 'SIDEBAR.PROFILE',
   },
 ];

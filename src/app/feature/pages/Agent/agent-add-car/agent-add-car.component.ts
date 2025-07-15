@@ -77,6 +77,18 @@ categoryOptions = [
   { label: 'Other', value: 'other' }
 ];
 
+
+// categoryOptions = [
+//   { label: 'CATEGORY.WEDDING', value: 'widding' },
+//   { label: 'CATEGORY.DAY_USE', value: 'Day Use' },
+//   { label: 'CATEGORY.TRIP', value: 'Trip' },
+//   { label: 'CATEGORY.BUSINESS', value: 'business' },
+//   { label: 'CATEGORY.AIRPORT', value: 'Airport Pickup' },
+//   { label: 'CATEGORY.ECONOMY', value: 'Economy' },
+//   { label: 'CATEGORY.OTHER', value: 'other' }
+// ];
+
+
 seatOptions = Array.from({ length: 7 }, (_, i) => {
   const seat = i + 2;
   return { label: `${seat} Seats`, value: seat };
@@ -195,7 +207,7 @@ typeOptions = [
  onImageSelected(event: Event): void {
   const file = (event.target as HTMLInputElement)?.files?.[0];
   if (file) {
-    this.mainImage = file; 
+    this.mainImage = file;
     const reader = new FileReader();
     reader.onload = () => {
       this.imagePreview = reader.result as string;
@@ -257,7 +269,7 @@ removeDocument(preview: string) {
   // ---------- submit ----------
   submitForm(): void {
     if (this.carForm.invalid) {
-    this.carForm.markAllAsTouched(); 
+    this.carForm.markAllAsTouched();
     return;
   }
 

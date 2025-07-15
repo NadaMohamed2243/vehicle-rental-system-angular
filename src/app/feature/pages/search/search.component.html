@@ -8,7 +8,7 @@
         @if (isLoading) {
         <div class="flex flex-col items-center justify-center w-full py-10">
             <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-            <p class="mt-4 text-dark-blue text-lg font-medium">Loading cars...</p>
+            <p class="mt-4 text-dark-blue text-lg font-medium">{{ 'CARS.LOADING' | translate }}<</p>
         </div>
         } @else {
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 p-4 m-5">
@@ -17,7 +17,7 @@
             <app-card [carDetails]="car" fromWho="car" (click)="showCarDetails(car)"></app-card>
             }
             @if (filteredCars.length === 0) {
-            <p class="col-span-full text-center text-gray-500">No cars available</p>
+            <p class="col-span-full text-center text-gray-500">{{ 'CARS.NO_CARS' | translate }}</p>
             }
         </div>
         }
@@ -48,14 +48,14 @@
                 <div class="flex justify-between pb-3">
                     <p class="font-bold text-lg">{{selectedCar?.brand}} {{selectedCar?.model}} {{selectedCar?.year}}</p>
                     <p class="font-semibold">EG {{selectedCar?.totalPricePerHour}} <span
-                            class="text-sm text-[#8c8c8c]">/hour</span></p>
+                            class="text-sm text-[#8c8c8c]">{{"CAR_CARD.PER_HOUR"|translate}}</span></p>
                 </div>
                 <div class="card">
                     <p-tabs value="0">
                         <p-tablist>
-                            <p-tab value="0">Rent details</p-tab>
-                            <p-tab value="1">Vehicle info</p-tab>
-                            <p-tab value="2">Booking History</p-tab>
+                            <p-tab value="0">{{ 'CARS.TABS.RENT' | translate }}</p-tab>
+                            <p-tab value="1">{{ 'CARS.TABS.INFO' | translate }}</p-tab>
+                            <p-tab value="2">{{ 'CARS.TABS.HISTORY' | translate }}</p-tab>
                         </p-tablist>
                         <p-tabpanels>
                             <p-tabpanel value="0">

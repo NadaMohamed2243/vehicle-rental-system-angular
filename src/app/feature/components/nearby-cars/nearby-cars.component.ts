@@ -4,10 +4,11 @@ import { Cars } from '../../../core/interfaces/cars';
 import { CarService } from '../../../core/services/car.service';
 import { CardCarouselComponent } from "../../../shared/components/ui/card-carousel/card-carousel.component";
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-nearby-cars',
-  imports: [CardCarouselComponent, CommonModule],
+  imports: [CardCarouselComponent, CommonModule,TranslateModule],
   templateUrl: './nearby-cars.component.html',
   styleUrls: ['./nearby-cars.component.css']
 })

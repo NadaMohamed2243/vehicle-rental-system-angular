@@ -7,11 +7,12 @@
         [alt]="(carDetails()?.brand + ' ' + carDetails()?.model) || 'Car image'" />
 
       <!-- Status badges -->
-      <div class="absolute top-0 left-0 flex justify-between items-center w-full">
+      <div class="absolute top-0 left-0 flex items-start w-auto">
         <p class="bg-blue-100 text-blue-900 font-semibold px-3 py-0.5 m-2 rounded-2xl">
-          {{carDetails()?.type}}
+          {{ carDetails()?.type }}
         </p>
       </div>
+
 
       @if(fromWho()!="landing"){
       <!-- Heart Favorite Icon -->
@@ -53,7 +54,7 @@
         <span class="text-xl font-bold text-dark-blue">
           EG {{carDetails()?.totalPricePerHour}}
         </span>
-        <span class="text-sm text-gray-500 ml-1">/hour</span>
+        <span class="text-sm text-gray-500 ml-1">{{ 'CAR_CARD.PER_HOUR' | translate }}</span>
       </div>
 
       <app-star-rating [rating]="carDetails()?.rating?? 0"></app-star-rating>
@@ -63,7 +64,7 @@
       <div class="flex gap-3 text-sm text-gray-600 dark:text-gray-400 justify-between">
         @if (carDetails()?.seats) {
         <span class="flex items-center gap-1 bg-grayLight px-3 py-2 rounded-xl text-dark-blue font-bold"
-          [title]="carDetails()?.seats + ' seats'">
+          [title]="carDetails()?.seats + ' ' + ('CAR_CARD.SEATS' | translate)">
           <!-- Seat icon -->
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -81,7 +82,8 @@
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M12 6V3m0 3v12m0-6H9m3 0h3m-3 0v6m0 0v3m0-3h3m-3 0H9" />
           </svg>
-          {{ carDetails()?.transmission === 'Automatic' ? 'AT' : 'MT' }}
+          {{ carDetails()?.transmission === 'Automatic' ?  ('CAR_CARD.AUTOMATIC' | translate)
+              : ('CAR_CARD.MANUAL' | translate) }}
         </span>
         }
 
@@ -103,7 +105,7 @@
         <hr class="border-t-2 border-grayLight my-4" />
         <a class="w-full inline-flex justify-center items-center px-3 py-2 text-sm font-medium text-white bg-light-blue rounded-lg hover:bg-dark-blue focus:ring-4 focus:outline-none focus:ring-blue-300 mt-auto"
           (click)="getTargetRoute()">
-          Book Now
+          {{ 'CAR_CARD.BOOK_NOW' | translate }}
           <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" xmlns="http://www.w3.org/2000/svg" fill="none"
             viewBox="0 0 14 10">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

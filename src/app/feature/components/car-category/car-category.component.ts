@@ -1,10 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CarService } from '../../../core/services/car.service';
 import { Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-car-category',
-  imports: [],
+  imports: [TranslateModule],
   templateUrl: './car-category.component.html',
   styleUrl: './car-category.component.css',
 })

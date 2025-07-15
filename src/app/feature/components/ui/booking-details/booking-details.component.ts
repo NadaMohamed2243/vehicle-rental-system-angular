@@ -5,6 +5,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { DividerModule } from 'primeng/divider';
 import { Cars } from '../../../../core/interfaces/cars';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-booking-details',
@@ -15,12 +16,13 @@ import { Cars } from '../../../../core/interfaces/cars';
     DatePickerModule,
     ToggleSwitchModule,
     DividerModule,
+    TranslateModule
   ],
   template: `
     <div class="card flex py-5">
       <div class="flex flex-col gap-5">
         <div class="flex flex-col gap-2">
-          <p class="text-xs font-bold">PICK-UP DATE & TIME</p>
+          <p class="text-xs font-bold">{{ 'BOOKING_DETAILS.PICKUP_TITLE' | translate }}</p>
           <p-datepicker
             [iconDisplay]="'input'"
             [showIcon]="true"
@@ -30,17 +32,17 @@ import { Cars } from '../../../../core/interfaces/cars';
             [minDate]="minDate"
             (ngModelChange)="onPickupDateChange()"
             [showButtonBar]="true"
-            placeholder="Select pickup date & time"
+            [placeholder]="'BOOKING_DETAILS.PICKUP_PLACEHOLDER' | translate"
           />
           @if (pickupDate && pickupDate < minDate) {
-          <small class="text-red-500 text-xs"
-            >Pickup date cannot be in the past</small
-          >
+          <small class="text-red-500 text-xs">
+        {{ 'BOOKING_DETAILS.PICKUP_ERROR' | translate }}
+            </small>
           }
         </div>
 
         <div class="flex flex-col gap-2">
-          <p class="text-xs font-bold">DROP-OFF DATE & TIME</p>
+          <p class="text-xs font-bold">{{ 'BOOKING_DETAILS.DROPOFF_TITLE' | translate }}</p>
           <p-datepicker
             [iconDisplay]="'input'"
             [showIcon]="true"
@@ -50,11 +52,12 @@ import { Cars } from '../../../../core/interfaces/cars';
             [minDate]="minDropoffDate"
             (ngModelChange)="onDropoffDateChange()"
             [showButtonBar]="true"
-            placeholder="Select drop-off date & time"
+            [placeholder]="'BOOKING_DETAILS.DROPOFF_PLACEHOLDER' | translate"
           />
           @if (dropoffDate && pickupDate && dropoffDate <= pickupDate) {
-          <small class="text-red-500 text-xs"
-            >Drop-off date must be after pickup date</small
+          <small class="text-red-500 text-xs">
+        {{ 'BOOKING_DETAILS.DROPOFF_ERROR' | translate }}
+            </small
           >
           }
         </div>
@@ -62,10 +65,10 @@ import { Cars } from '../../../../core/interfaces/cars';
         @if (selectedCar?.with_driver) {
         <div class="mt-6 mb-3 flex justify-between items-center">
           <div class="flex flex-col">
-            <span class="text-xs font-bold">WITH DRIVER</span>
-            <span class="text-xs text-gray-500"
-              >Required for delivery service</span
-            >
+          <span class="text-xs font-bold">{{ 'BOOKING_DETAILS.WITH_DRIVER_TITLE' | translate }}</span>
+        <span class="text-xs text-gray-500">
+          {{ 'BOOKING_DETAILS.WITH_DRIVER_NOTE' | translate }}
+        </span>
           </div>
           <p-toggleswitch
             [(ngModel)]="withDriver"
@@ -79,7 +82,7 @@ import { Cars } from '../../../../core/interfaces/cars';
 
       <div class="flex flex-col gap-2 w-50">
         <div class="flex justify-between items-center">
-          <p class="text-xs font-bold">CAR RENTAL</p>
+          <p class="text-xs font-bold">{{ 'BOOKING_DETAILS.CAR_RENTAL' | translate }}</p>
           <p class="text-sm font-semibold">
             EG
             {{
@@ -91,7 +94,7 @@ import { Cars } from '../../../../core/interfaces/cars';
 
         @if (withDriver) {
         <div class="flex justify-between items-center">
-          <p class="text-xs font-bold">DRIVER FEE</p>
+          <p class="text-xs font-bold">{{ 'BOOKING_DETAILS.DRIVER_FEE' | translate }}</p>
           <p class="text-sm font-semibold">
             EG {{ 25 * rentalDuration | number : '1.2-2' }}
           </p>
@@ -99,12 +102,12 @@ import { Cars } from '../../../../core/interfaces/cars';
         }
 
         <div class="flex justify-between items-center my-4">
-          <p class="text-xs font-bold">SALES TAXES</p>
+          <p class="text-xs font-bold">{{ 'BOOKING_DETAILS.SALES_TAXES' | translate }}</p>
           <p class="text-sm font-semibold">$13.06</p>
         </div>
 
         <div class="flex justify-between items-center">
-          <p class="text-lg font-bold">Total Price</p>
+          <p class="text-lg font-bold">{{ 'BOOKING_DETAILS.TOTAL_PRICE' | translate }}</p>
           <p class="text-lg font-semibold">
             EG {{ totalPrice | number : '1.2-2' }}
           </p>
